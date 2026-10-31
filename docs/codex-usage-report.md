@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T06:13:14.103Z (UTC).
+Generated: 2026-10-31T06:31:43.443Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:12:19.481Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:31:26.156Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 419 |
-| sessions | 7 |
-| prompts | 7 |
-| tool_invocations | 197 |
-| tool_results | 194 |
+| hook_events | 579 |
+| sessions | 9 |
+| prompts | 9 |
+| tool_invocations | 275 |
+| tool_results | 268 |
 | manual_entries | 15 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -21,9 +21,16 @@ Models reported by hooks: gpt-6-astra, unknown.
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| apply_patch | codex_builtin | 20 | 20 | 20 | 0 | 0 | 20 | 0 |
-| Bash | codex_builtin | 168 | 168 | 167 | 0 | 0 | 167 | 1 |
-| mcp__cua_repl__js | mcp_external | 2 | 2 | 0 | 0 | 0 | 0 | 2 |
+| apply_patch | codex_builtin | 21 | 21 | 21 | 0 | 0 | 21 | 0 |
+| Bash | codex_builtin | 227 | 227 | 226 | 0 | 0 | 226 | 1 |
+| clockcurr_time | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
+| mcp__codex_apps__sites__create_site | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__get_deployment_status | mcp_external | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__get_site | mcp_external | 6 | 6 | 4 | 4 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__get_site_version | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__save_version_and_deploy_private | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__update_site_access | mcp_external | 2 | 2 | 0 | 0 | 0 | 0 | 2 |
+| mcp__cua_repl__js | mcp_external | 3 | 3 | 1 | 1 | 0 | 0 | 2 |
 | view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
 | webrun | unknown | 6 | 6 | 6 | 0 | 0 | 6 | 0 |
 
@@ -40,6 +47,8 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T05:35:32.062Z | dbc7154b19a9 | 8c2990faaa54 | dbecd8665862 |
 | 2026-10-31T05:42:11.969Z | b51ab2502b2d | 380a257edb4f | 34ebe701e005 |
 | 2026-10-31T06:03:25.368Z | c2568ee7b933 | 6defa7d07ad2 | 1ae343f8ee8a |
+| 2026-10-31T06:22:15.269Z | 94682603fc7f | a84cee3a7737 | 8b9936a383f9 |
+| 2026-10-31T06:29:36.371Z | bebb67c1d928 | 2a26cd66de87 | aaabc45e2fce |
 
 ### Prompt 68507c1e0b3d
 
@@ -296,6 +305,53 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt 8b9936a383f9
+
+    Use the Sites plugin. Task DEPLOY02: publish both seaPilot web apps from this repository
+    (main, commit 90f644d or later) in API mode. Read docs/SITES-DEPLOYMENT.md and
+    scripts/sites/build-export.mjs first; Minh published the first fixture-only versions.
+
+    Build settings for both apps (compiled into the static export):
+    - NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com/
+    - NEXT_PUBLIC_USE_FIXTURES must be unset
+    - SITES_STATIC_EXPORT=1 via scripts/sites/build-export.mjs customer|customer-service
+
+    Targets, in order of preference:
+    1. Update the existing Sites whose project ids are in apps/customer/.openai/hosting.json
+       and apps/customer-service/.openai/hosting.json, if this ChatGPT account can edit them.
+    2. If this account cannot edit them, create two new Sites owned by this account,
+       titles "seaPilot Customer" and "seaPilot Customer Service", slugs close to
+       seapilot-customer-hoang and seapilot-service-hoang. Do not overwrite Minh's
+       apps/*/.openai/hosting.json; record the new project ids in a new file
+       docs/sites-hoang.json instead.
+
+    Keep the audience private (do not make anything public). These Sites are static; the
+    backend stays on this laptop. No environment variables or secrets are needed on Sites;
+    never read, print or copy apps/api/.env.
+
+    After deploying, report: for each app the hosted URL, project id, whether it was an
+    update or a new Site, the deployed version, and the exact origin (scheme + host) of each
+    URL so it can be added to the API CORS allowlist. Append a DEPLOY02 row to
+    docs/codex-log.md and update docs/SITES-DEPLOYMENT.md. Do not commit or push to this
+    repository's GitHub remote; leave changes in the working tree.
+
+Truncated during capture: no.
+
+### Prompt aaabc45e2fce
+
+    Use the Sites plugin. Task DEPLOY03: the repository owner has approved making his two seaPilot Sites
+    public so judges and teammates can open them without signing in.
+    Change the audience/visibility to public (anyone with the link, no sign-in) for exactly these two
+    projects owned by this account, and nothing else:
+    - appgprj_6ae58941057881918fe726f0e4859674 (https://seapilot-customer-hoang.wirybear257.chatgpt.site)/
+    - appgprj_6ae589671c8481918691460557ce4c4e (https://seapilot-service-hoang.wirybear257.chatgpt.site)/
+    Do not redeploy or rebuild. Never read apps/api/.env. Afterwards confirm with curl that each URL returns
+    HTTP 200 without authentication and serves the app HTML (not a sign-in page).
+    Update docs/sites-hoang.json and docs/SITES-DEPLOYMENT.md to record that these two Sites are public,
+    and append a DEPLOY03 row to docs/codex-log.md. Do not commit or push. Report the final audience of each Site.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -499,6 +555,84 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T06:11:37.483Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
 | 2026-10-31T06:12:06.237Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
 | 2026-10-31T06:12:06.702Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:22:20.542Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:20.840Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:26.266Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:33.059Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:33.407Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__get_site | no result observed |
+| 2026-10-31T06:22:35.111Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__get_site | no result observed |
+| 2026-10-31T06:22:42.587Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:43.107Z | 94682603fc7f | a84cee3a7737 | clockcurr_time | unknown |
+| 2026-10-31T06:22:54.293Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:22:54.726Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__create_site | success |
+| 2026-10-31T06:23:14.482Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:24.304Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:32.060Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__create_site | success |
+| 2026-10-31T06:23:51.043Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:51.519Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:51.797Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:53.033Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:23:54.266Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:07.290Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:07.564Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:08.876Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:21.836Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:29.780Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:31.002Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:39.964Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:42.305Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:24:58.768Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:05.868Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:08.215Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:16.999Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:17.000Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:27.872Z | 94682603fc7f | a84cee3a7737 | mcp__cua_repl__js | success |
+| 2026-10-31T06:25:38.318Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:25:48.021Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:04.753Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:09.340Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:17.270Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:22.133Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:28.548Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:34.679Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:43.487Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:26:51.105Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__save_version_and_deploy_private | success |
+| 2026-10-31T06:27:07.616Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__save_version_and_deploy_private | success |
+| 2026-10-31T06:27:52.318Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__get_deployment_status | success |
+| 2026-10-31T06:27:53.343Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__get_site_version | success |
+| 2026-10-31T06:27:53.351Z | 94682603fc7f | a84cee3a7737 | mcp__codex_apps__sites__get_site_version | success |
+| 2026-10-31T06:27:54.292Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:28:10.808Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:28:11.148Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:28:11.472Z | 94682603fc7f | a84cee3a7737 | clockcurr_time | unknown |
+| 2026-10-31T06:28:44.418Z | 94682603fc7f | a84cee3a7737 | apply_patch | unknown |
+| 2026-10-31T06:28:44.630Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:28:59.402Z | 94682603fc7f | a84cee3a7737 | Bash | unknown |
+| 2026-10-31T06:29:42.550Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:42.564Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:42.574Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:46.095Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:46.391Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:56.478Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:29:56.494Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:29:56.504Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:30:02.262Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__update_site_access | no result observed |
+| 2026-10-31T06:30:02.346Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__update_site_access | no result observed |
+| 2026-10-31T06:30:10.708Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:10.726Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:10.739Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:21.395Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:30:21.412Z | bebb67c1d928 | 2a26cd66de87 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:30:21.418Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:27.521Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:27.532Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:27.540Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:34.144Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:40.981Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:42.270Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:30:49.532Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:31:13.455Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:31:19.965Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
 
 ## Self-reported external activity
 
