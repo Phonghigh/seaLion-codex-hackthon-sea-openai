@@ -1,19 +1,19 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T07:59:37.637Z (UTC).
+Generated: 2026-10-31T08:20:15.671Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:59:37.287Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:11:30.269Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 983 |
+| hook_events | 986 |
 | sessions | 15 |
 | prompts | 16 |
 | tool_invocations | 470 |
-| tool_results | 455 |
-| manual_entries | 20 |
+| tool_results | 456 |
+| manual_entries | 24 |
 
 Models reported by hooks: gpt-6-astra, unknown.
 
@@ -22,7 +22,7 @@ Models reported by hooks: gpt-6-astra, unknown.
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | apply_patch | codex_builtin | 22 | 22 | 22 | 0 | 0 | 22 | 0 |
-| Bash | codex_builtin | 377 | 377 | 372 | 0 | 0 | 372 | 5 |
+| Bash | codex_builtin | 377 | 377 | 373 | 0 | 0 | 373 | 4 |
 | clockcurr_time | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
 | mcp__codex_apps__sites__create_site | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__create_source_repository_write_credential | mcp_external | 6 | 6 | 6 | 6 | 0 | 0 | 0 |
@@ -936,7 +936,7 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T07:58:44.731Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__deploy_site_version | success |
 | 2026-10-31T07:59:21.955Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
 | 2026-10-31T07:59:37.073Z | 05315e47626e | e6a4e0baf643 | apply_patch | unknown |
-| 2026-10-31T07:59:37.287Z | 05315e47626e | e6a4e0baf643 | Bash | no result observed |
+| 2026-10-31T07:59:37.287Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
 
 ## Self-reported external activity
 
@@ -1080,6 +1080,30 @@ These entries are not automatic evidence and are excluded from tool counts.
 - 2026-10-31T07:39:09.119Z — codex-desktop/manual (unverified; d4cb6df3ffa8)
 
     Resolving current Git conflicts while preserving merged backend and local Sea UI work. Automatic hook coverage unverified; manual evidence.
+
+    Resolve conflicts
+
+- 2026-10-31T07:48:40.463Z — codex-desktop/manual (unverified; e533bc8b9cd9)
+
+    Refining both API and fixture CS UI. Manual evidence; automatic coverage unverified.
+
+    Remove Customer service caption; make sheets expandable/collapsible; make conversation list more colorful using CRM patterns.
+
+- 2026-10-31T07:58:12.596Z — codex-desktop/manual (unverified; 36372bca01f2)
+
+    Inspected rendered reference inbox. Adapting compact inbox density, counted queue filters, sorting and pane hierarchy; preserving case workflows.
+
+    Use https://buddy-bound-base.lovable.app/TND4K2PZ1/inbox as reference and update current UI; include only relevant components.
+
+- 2026-10-31T08:06:05.767Z — codex-desktop/manual (unverified; d36b90ab3343)
+
+    Updating both CS modes while preserving drafts and approval controls; manual evidence, automatic coverage unverified.
+
+    Apply screenshot feedback: remove left rail, move case toggle to conversation header as icon, change case summary layout, add composer expand/collapse.
+
+- 2026-10-31T08:11:30.260Z — codex-desktop/manual (unverified; 34c8b7424510)
+
+    Inspecting and resolving current merge conflicts, preserving recent UI and backend changes. Manual evidence; automatic hook coverage unverified.
 
     Resolve conflicts
 
