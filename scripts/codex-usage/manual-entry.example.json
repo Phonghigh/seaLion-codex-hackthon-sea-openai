@@ -1,0 +1,8 @@
+{
+  "service": "ChatGPT",
+  "tool": "web_search",
+  "occurred_at": "2026-10-31T09:00:00+07:00",
+  "note": "VÍ DỤ GIẢ LẬP — không nhập file này vào báo cáo thật. Thay bằng mục đích, kết quả và phần bạn đã tự kiểm tra trong một hoạt động thực tế.",
+  "prompt": "Thay bằng prompt thực tế đã loại bỏ dữ liệu nhạy cảm; có thể bỏ trường này.",
+  "model": "unknown"
+}

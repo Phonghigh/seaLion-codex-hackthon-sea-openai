@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "title": "seaPilot — Codex usage evidence",
+  "generated_at": "2026-10-31T03:49:18.318Z",
+  "content_included": true,
+  "coverage": {
+    "first_recorded_at": "2026-10-31T03:40:15.883Z",
+    "last_recorded_at": "2026-10-31T03:44:48.806Z",
+    "invalid_files_skipped": 0,
+    "limitations": [
+      "Only events received by this recorder are counted; no retroactive reconstruction.",
+      "Hosted tools (for example hosted WebSearch) and specialized paths may not emit tool hooks.",
+      "ChatGPT outside this Codex runtime is not observed. Manual entries are self-reported and excluded from automatic counts.",
+      "A start without a result may be interrupted, denied, running, or missing; it is not counted as successful.",
+      "Success/error signals describe the tool transport or process, not verified business outcomes.",
+      "MCP is a connection type, not proof of third-party ownership. Unknown names remain unknown.",
+      "This is editable, Git-shared evidence, not tamper-proof certification or proof of hackathon eligibility.",
+      "Prompt counts are received hook deliveries, including repeated identical text. Tool invocations are correlated by runtime IDs.",
+      "No token, cost, time-saved, percentage of AI-written code, or complete-account usage is inferred."
+    ]
+  },
+  "totals": {
+    "hook_events": 0,
+    "sessions": 0,
+    "prompts": 0,
+    "tool_invocations": 0,
+    "tool_results": 0,
+    "manual_entries": 3
+  },
+  "models": [],
+  "tools": [],
+  "prompts": [],
+  "calls": [],
+  "manual_entries": [
+    {
+      "id": "36ce98085990",
+      "recorded_at": "2026-10-31T03:40:15.883Z",
+      "occurred_at": "2026-10-31T03:37:22.000Z",
+      "service_tool": "CodexDesktop/architecture_plan",
+      "status": "unverified",
+      "prompt": {
+        "text": "Có sự thay đổi về kiến trúc.\n\n1. API, DB dùng ở local, rồi deploy thông qua cloud flare quick tunnel. thêm 1 plan deploy local bằng cloudflare quick tunnel luôn, dùng CLI cloudflare, tôi sẽ login rồi còn lại setup deploy dùng command trong CLI.\n2. FE sẽ deploy qua ChatGPT site, dùng domain đã deploy public của quick tunnel. CHú ý vấn đề CORS.\n\nUpdate plan detail cho tôi. Hỏi nếu thiếu context hoặc conflict gì\n\n[$ck:brainstorm](<HOME>\\.agents\\skills\\brainstorm\\SKILL.md)",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported current user request observed in this chat; timestamp is first inspection time, not verified message timestamp. Recorder reports zero observed hooks. This entry is not automatic tool evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "4482e5a7d6ea",
+      "recorded_at": "2026-10-31T03:40:17.463Z",
+      "occurred_at": "2026-10-31T03:40:00.000Z",
+      "service_tool": "CodexDesktop/architecture_clarification",
+      "status": "unverified",
+      "prompt": {
+        "text": "DB local: PostgreSQL local + lưu ảnh trên ổ đĩa.\nCloudflare: Quick Tunnel cho demo, chấp nhận cập nhật URL.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported answers received during this planning turn; time is approximate observation, not a captured hook timestamp.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "707b6bd1f1e4",
+      "recorded_at": "2026-10-31T03:44:48.806Z",
+      "occurred_at": "2026-10-31T03:43:42.000Z",
+      "service_tool": "CodexDesktop/git_publish",
+      "status": "unverified",
+      "prompt": {
+        "text": "commit, push lên",
+        "truncated": false
+      },
+      "note": {
+        "text": "Actual user request in this chat. Manually recorded because native hook execution has not been observed. Time is first task inspection, not a verified message timestamp; not automatic tool evidence.",
+        "truncated": false
+      }
+    }
+  ]
+}

@@ -67,6 +67,15 @@ Run typecheck, lint and test before you say a task is done.
    feat(T04): agent loop
 10. After each task, append to docs/codex-log.md: task id, start and end time,
     what you built, files changed, tests added, problems found.
+11. Every developer must record every Codex prompt used for this project.
+    Use the shared `.codex/hooks.json`; run `node scripts/codex-usage/cli.mjs install`
+    after cloning, then review/trust the project and hooks via Codex CLI `/hooks`.
+    `.codex-usage/events/` contains PUBLIC, redacted prompt/tool evidence and must
+    be included with the related work in Git. Run `node scripts/codex-usage/cli.mjs report`
+    to regenerate the shared report (includes redacted prompts). Never disable or
+    bypass recording for project work; fix a failed prompt recorder before retrying.
+    Keep secrets out of prompts and logs. For activity outside hook coverage, add
+    a truthful `manual` entry; do not invent automatic evidence. See docs/codex-usage.md.
 
 ## Data model (minimum)
 customers, orders, order_items, shipments (parcel_code, status, updated_at),
