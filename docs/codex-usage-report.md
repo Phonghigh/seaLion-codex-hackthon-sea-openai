@@ -1,26 +1,28 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:06:47.112Z (UTC).
+Generated: 2026-10-31T05:20:31.258Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:05:19.040Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:20:17.311Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 0 |
-| sessions | 0 |
-| prompts | 0 |
-| tool_invocations | 0 |
-| tool_results | 0 |
+| hook_events | 30 |
+| sessions | 2 |
+| prompts | 2 |
+| tool_invocations | 11 |
+| tool_results | 11 |
 | manual_entries | 12 |
 
-Models reported by hooks: none.
+Models reported by hooks: gpt-6-astra, unknown.
 
 ## Observed tools
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| apply_patch | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
+| Bash | codex_builtin | 10 | 10 | 10 | 0 | 0 | 10 | 0 |
 
 ## Prompt trail
 
@@ -28,6 +30,34 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 
 | Time (UTC) | Session | Turn | Event |
 | --- | --- | --- | --- |
+| 2026-10-31T05:18:37.224Z | 759ea8cb07d0 | 8c352424834e | 68507c1e0b3d |
+| 2026-10-31T05:18:55.971Z | 964fb863149d | cdcd9c2b0ec8 | a633d76f12ed |
+
+### Prompt 68507c1e0b3d
+
+    Reply with the single word: ready. Do not run any tools.
+
+Truncated during capture: no.
+
+### Prompt a633d76f12ed
+
+    Edit AGENTS.md only.
+    In "Current stack and scope": keep apps/customer (3000), apps/customer-service (3001),
+    packages/ui, packages/contracts, packages/demo. Add:
+    - apps/api: Hono on Node 20+, TypeScript strict, run with tsx, port 4000.
+    - PostgreSQL 16 in Docker (docker-compose.yml at the repo root), Drizzle ORM with the
+      "postgres" driver, migrations in apps/api/drizzle. All data access goes through a
+      CaseStore interface in apps/api/src/store.
+    - OpenAI Responses API with function tools, server side only, model from OPENAI_MODEL.
+    - Both web apps will call the API through NEXT_PUBLIC_API_BASE. packages/demo stays
+      only as a fallback for UI development.
+    - Exposed for the demo with: cloudflared tunnel --url http://127.0.0.1:4000/
+    Remove the sentences saying the backend or API integration is deferred, and the one
+    saying port 3001 must be reassigned. Keep every hard rule and the data model.
+    Add to Hard rules: commits by the team git identity, no Co-authored-by lines.
+    Do not commit; leave the change in the working tree.
+
+Truncated during capture: no.
 
 ## Tool call trail
 
@@ -35,6 +65,17 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 
 | First observed (UTC) | Session | Turn | Tool | Result |
 | --- | --- | --- | --- | --- |
+| 2026-10-31T05:19:00.771Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:10.648Z | 964fb863149d | cdcd9c2b0ec8 | apply_patch | unknown |
+| 2026-10-31T05:19:11.007Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:11.305Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:11.325Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:11.335Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:20.192Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:32.090Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:19:47.422Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:20:11.054Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:20:14.279Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
 
 ## Self-reported external activity
 

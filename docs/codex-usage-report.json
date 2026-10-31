@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T05:06:47.112Z",
+  "generated_at": "2026-10-31T05:20:31.258Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T05:05:19.040Z",
+    "last_recorded_at": "2026-10-31T05:20:17.311Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -20,17 +20,199 @@
     ]
   },
   "totals": {
-    "hook_events": 0,
-    "sessions": 0,
-    "prompts": 0,
-    "tool_invocations": 0,
-    "tool_results": 0,
+    "hook_events": 30,
+    "sessions": 2,
+    "prompts": 2,
+    "tool_invocations": 11,
+    "tool_results": 11,
     "manual_entries": 12
   },
-  "models": [],
-  "tools": [],
-  "prompts": [],
-  "calls": [],
+  "models": [
+    "gpt-6-astra",
+    "unknown"
+  ],
+  "tools": [
+    {
+      "tool": "apply_patch",
+      "category": "codex_builtin",
+      "invocations": 1,
+      "starts_observed": 1,
+      "results_observed": 1,
+      "success_signals": 0,
+      "error_signals": 0,
+      "unknown_results": 1,
+      "no_result_observed": 0
+    },
+    {
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "invocations": 10,
+      "starts_observed": 10,
+      "results_observed": 10,
+      "success_signals": 0,
+      "error_signals": 0,
+      "unknown_results": 10,
+      "no_result_observed": 0
+    }
+  ],
+  "prompts": [
+    {
+      "id": "68507c1e0b3d",
+      "at": "2026-10-31T05:18:37.224Z",
+      "session": "759ea8cb07d0",
+      "turn": "8c352424834e",
+      "content": {
+        "text": "Reply with the single word: ready. Do not run any tools.",
+        "truncated": false
+      },
+      "capture_truncated": false
+    },
+    {
+      "id": "a633d76f12ed",
+      "at": "2026-10-31T05:18:55.971Z",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "content": {
+        "text": "Edit AGENTS.md only.\nIn \"Current stack and scope\": keep apps/customer (3000), apps/customer-service (3001),\npackages/ui, packages/contracts, packages/demo. Add:\n- apps/api: Hono on Node 20+, TypeScript strict, run with tsx, port 4000.\n- PostgreSQL 16 in Docker (docker-compose.yml at the repo root), Drizzle ORM with the\n  \"postgres\" driver, migrations in apps/api/drizzle. All data access goes through a\n  CaseStore interface in apps/api/src/store.\n- OpenAI Responses API with function tools, server side only, model from OPENAI_MODEL.\n- Both web apps will call the API through NEXT_PUBLIC_API_BASE. packages/demo stays\n  only as a fallback for UI development.\n- Exposed for the demo with: cloudflared tunnel --url http://127.0.0.1:4000/\nRemove the sentences saying the backend or API integration is deferred, and the one\nsaying port 3001 must be reassigned. Keep every hard rule and the data model.\nAdd to Hard rules: commits by the team git identity, no Co-authored-by lines.\nDo not commit; leave the change in the working tree.",
+        "truncated": false
+      },
+      "capture_truncated": false
+    }
+  ],
+  "calls": [
+    {
+      "id": "92e544fd7f0f",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:00.771Z",
+      "result_at": "2026-10-31T05:19:01.028Z"
+    },
+    {
+      "id": "e21eb82b8759",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "apply_patch",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:10.648Z",
+      "result_at": "2026-10-31T05:19:10.916Z"
+    },
+    {
+      "id": "11eacfc81362",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:11.007Z",
+      "result_at": "2026-10-31T05:19:11.239Z"
+    },
+    {
+      "id": "e38cac1b8061",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:11.305Z",
+      "result_at": "2026-10-31T05:20:14.219Z"
+    },
+    {
+      "id": "1ea4ccb30a6a",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:11.325Z",
+      "result_at": "2026-10-31T05:20:14.197Z"
+    },
+    {
+      "id": "aa3e065fa743",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:11.335Z",
+      "result_at": "2026-10-31T05:20:14.222Z"
+    },
+    {
+      "id": "0b7a05eb7635",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:20.192Z",
+      "result_at": "2026-10-31T05:19:20.429Z"
+    },
+    {
+      "id": "4b0b622975f4",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:32.090Z",
+      "result_at": "2026-10-31T05:19:35.430Z"
+    },
+    {
+      "id": "885734e8f3e3",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:19:47.422Z",
+      "result_at": "2026-10-31T05:19:47.629Z"
+    },
+    {
+      "id": "573458a27ef3",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:20:11.054Z",
+      "result_at": "2026-10-31T05:20:11.268Z"
+    },
+    {
+      "id": "4606f042f302",
+      "session": "964fb863149d",
+      "turn": "cdcd9c2b0ec8",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T05:20:14.279Z",
+      "result_at": "2026-10-31T05:20:14.486Z"
+    }
+  ],
   "manual_entries": [
     {
       "id": "36ce98085990",

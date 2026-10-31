@@ -16,20 +16,25 @@ Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md
   (port 3000) and `apps/customer-service` (port 3001).
 - Tailwind CSS and official shadcn/ui components in `packages/ui`; shared Zod
   schemas in `packages/contracts` and in-memory fixtures in `packages/demo`.
+- `apps/api`: Hono on Node 20+, strict TypeScript, run with `tsx`, port 4000.
+- PostgreSQL 16 in Docker (`docker-compose.yml` at the repo root), Drizzle ORM
+  with the `postgres` driver, migrations in `apps/api/drizzle`. All data access
+  goes through a `CaseStore` interface in `apps/api/src/store`.
+- OpenAI Responses API with function tools, server side only, model from `OPENAI_MODEL`.
+- Both web apps will call the API through `NEXT_PUBLIC_API_BASE`. `packages/demo`
+  stays only as a fallback for UI development.
+- Exposed for the demo with: `cloudflared tunnel --url http://127.0.0.1:4000`
 - Vitest plus the Node usage-recorder suite. Both run through `pnpm test`.
 - The user explicitly requested Next.js, two sites and shadcn. Preserve this
   implemented frontend; the incoming Vite/no-component-library scaffold plan
   does not authorize replacing it.
-- API discovery/integration and deployment are deferred. Each page owns isolated
-  fixture state. No shared backend or cross-site synchronization exists yet.
 
 For frontend work, read `docs/FRONTEND-BASE.md` for commands and scope,
 `DESIGN.md` for tokens and components, and `docs/FRONTEND-IMPLEMENTATION-PLAN.md`
-for delivery status. For future backend work, read `docs/Architecture.md` and
+for delivery status. For backend work, read `docs/Architecture.md` and
 `prompts/02-build-tasks.md`: they preserve main's Hono/PostgreSQL/Drizzle/tunnel
 integration plan, not implemented services. Adapt their one-package/Vite paths
-to this workspace before implementation. API port 3001 conflicts with CS and
-must be reassigned before running both. Do not replace the frontend or deploy
+to this workspace before implementation. Do not replace the frontend or deploy
 without a new user instruction.
 
 ## Commands (run from repo root)

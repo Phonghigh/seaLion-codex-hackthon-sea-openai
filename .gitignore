@@ -16,3 +16,6 @@ coverage/
 # Frontend build and visual review output
 *.tsbuildinfo
 .impeccable/review/
+
+# Local pnpm store created by sandboxed installs
+.pnpm-store/
