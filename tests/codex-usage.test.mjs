@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +13,8 @@ import { localDirectory, readEvents, record } from '../scripts/codex-usage/store
 
 const scripts = resolve(dirname(fileURLToPath(import.meta.url)), '../scripts/codex-usage');
 const now = '2026-10-31T06:00:00.000Z';
-const fixtureRoot = resolve(tmpdir(), 'codex-usage-synthetic-project');
+const temporaryRoot = await realpath(tmpdir());
+const fixtureRoot = resolve(temporaryRoot, 'codex-usage-synthetic-project');
 
 function hook(overrides = {}, root = fixtureRoot) {
   return normalizeHook({
@@ -32,9 +33,9 @@ function manual(overrides = {}) {
 
 async function sandbox(t, withCli = false) {
   // Short prefix also exercises Windows hosts with the legacy MAX_PATH limit.
-  const root = await mkdtemp(join(tmpdir(), 'sph-'));
+  const root = await mkdtemp(join(temporaryRoot, 'sph-'));
   t.after(async () => {
-    assert.ok(root.startsWith(join(tmpdir(), 'sph-')));
+    assert.ok(root.startsWith(join(temporaryRoot, 'sph-')));
     await rm(root, { recursive: true, force: true });
   });
   if (withCli) await cp(scripts, join(root, 'scripts', 'codex-usage'), { recursive: true });

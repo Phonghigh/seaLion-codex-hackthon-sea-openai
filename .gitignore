@@ -12,3 +12,7 @@ coverage/
 .codex-usage/hooks-backup-*.json
 .codex-usage/**/*.tmp
 .codex/hooks-*.tmp
+
+# Frontend build and visual review output
+*.tsbuildinfo
+.impeccable/review/

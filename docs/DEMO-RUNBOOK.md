@@ -1,5 +1,11 @@
 # seaPilot - Demo runbook (6 min + 2 min Q&A)
 
+Integration target, not a verified runbook for the current checkout. Database,
+API, tunnel, replay and cross-site flows below require future implementation.
+For today's independent Next.js previews use [FRONTEND-BASE.md](FRONTEND-BASE.md)
+(Customer 3000, CS 3001). The API port and frontend route assumptions below must
+be adapted before integration; this merge does not enable them.
+
 Operator: Hoang. Laptop: Minh. Speakers: Nhu (problem, 0:00-0:40), Hoang (scenes),
 Phong (architecture + Codex, 4:50-6:00). Two browser tabs side by side:
 `/customer` and `/cs?demo=1`. All times Asia/Saigon.

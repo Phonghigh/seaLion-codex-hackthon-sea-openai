@@ -1,5 +1,12 @@
 # 02 - Build tasks (Codex prompts)
 
+Merge scope: these are the incoming backend/integration task proposals. The
+existing `apps/customer` and `apps/customer-service` Next.js/shadcn sites supersede
+T01's Vite/no-component-library frontend scaffold. Do not replace the workspace.
+API discovery/integration and deployment remain deferred by the user; adapt paths,
+commands and the API port (3001 is used by CS) before executing these tasks.
+Read `docs/FRONTEND-BASE.md` and root AGENTS.md for current runnable scope.
+
 Revised 31 Oct 12:30 (Asia/Saigon): one package, `src/web` static on ChatGPT Sites,
 `src/api` Hono + Docker Postgres on Minh's Mac behind a Cloudflare tunnel. See AGENTS.md.
 

@@ -1,0 +1,16 @@
+{
+  "name": "@seapilot/demo",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@seapilot/contracts": "workspace:*",
+    "react": "19.3.1"
+  }
+}

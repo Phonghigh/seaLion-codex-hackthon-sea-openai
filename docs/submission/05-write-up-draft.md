@@ -2,7 +2,7 @@
 
 > Source (English translation): [05 – Write-up (draft)](https://docs.google.com/document/d/1iIN2QEa0cxI_5_xbRE3vugApgIfFUR_lxfgfxBI2qkg/edit?tab=t.8pt3qhj8y9uo)
 > Retrieved: 2026-10-31 (Asia/Ho_Chi_Minh). Draft; statements below are source material, not verified implementation or event rules.
-> Review findings and proposed corrections: [review.md](review.md). Existing repository prompts remain the execution copies.
+> The earlier prep review was retired during documentation consolidation. Check current implementation evidence in [FRONTEND-QA.md](../FRONTEND-QA.md) and [codex-log.md](../codex-log.md) before using these draft claims.
 
 Usage: this is the Project Write-up draft for PDF submission through the Google Form. Use English because the final-round panel includes international judges. On event day, Như fills the [ ... ] placeholders with real figures from `docs/codex-log.md` and the README, then exports the PDF at 16:15–16:35.
 Rule: never invent figures. If a real measurement is unavailable, remove the sentence rather than estimating.

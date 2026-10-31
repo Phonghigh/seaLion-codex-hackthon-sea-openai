@@ -11,57 +11,45 @@ WHAT we build: docs/PRODUCT-BRIEF.md (scenes, triage rules, cut-line).
 HOW the demo runs: docs/DEMO-RUNBOOK.md. Topology: docs/Architecture.md.
 Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md.
 
-## Stack (revised 31 Oct 12:30, one developer, do not change without asking)
-One package, two entry points:
-- `src/web/`    React + Vite + TypeScript strict + Tailwind (no component library).
-                Builds to `dist/web`. Published on ChatGPT Sites. Calls the API through
-                `VITE_API_BASE` (the Cloudflare tunnel URL).
-- `src/api/`    Node 20 + Hono + TypeScript strict, run with tsx. Listens on 127.0.0.1:3001.
-                Exposed with `cloudflared tunnel --url http://127.0.0.1:3001`.
-                Also serves `dist/web` at `/` so the tunnel URL alone shows the whole app.
-- `src/shared/` Zod schemas and types imported by both sides.
-- Data: PostgreSQL 16 in Docker (`docker compose up -d db`, port 5432), Drizzle ORM with
-  the `postgres` driver, migrations in `drizzle/`. All access goes through the
-  `CaseStore` interface (`src/api/store/`). Reset = truncate all tables, insert seed.
-  Images: `public/demo/` (seed) and `data/uploads/`, served at `/files/*` without auth.
-- OpenAI SDK, Responses API with function tools. Vitest. `tests/codex-usage.test.mjs`
-  uses node:test and runs under `pnpm test:tooling`, excluded from Vitest.
-No Next.js, no Supabase, no Vercel, no auth, no shadcn.
-Scope today, in this order: Scenes 1-2-3 first (P0). Then triage + routing (T07b) with
-Scene 0 and Scene 4 (P2) - the AI-or-human decision is part of the product, keep it.
-Replay and voice are optional after the freeze.
+## Current stack and scope
+- Two independent Next.js App Router apps with strict TypeScript: `apps/customer`
+  (port 3000) and `apps/customer-service` (port 3001).
+- Tailwind CSS and official shadcn/ui components in `packages/ui`; shared Zod
+  schemas in `packages/contracts` and in-memory fixtures in `packages/demo`.
+- Vitest plus the Node usage-recorder suite. Both run through `pnpm test`.
+- The user explicitly requested Next.js, two sites and shadcn. Preserve this
+  implemented frontend; the incoming Vite/no-component-library scaffold plan
+  does not authorize replacing it.
+- API discovery/integration and deployment are deferred. Each page owns isolated
+  fixture state. No shared backend or cross-site synchronization exists yet.
+
+For frontend work, read `docs/FRONTEND-BASE.md` for commands and scope,
+`DESIGN.md` for tokens and components, and `docs/FRONTEND-IMPLEMENTATION-PLAN.md`
+for delivery status. For future backend work, read `docs/Architecture.md` and
+`prompts/02-build-tasks.md`: they preserve main's Hono/PostgreSQL/Drizzle/tunnel
+integration plan, not implemented services. Adapt their one-package/Vite paths
+to this workspace before implementation. API port 3001 conflicts with CS and
+must be reassigned before running both. Do not replace the frontend or deploy
+without a new user instruction.
 
 ## Commands (run from repo root)
-- install:    pnpm install
-- dev:        pnpm dev            (api on 3001 and web on 5173, concurrently)
-- build:      pnpm build          (vite build -> dist/web)
-- typecheck:  pnpm typecheck
-- lint:       pnpm lint
-- test:       pnpm test           (vitest)
-- tooling:    pnpm test:tooling   (node --test tests/codex-usage.test.mjs)
-- db:         docker compose up -d db; pnpm db:migrate
-- reset:      pnpm db:reset       (same as POST /api/demo/reset)
-- tunnel:     pnpm tunnel         (cloudflared quick tunnel to 3001)
+- install: `pnpm install`
+- dev: `pnpm dev` (Customer 3000, Customer Service 3001)
+- build: `pnpm build` (both independent Next.js builds)
+- typecheck: `pnpm typecheck`
+- lint: `pnpm lint`
+- test: `pnpm test` (Vitest and Node recorder tests)
+- reset: local preview Reset control (no backend reset exists yet)
 Run typecheck, lint and test before you say a task is done.
-
-## Folder layout
-- src/web/pages/Customer.tsx, Cs.tsx; src/web/lib/api.ts (fetch client, VITE_API_BASE)
-- src/api/routes/        demo, conversations, messages, upload, agent, cases, orders, health, files
-- src/api/db/schema.ts   Drizzle schema, single source of truth; drizzle/ migrations
-- src/api/store/CaseStore.ts  interface; postgres.ts adapter; seed.ts loads data/seed.json
-- src/api/ai/            tools.ts, agent.ts, prompt loader (reads prompts/03-runtime-prompt.md)
-- src/api/demo/clock.ts  demo clock (Next day moves it one day)
-- src/shared/            Zod schemas: rows, AgentSuggestion, API envelopes
-- data/seed.json         the "Start" and "After Demo 1" states from prompts/04-demo-data.md
-- docker-compose.yml     postgres:16, volume, POSTGRES_PASSWORD from .env
-- config/, prompts/, docs/codex-log.md as before
+Database, migration and tunnel commands in the integration plan are not available
+in the current package scripts.
 
 ## Hard rules
 1. The repo is PUBLIC. Never commit secrets. Keys live only in `.env` (git-ignored).
    Keep `.env.example` with names only. DATABASE_URL and POSTGRES_PASSWORD are env too;
    a dev-only default may appear in docker-compose.yml.
-2. OPENAI_API_KEY is read only in `src/api`. The web bundle never contains a secret.
-   The demo token is typed once into the demo bar and kept in sessionStorage.
+2. When backend integration is implemented, OPENAI_API_KEY is server-only. The
+   web bundle never contains a secret. The planned demo token stays in sessionStorage.
 3. The AI never writes to the database. It calls tools; the API validates
    the arguments with Zod and runs the query.
 4. Every fact shown to CS has a source: "customer", "system" or "unverified".
@@ -81,11 +69,13 @@ Run typecheck, lint and test before you say a task is done.
     `.codex-usage/events/` contains PUBLIC, redacted prompt/tool evidence and must
     be included with the related work in Git. Run `node scripts/codex-usage/cli.mjs report`
     to regenerate the shared report. Never disable or bypass recording for project work.
-    Keep secrets out of prompts and logs. See docs/codex-usage.md.
+    Fix failed prompt recording before retrying. For activity outside hook coverage,
+    add a truthful manual entry; never invent automatic evidence. Keep secrets out
+    of prompts and logs. See docs/codex-usage.md.
 12. CORS on the API: exact-origin allowlist from env CORS_ORIGINS, never `*`.
     Handle OPTIONS before auth. `GET /files/*` and `GET /api/health` need no token.
 
-## Data model
+## Planned backend data model
 customers, orders, order_items, shipments (parcel_code, status, updated_at),
 cases (id = code e.g. CS001, status, assignee, order_id, title),
 conversations (id, case_id nullable, customer_id, channel, opened_at, mode "human"|"auto"),
@@ -97,7 +87,7 @@ Ids are the fixture strings from prompts/04-demo-data.md (CS001, CONV1, EV1 ...)
 new rows get short random ids with the same prefix. Case status: open ->
 waiting_customer -> waiting_ops -> resolved. Team id "operations", label "Warehouse Ops".
 
-## Decisions that close known gaps (do not re-open)
+## Backend integration decisions from main
 - First case: approving a reply in a conversation with no case creates the case,
   links the conversation, attaches pending evidence, writes case_created.
 - Change detection baseline: every reply_sent event stores `shipment_snapshot`
@@ -110,6 +100,6 @@ waiting_customer -> waiting_ops -> resolved. Team id "operations", label "Wareho
 
 ## Done means
 - typecheck, lint and tests pass
-- the demo still runs after POST /api/demo/reset
+- the frontend demo still runs after its local Reset control; verify backend reset once implemented
 - no secret in the diff
 - docs/codex-log.md updated

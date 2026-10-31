@@ -1,5 +1,12 @@
 # seaPilot - Architecture
 
+Merge status: this document preserves main's planned integrated backend/demo
+architecture. The current code is two Next.js/shadcn apps on ports 3000/3001,
+with independent local fixtures; see [FRONTEND-BASE.md](FRONTEND-BASE.md).
+The Vite/static frontend, API, database and tunnel below are not implemented.
+Before integration, adapt the frontend paths/build assumptions and choose an API
+port that does not collide with Customer Service on 3001. Deployment remains deferred.
+
 Decided 31 Oct 2026, 12:00 (Asia/Saigon). Supersedes every earlier topology note.
 
 ## Topology

@@ -13,12 +13,17 @@ Build direction: 02, AI-Native Products & Operations.
 1. [docs/PRODUCT-BRIEF.md](docs/PRODUCT-BRIEF.md) - what we build, triage rules, 5 scenes, cut-line.
 2. [AGENTS.md](AGENTS.md) - rules Codex follows, stack, data model, locked decisions.
 3. [docs/Architecture.md](docs/Architecture.md) - topology: static web on ChatGPT Sites,
-   API on the demo laptop behind a Cloudflare tunnel, SQLite file.
+   planned Hono API on the demo laptop behind a Cloudflare tunnel, PostgreSQL.
 4. [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) - the 6-minute demo and fallbacks.
 5. [prompts/02-build-tasks.md](prompts/02-build-tasks.md) - Codex prompts, owners, schedule.
 
-Status: planning and Codex tooling are in place; the application scaffold starts at
-12:05. The sections below are filled by T10.
+Status: the two-site Next.js/shadcn frontend is implemented with independent local
+fixtures. Run `pnpm install` and `pnpm dev`: Customer uses port 3000 and Customer
+Service port 3001. See the [frontend runbook](docs/FRONTEND-BASE.md),
+[implementation plan](docs/FRONTEND-IMPLEMENTATION-PLAN.md) and
+[brand guide](docs/BRANDING.md). API integration and deployment remain deferred.
+The incoming backend/demo documents describe future work; their Vite scaffold
+and port choices must be reconciled with the existing frontend before execution.
 
 ## Problem
 ## Solution
