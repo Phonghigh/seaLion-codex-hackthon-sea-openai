@@ -185,3 +185,34 @@ Reset. Scene tests use mocked models and disposable databases:
 ```sh
 DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres OPENAI_API_KEY= pnpm test
 ```
+
+## Detection-only OpenAI setup
+
+Set `TRIAGE_DETECTION_ONLY=1` to classify messages without automatically generating
+or sending replies. The triage result is saved with the routing audit; the backend
+assigns human handling. Existing human-category safeguards still apply. Setting
+`0` (or omitting the setting) retains the original automatic-reply demo behavior.
+This flag does not remove the separate, explicitly invoked Suggest/Approve flow.
+Leave `OPENAI_MODEL` empty and set only `TRIAGE_MODEL` if only detection should have
+a model configured.
+
+Use your OpenAI project's API key in the ignored `apps/api/.env`:
+
+- `OPENAI_API_KEY`: enter locally; never paste in chat or a frontend environment.
+- `OPENAI_PROJECT_ID`: project ID for the triage requests.
+- `TRIAGE_MODEL`: a model available to the project that supports Responses structured outputs.
+- `TRIAGE_DETECTION_ONLY=1`.
+
+The prepared local file uses `gpt-4.1-mini` for triage; access and billing still need
+verification with your project. See [model documentation](https://developers.openai.com/api/docs/models/gpt-4.1-mini)
+and [server-side authentication](https://developers.openai.com/api/reference/overview).
+
+Run `pnpm try:triage` to send one synthetic order-status message. It needs no
+PostgreSQL and neither writes data nor generates a customer reply. Missing key or
+model fails before any request. Provider errors are not printed with credentials.
+
+For the full UI, configure the database variables, migrate/seed a local demo DB,
+start the API, and run both Next apps with `NEXT_PUBLIC_USE_FIXTURES` unset.
+The currently running fixture previews do not call OpenAI. Restart the API after
+changing its environment. No project key, model permissions, billing settings,
+or live-model success is implied by passing mocked tests.

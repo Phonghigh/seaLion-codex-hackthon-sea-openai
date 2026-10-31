@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T08:51:42.351Z (UTC).
+Generated: 2026-10-31T08:53:42.145Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:25:22.309Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:49:54.144Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:25:22.309Z.
 | prompts | 17 |
 | tool_invocations | 500 |
 | tool_results | 486 |
-| manual_entries | 24 |
+| manual_entries | 26 |
 
 Models reported by hooks: gpt-6-astra, unknown.
 
@@ -1143,6 +1143,18 @@ These entries are not automatic evidence and are excluded from tool counts.
     Inspecting and resolving current merge conflicts, preserving recent UI and backend changes. Manual evidence; automatic hook coverage unverified.
 
     Resolve conflicts
+
+- 2026-10-31T08:46:26.730Z — codex-desktop/manual (unverified; 01b857b30487)
+
+    Implementing configurable detection-only triage and project configuration; project access requires user login and local API key entry. No key recorded.
+
+    Help setup OpenAI project and update detection-only feature.
+
+- 2026-10-31T08:49:54.135Z — codex-desktop/manual (unverified; 767664875758)
+
+    User reports adding local API key. Running authorized synthetic detection smoke check without reading or printing credentials.
+
+    I added
 
 
 ## Coverage and interpretation

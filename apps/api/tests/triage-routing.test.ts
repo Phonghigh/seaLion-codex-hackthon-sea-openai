@@ -54,6 +54,21 @@ describe.skipIf(!url)('BE05 scenes and async routing (disposable PostgreSQL, moc
     await vi.waitFor(async () => expect((await detail(id)).triage_pending).toBe(false));
     const data = await detail(id); expect(data.routing).toBeTruthy(); return data;
   };
+  it('detection-only classifies and routes without invoking the reply model or sending a reply', async () => {
+    app = createApp(database.store, { demo, token: 'test-only', triage: { detectionOnly: true, model: 'mock-triage', client: { responses: { create: classify } } }, agent: { model: 'mock-suggest', client: automatic } });
+    const id = await create(); await send(id);
+    const data = await routed(id);
+    expect(classify).toHaveBeenCalledOnce();
+    expect(automatic.responses.create).not.toHaveBeenCalled();
+    expect(data.routing).toMatchObject({ triage: low, decision: { mode: 'human', rule: 'detection_only' } });
+    expect(data.routing.route).toBeTruthy();
+    expect(data.conversation.mode).toBe('human');
+    expect(data.messages).toHaveLength(1);
+    expect(data.messages[0].role).toBe('customer');
+    expect(await database.store.list('cases')).toEqual([]);
+    expect(await database.store.list('tasks')).toEqual([]);
+    expect(await database.store.list('conversation_events', { conversation_id: id })).toEqual([expect.objectContaining({ type: 'routed' })]);
+  });
   it('Scene 0 sends a system-backed AI reply, persists the audit and exposes mode/customer on refresh', async () => {
     const id = await create(); await send(id);
     const data = await routed(id);

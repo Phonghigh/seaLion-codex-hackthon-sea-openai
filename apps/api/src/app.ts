@@ -14,7 +14,7 @@ import { createAgent, type AgentOptions } from './ai/agent';
 import { get_case_context, get_order_shipments, ToolNotFoundError } from './ai/tools';
 
 export const DEFAULT_ORIGINS = 'http://127.0.0.1:3000,http://127.0.0.1:3001,http://localhost:3000,http://localhost:3001';
-export function createApp(store: CaseStore, options: { token?: string; origins?: string; demo?: ReturnType<typeof createDemoService>; agent?: AgentOptions; triage?: TriageOptions; uploadsRoot?: URL } = {}) {
+export function createApp(store: CaseStore, options: { token?: string; origins?: string; demo?: ReturnType<typeof createDemoService>; agent?: AgentOptions; triage?: TriageOptions & { detectionOnly?: boolean }; uploadsRoot?: URL } = {}) {
   const app = new Hono();
   const demo = options.demo ?? createDemoService(store);
   let lastWrite = 0;

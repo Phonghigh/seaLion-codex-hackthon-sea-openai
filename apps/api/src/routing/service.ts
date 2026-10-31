@@ -6,7 +6,7 @@ import { triage, safeTriage, type TriageOptions } from '../ai/triage';
 import type { createAgent } from '../ai/agent';
 import type { DemoClock } from '../demo/clock';
 import type { CaseStore } from '../store/CaseStore';
-import { decideMode, routeHuman } from './decide';
+import { decideMode, routeHuman, type RoutingFacts } from './decide';
 
 async function readFacts(store: CaseStore, conversationId: string) {
   const conversation = await store.get('conversations', conversationId);
@@ -35,7 +35,14 @@ async function readFacts(store: CaseStore, conversationId: string) {
 }
 
 /** In-process demo jobs; model calls never hold a DB transaction or delay message saving. */
-export function createRoutingService(store: CaseStore, clock: DemoClock, now: () => string, agent: ReturnType<typeof createAgent>, options: TriageOptions = {}) {
+export function createRoutingService(store: CaseStore, clock: DemoClock, now: () => string, agent: ReturnType<typeof createAgent>, options: TriageOptions & { detectionOnly?: boolean } = {}) {
+  const detectionOnly = options.detectionOnly ?? process.env.TRIAGE_DETECTION_ONLY === '1';
+  const detectMode = (result: Triage, facts: RoutingFacts) => {
+    const decision = decideMode(result, facts, policy);
+    return detectionOnly && decision.mode === 'ai'
+      ? { mode: 'human' as const, rule: 'detection_only', reason: 'AI classified this request as eligible for automatic handling. Detection-only mode keeps the reply with a human.' }
+      : decision;
+  };
   let epoch = 0;
   const versions = new Map<string, number>();
   const pending = new Set<Promise<void>>();
@@ -43,7 +50,7 @@ export function createRoutingService(store: CaseStore, clock: DemoClock, now: ()
   const routingFacts = (data: NonNullable<Awaited<ReturnType<typeof readFacts>>>, result: Triage) => ({
     ...data.facts, all_facts_from_system: data.facts.all_facts_from_system && ['order_status', 'confirm_receipt'].includes(result.category),
   });
-  async function process(conversationId: string, version: number, started: number) {
+  async function processConversation(conversationId: string, version: number, started: number) {
     const valid = () => epoch === started && versions.get(conversationId) === version;
     const initial = await readFacts(store, conversationId);
     if (!initial || !valid()) return;
@@ -58,7 +65,7 @@ export function createRoutingService(store: CaseStore, clock: DemoClock, now: ()
     if (!valid()) return;
     const fresh = await readFacts(store, conversationId);
     if (!fresh || fresh.message.id !== initial.message.id || !valid()) return;
-    const decision = decideMode(result, routingFacts(fresh, result), policy);
+    const decision = detectMode(result, routingFacts(fresh, result));
     const shipmentSnapshot = JSON.stringify(fresh.shipments.map(item => [item.id, item.status, item.updated_at]));
     const suggestion = decision.mode === 'ai' ? await agent.suggest(conversationId, 'auto') : null;
     if (!valid()) return;
@@ -66,7 +73,7 @@ export function createRoutingService(store: CaseStore, clock: DemoClock, now: ()
       const current = await readFacts(tx, conversationId);
       if (!current || current.message.id !== initial.message.id || !valid()) return;
       // A CS reply, attachment, link, reset or newer customer message may arrive during either model call.
-      let finalDecision = decideMode(result, routingFacts(current, result), policy);
+      let finalDecision = detectMode(result, routingFacts(current, result));
       if (finalDecision.mode === 'ai' && JSON.stringify(current.shipments.map(item => [item.id, item.status, item.updated_at])) !== shipmentSnapshot) {
         finalDecision = { mode: 'human', rule: 'system_data_changed', reason: 'Shipment data changed while the reply was prepared; a human will review the latest status.' };
       }
@@ -93,7 +100,7 @@ export function createRoutingService(store: CaseStore, clock: DemoClock, now: ()
       versions.set(conversationId, version);
       active.set(conversationId, version);
       const started = epoch;
-      const job = process(conversationId, version, started).catch(() => {
+      const job = processConversation(conversationId, version, started).catch(() => {
         // DB failure leaves the saved message in the human inbox. Never emit private provider/DB errors.
         console.warn('Conversation routing could not be saved; human review is required.');
       });
