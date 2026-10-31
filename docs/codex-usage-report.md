@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T08:20:15.671Z (UTC).
+Generated: 2026-10-31T08:25:42.421Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:11:30.269Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:25:22.309Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 986 |
-| sessions | 15 |
-| prompts | 16 |
-| tool_invocations | 470 |
-| tool_results | 456 |
+| hook_events | 1050 |
+| sessions | 16 |
+| prompts | 17 |
+| tool_invocations | 500 |
+| tool_results | 486 |
 | manual_entries | 24 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -22,16 +22,16 @@ Models reported by hooks: gpt-6-astra, unknown.
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | apply_patch | codex_builtin | 22 | 22 | 22 | 0 | 0 | 22 | 0 |
-| Bash | codex_builtin | 377 | 377 | 373 | 0 | 0 | 373 | 4 |
+| Bash | codex_builtin | 397 | 397 | 393 | 0 | 0 | 393 | 4 |
 | clockcurr_time | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
 | mcp__codex_apps__sites__create_site | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__create_source_repository_write_credential | mcp_external | 6 | 6 | 6 | 6 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__deploy_site_version | mcp_external | 6 | 6 | 4 | 4 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__create_source_repository_write_credential | mcp_external | 8 | 8 | 8 | 8 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__deploy_site_version | mcp_external | 8 | 8 | 6 | 6 | 0 | 0 | 2 |
 | mcp__codex_apps__sites__get_deployment_status | mcp_external | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__get_site | mcp_external | 22 | 22 | 20 | 20 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__get_site | mcp_external | 26 | 26 | 24 | 24 | 0 | 0 | 2 |
 | mcp__codex_apps__sites__get_site_version | mcp_external | 4 | 4 | 4 | 4 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__list_site_versions | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__save_site_version | mcp_external | 4 | 4 | 4 | 4 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__save_site_version | mcp_external | 6 | 6 | 6 | 6 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__save_version_and_deploy_private | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__update_site_access | mcp_external | 4 | 4 | 2 | 2 | 0 | 0 | 2 |
 | mcp__cua_repl__js | mcp_external | 6 | 6 | 2 | 2 | 0 | 0 | 4 |
@@ -61,6 +61,7 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T07:34:17.842Z | 91e717519951 | 8cc37a5ad4dc | 94cfd334c5b3 |
 | 2026-10-31T07:52:38.664Z | 31528f7fae02 | 59d10a551782 | 3329b2af80a8 |
 | 2026-10-31T07:55:24.571Z | 05315e47626e | e6a4e0baf643 | 0b2547708934 |
+| 2026-10-31T08:21:37.526Z | 37959ad2a6fc | 8e03dd10590e | fce7f42e1c57 |
 
 ### Prompt 68507c1e0b3d
 
@@ -458,6 +459,12 @@ Truncated during capture: no.
 ### Prompt 0b2547708934
 
     Use the Sites plugin. Task DEPLOY05: build and SAVE a new version of Hoang's two existing Sites from main at commit 4b6a4aa, exactly like DEPLOY04 (scripts/sites/build-export.mjs, NEXT_PUBLIC_USE_FIXTURES unset, NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com)./ Customer: appgprj_6ae58941057881918fe726f0e4859674. Customer Service: appgprj_6ae589671c8481918691460557ce4c4e. Put ~/.nvm/versions/node/v24.22.1/bin first in PATH so node is arm64 (the /usr/local/bin node is x64 and breaks esbuild). You may commit and push to the two Sites hosting repositories as the Sites helper requires; never commit or push this GitHub repository. Do not change access. Save the version; then try to deploy it. If deploy needs approval, stop and report the saved version numbers. Never read apps/api/.env. Append a DEPLOY05 row to docs/codex-log.md. Be fast: skip the full repo test suite, it already passed.
+
+Truncated during capture: no.
+
+### Prompt fce7f42e1c57
+
+    Use the Sites plugin. Task DEPLOY06: build and deploy a new version of Hoang's two existing Sites from main at commit 86b8163, exactly like DEPLOY05 (scripts/sites/build-export.mjs, NEXT_PUBLIC_USE_FIXTURES unset, NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com)./ Customer: appgprj_6ae58941057881918fe726f0e4859674. Customer Service: appgprj_6ae589671c8481918691460557ce4c4e. Put ~/.nvm/versions/node/v24.22.1/bin first in PATH so node is arm64. You may commit and push to the two Sites hosting repositories as the Sites helper requires; never commit or push this GitHub repository. Do not change access. Never read apps/api/.env. Append a DEPLOY06 row to docs/codex-log.md. Be fast: skip the full repo test suite, it already passed. Report the deployed version per Site.
 
 Truncated during capture: no.
 
@@ -937,6 +944,36 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T07:59:21.955Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
 | 2026-10-31T07:59:37.073Z | 05315e47626e | e6a4e0baf643 | apply_patch | unknown |
 | 2026-10-31T07:59:37.287Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T08:21:43.527Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:21:43.540Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:21:43.549Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:21:48.726Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:21:56.344Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T08:21:56.353Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T08:21:58.368Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:11.501Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T08:22:14.654Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T08:22:18.419Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:19.665Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:25.712Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:36.153Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:37.384Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:43.285Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:22:43.584Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:03.126Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:07.563Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:16.343Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:22.821Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:32.704Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:32.991Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__save_site_version | success |
+| 2026-10-31T08:23:45.186Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:23:45.495Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__save_site_version | success |
+| 2026-10-31T08:24:00.114Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
+| 2026-10-31T08:24:00.506Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__deploy_site_version | success |
+| 2026-10-31T08:24:31.885Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__deploy_site_version | success |
+| 2026-10-31T08:25:15.912Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T08:25:15.912Z | 37959ad2a6fc | 8e03dd10590e | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T08:25:17.701Z | 37959ad2a6fc | 8e03dd10590e | Bash | unknown |
 
 ## Self-reported external activity
 
