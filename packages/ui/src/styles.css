@@ -240,3 +240,5 @@ time { font-variant-numeric:tabular-nums; }
 .suggested-reply { border-top:1px solid var(--border); margin-top:18px; padding-top:16px; }
 .suggested-reply strong { font-size:13px; }
 .suggested-reply p { font-size:13px; line-height:1.7; margin-top:6px; white-space:pre-wrap; background:var(--canvas, #f1f5f9); border-radius:10px; padding:10px 12px; }
+.sample-messages { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-bottom:8px; }
+.sample-messages .button, .sample-messages button { font-size:12px; }
