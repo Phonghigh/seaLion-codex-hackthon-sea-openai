@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:06:47.112Z (UTC).
+Generated: 2026-10-31T05:14:12.811Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:05:19.040Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:11:16.370Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:05:19.040Z.
 | prompts | 0 |
 | tool_invocations | 0 |
 | tool_results | 0 |
-| manual_entries | 12 |
+| manual_entries | 13 |
 
 Models reported by hooks: none.
 
@@ -122,6 +122,12 @@ These entries are not automatic evidence and are excluded from tool counts.
     Self-reported merge resolution request. Reviewing the in-progress merge and retaining both branches documentation and event history; automatic hook coverage remains unverified.
 
     I have merged origin/main, please review and resolve conflicts
+
+- 2026-10-31T05:07:00.000Z — Codex/sites-deployment (unverified; 6590c7580447)
+
+    Self-reported request to deploy Customer and Customer Service using Sites. Static Next.js export preparation and two private Site registrations; deployment outcomes recorded separately. No API integration.
+
+    [@Sites](plugin://sites@openai-curated-remote) please deploy 2 sites
 
 
 ## Coverage and interpretation

@@ -16,3 +16,8 @@ coverage/
 # Frontend build and visual review output
 *.tsbuildinfo
 .impeccable/review/
+
+# Static exports and isolated Sites publishing checkouts
+out/
+.sites/
+.pnpm-store/

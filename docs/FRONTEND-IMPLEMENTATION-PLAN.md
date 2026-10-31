@@ -3,7 +3,8 @@
 Status: frontend base and shadcn/branding refinement implemented, 31 October 2026.
 Two independent Next.js sites run with **separate in-memory fixtures**. The user
 explicitly deferred API discovery and integration: no shared HTTP mock service,
-API client, cross-window synchronization or deployment is included in this phase.
+API client or cross-window synchronization is included in this phase. A subsequent
+user request authorized private Sites deployment; see [SITES-DEPLOYMENT.md](SITES-DEPLOYMENT.md).
 See [FRONTEND-BASE.md](FRONTEND-BASE.md) for run instructions and
 [FRONTEND-QA.md](FRONTEND-QA.md) for verification and remaining limits.
 
@@ -383,7 +384,7 @@ behavior is integrated; do not invent backend capabilities in the UI.
 | shadcn and branding refinement | Complete | Official registry controls, cobalt/navy/cyan tokens, original mark/pattern, brand board and documented design system |
 | Frontend verification | Complete within recorded limits | Typecheck, lint, 36 tests, both builds, four viewport sizes and keyboard interaction review |
 | Shared state and API adapter | Deferred by user | Agree contracts and authorization, then implement synchronization across origins |
-| Deployment | Deferred | Separate projects/URLs after an explicit deployment request |
+| Deployment | Complete, owner-private | Separate Customer and CS static Next.js exports on Sites; see SITES-DEPLOYMENT.md |
 | P2/P3 triage and ambiguity | Deferred | Resolve policy/config decisions before implementation |
 
 The next development phase should begin with an explicit integration scope.

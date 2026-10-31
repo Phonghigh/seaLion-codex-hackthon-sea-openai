@@ -4,6 +4,7 @@
 - [FRONTEND-BASE.md](FRONTEND-BASE.md) — implemented two-site frontend and local run instructions.
 - [FRONTEND-IMPLEMENTATION-PLAN.md](FRONTEND-IMPLEMENTATION-PLAN.md) — delivery status and deferred integration.
 - [BRANDING.md](BRANDING.md) — branding assets and shadcn component contract.
+- [SITES-DEPLOYMENT.md](SITES-DEPLOYMENT.md) — private hosted URLs and export workflow.
 - [FRONTEND-QA.md](FRONTEND-QA.md) — checks performed and remaining limits.
 - [Architecture.md](Architecture.md) — planned backend and tunnel topology; integration caveats at the top.
 - [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md) — planned integrated demo and fallbacks.

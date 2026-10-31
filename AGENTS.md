@@ -20,7 +20,8 @@ Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md
 - The user explicitly requested Next.js, two sites and shadcn. Preserve this
   implemented frontend; the incoming Vite/no-component-library scaffold plan
   does not authorize replacing it.
-- API discovery/integration and deployment are deferred. Each page owns isolated
+- API discovery/integration remains deferred. Private Sites deployments are recorded
+  in `docs/SITES-DEPLOYMENT.md`. Each page owns isolated
   fixture state. No shared backend or cross-site synchronization exists yet.
 
 For frontend work, read `docs/FRONTEND-BASE.md` for commands and scope,

@@ -1,8 +1,8 @@
 # Frontend base
 
 Two independent Next.js App Router applications share UI primitives, Zod schemas,
-and deterministic fixture logic. This phase uses the Sites local-only workflow
-and the repository's Impeccable design guidance.
+and deterministic fixture logic. The base uses the repository's Impeccable design guidance. Both apps now also
+have private static Sites deployments; see [SITES-DEPLOYMENT.md](SITES-DEPLOYMENT.md).
 
 ## Run
 

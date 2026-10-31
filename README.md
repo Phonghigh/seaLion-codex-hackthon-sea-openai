@@ -21,7 +21,7 @@ Status: the two-site Next.js/shadcn frontend is implemented with independent loc
 fixtures. Run `pnpm install` and `pnpm dev`: Customer uses port 3000 and Customer
 Service port 3001. See the [frontend runbook](docs/FRONTEND-BASE.md),
 [implementation plan](docs/FRONTEND-IMPLEMENTATION-PLAN.md) and
-[brand guide](docs/BRANDING.md). API integration and deployment remain deferred.
+[brand guide](docs/BRANDING.md). API integration remains deferred. Both apps have [private Sites deployments](docs/SITES-DEPLOYMENT.md).
 The incoming backend/demo documents describe future work; their Vite scaffold
 and port choices must be reconciled with the existing frontend before execution.
 
