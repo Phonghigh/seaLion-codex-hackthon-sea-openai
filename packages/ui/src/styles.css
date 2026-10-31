@@ -33,6 +33,8 @@ textarea { resize:vertical; }
 .brand { display:inline-flex; align-items:center; gap:9px; font-size:23px; font-weight:700; letter-spacing:-.8px; white-space:nowrap; }
 .brand-symbol { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:var(--primary); color:#fff; }
 .brand-dot { color:#67e8f9; }
+.brand-symbol { background:#fff; overflow:hidden; }
+.brand-mark { width:100%; height:100%; object-fit:cover; display:block; }
 .avatar { display:inline-flex; width:36px; height:36px; justify-content:center; align-items:center; flex-shrink:0; border-radius:50%; background:#e3eafb; color:#33558f; font-size:12px; font-weight:600; }
 .avatar-customer { background:#e5f3fa; color:#285e7a; }
 .avatar-small { width:28px; height:28px; font-size:10px; }
@@ -245,7 +247,7 @@ time { font-variant-numeric:tabular-nums; }
 .customer-header { max-width:none; padding-inline:max(24px,calc((100vw - 1096px)/2)); background:var(--navy); color:#fff; position:relative; }
 .customer-header .header-help { color:#c2d0ec; }
 .customer-header .brand, .app-rail .brand { color:#fff; }
-.customer-header .brand-symbol { background:#2457d6; }
+.customer-header .brand-symbol { background:#fff; }
 .customer-header .badge { background:#263c61; color:#dbedff; }
 .app-rail { background:var(--navy); border-color:var(--navy); }
 .app-rail .button-ghost { color:#bdd0ef; }
