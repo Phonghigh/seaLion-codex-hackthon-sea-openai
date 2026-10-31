@@ -68,3 +68,62 @@ The web app stores file paths relative to the API, never the tunnel hostname.
   `CORS_ORIGINS` changes only if the Sites origin changes.
 - Limits: no uptime promise, no SSE. The agent endpoint returns a complete response.
 - Keep the Mac awake, plugged in, notifications off. Phone hotspot as backup.
+
+## Data model (ERD)
+
+```mermaid
+erDiagram
+    customers ||--o{ orders : places
+    customers ||--o{ conversations : opens
+    orders ||--o{ order_items : contains
+    orders ||--o{ shipments : "split into parcels"
+    orders ||--o{ cases : "is subject of"
+    cases ||--o{ conversations : "spans (case_id nullable until linked)"
+    conversations ||--o{ messages : has
+    conversations ||--o{ evidence : "receives (before linking)"
+    cases ||--o{ evidence : "owns (after linking)"
+    cases ||--o{ case_events : "audit log"
+    cases ||--o{ tasks : "escalates to"
+
+    customers { text id PK  text name  text email  text language }
+    orders { text id PK  text customer_id FK  timestamptz placed_at  text status }
+    order_items { text id PK  text order_id FK  text sku  text name  int qty  text parcel_code }
+    shipments { text id PK  text order_id FK  text parcel_code  text carrier  text tracking  text status  timestamptz updated_at }
+    cases { text id PK "CS001"  text order_id FK  text customer_id FK  text title  text status  text assignee  timestamptz created_at }
+    conversations { text id PK "CONV1"  text customer_id FK  text case_id FK "nullable"  text channel  text mode "human|auto"  timestamptz opened_at }
+    messages { text id PK  text conversation_id FK  text role "customer|cs|ai"  text text  text actor  timestamptz created_at }
+    evidence { text id PK "EV1"  text conversation_id FK  text case_id FK "nullable"  text type  text path  text source "customer|system|unverified"  timestamptz created_at }
+    case_events { text id PK  text case_id FK  text type  text actor  jsonb payload  timestamptz created_at }
+    tasks { text id PK  text case_id FK  text team "operations"  text status  jsonb evidence_ids  timestamptz created_at }
+```
+
+Event types: case_created, evidence_added, conversation_linked, assignee_changed,
+shipment_updated, routed, ai_suggestion, auto_reply, reply_sent (payload carries
+`shipment_snapshot`), action_executed, action_failed.
+
+### Why this shape
+- `cases` is the hub. A conversation points to a case, never the other way round, so a
+  customer can open any number of conversations and they all land on one case.
+- `conversations.case_id` is nullable: the new conversation exists before a human
+  confirms the link (Scene 2 banner). Evidence attaches to the conversation first and
+  moves to the case on link, so a photo is never lost and never duplicated.
+- `case_events` is an append-only audit log. Approvals, routing, AI suggestions and
+  action results all land here. It is what the timeline shows and what judges can audit.
+- `reply_sent.payload.shipment_snapshot` is the baseline for "what changed": compare the
+  parcels as they were when CS last answered with `shipments` now. No history table.
+- `shipments` is per parcel, not per order, because the whole story is "parcel A arrived,
+  parcel B did not": the missing-item case lives at parcel level.
+- `tasks` is the hand-off to operations. The reply for Scene 3 is allowed only after this
+  row exists.
+- Text ids equal to fixture codes (CS001, CONV1, EV1) so prompts, tests and the UI speak
+  the same names.
+
+### Where the agent's memory comes from
+The agent is stateless. Its memory is the case, read through three tools on every call:
+1. `find_cases` - which case this customer and order already have (customers, orders, cases).
+2. `get_case_context` - everything on that case: earlier conversations and messages,
+   evidence with sources, the event timeline, open tasks, and `changes_since_last_contact`
+   computed from the last `reply_sent` snapshot vs `shipments`.
+3. `get_order_shipments` - the facts right now, parcel by parcel.
+The model writes nothing back; the API records `ai_suggestion` and the human's decisions
+as events. Chat memory dies with the conversation; case memory does not. That is the product.
