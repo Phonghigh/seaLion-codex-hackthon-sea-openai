@@ -10,9 +10,9 @@ flowchart LR
     Site -->|HTTPS fetch, VITE_API_BASE| Edge[https://xxx.trycloudflare.com]
     subgraph Mac["Demo laptop (Minh, macOS)"]
         Tunnel[cloudflared] --> API[api: Hono on 127.0.0.1:3001]
-        API --> DB[(SQLite file api/data/seapilot.db)]
-        API --> Files[images: api/public/demo + api/data/uploads]
-        API --> Dist[fallback: serves web/dist]
+        API --> DB[(JSON file data/store.json)]
+        API --> Files[images: public/demo + data/uploads]
+        API --> Dist[fallback: serves dist/web]
     end
     Edge --> Tunnel
     API -->|server side| OpenAI[OpenAI Responses API / Decisions API]
@@ -22,7 +22,7 @@ flowchart LR
 |---|---|---|
 | web | ChatGPT Sites (public) | Two screens `/customer` and `/cs`, demo bar. Static. Talks only to `VITE_API_BASE`. |
 | api | Minh's Mac, port 3001 | Routes, Zod validation, CaseStore, agent loop, triage, approvals, CORS, files. |
-| SQLite | file next to api | All demo data. Reset = reload seed. Never exposed. |
+| JSON store | data/store.json next to the api | All demo data. Reset = copy seed over it. Never exposed. |
 | cloudflared | Minh's Mac | Quick tunnel, random hostname, no account. Restart = new URL. |
 | OpenAI | cloud | Only outbound network call during the demo. |
 
@@ -30,7 +30,7 @@ flowchart LR
 - The judged logic (link case, what changed, one question, approve-then-act) lives in
   `api/src/ai` and `api/src/store`. The storage engine is behind `CaseStore`; swap
   the adapter for Postgres later without touching logic.
-- SQLite file: zero install on the demo laptop, deterministic reset, same on macOS and
+- JSON file store: zero install on the demo laptop, deterministic reset, same on macOS and
   Windows dev machines. Postgres adds setup time and no score.
 - Static FE on Sites: public, shareable link. The API serves `web/dist` too, so if
   Sites cannot reach the tunnel (CSP), the tunnel URL alone still shows the full app.

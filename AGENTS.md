@@ -11,56 +11,49 @@ WHAT we build: docs/PRODUCT-BRIEF.md (scenes, triage rules, cut-line).
 HOW the demo runs: docs/DEMO-RUNBOOK.md. Topology: docs/Architecture.md.
 Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md.
 
-## Stack (decided 31 Oct 12:00, do not change without asking)
-Two deployables, one pnpm workspace:
-- `web/`   React + Vite + TypeScript strict + Tailwind + shadcn/ui.
-           Builds to static files. Published on ChatGPT Sites.
-           Calls the API through `VITE_API_BASE` (the Cloudflare tunnel URL).
-- `api/`   Node 20 + Hono + TypeScript strict. Runs on the demo laptop (macOS).
-           Exposed with `cloudflared tunnel --url http://127.0.0.1:3001`.
-           Also serves `web/dist` as a fallback so one tunnel URL shows the whole app.
-- `shared/` Zod schemas and types used by both (`@seapilot/shared`).
-- Data: SQLite file `api/data/seapilot.db` via Drizzle ORM + better-sqlite3.
-  Images: `api/public/demo/` (seed) and `api/data/uploads/` (customer uploads),
-  served by the API at `/files/*` without auth.
-- OpenAI SDK: Responses API with function tools for the agent.
-  Decisions API for triage (T07b), fallback to Responses.
-- Vitest for `api/`, `web/`, `shared/`. `tests/codex-usage.test.mjs` uses node:test
-  and is run by `pnpm test:tooling`, excluded from Vitest.
-No Next.js, no Supabase, no Postgres, no Vercel, no auth.
+## Stack (revised 31 Oct 12:30, one developer, do not change without asking)
+One package, two entry points:
+- `src/web/`    React + Vite + TypeScript strict + Tailwind (no component library).
+                Builds to `dist/web`. Published on ChatGPT Sites. Calls the API through
+                `VITE_API_BASE` (the Cloudflare tunnel URL).
+- `src/api/`    Node 20 + Hono + TypeScript strict, run with tsx. Listens on 127.0.0.1:3001.
+                Exposed with `cloudflared tunnel --url http://127.0.0.1:3001`.
+                Also serves `dist/web` at `/` so the tunnel URL alone shows the whole app.
+- `src/shared/` Zod schemas and types imported by both sides.
+- Data: JSON file `data/store.json` behind the `CaseStore` interface (`src/api/store/`).
+  Reset copies `data/seed.json` over it. Writes go to a temp file then rename.
+  Images: `public/demo/` (seed) and `data/uploads/`, served at `/files/*` without auth.
+- OpenAI SDK, Responses API with function tools. Vitest. `tests/codex-usage.test.mjs`
+  uses node:test and runs under `pnpm test:tooling`, excluded from Vitest.
+No Next.js, no database server, no ORM, no Vercel, no auth, no shadcn.
+Scope today: Scenes 1, 2, 3 only. Triage (T07b), Scene 0, Scene 4, replay, voice are cut.
 
 ## Commands (run from repo root)
 - install:    pnpm install
 - dev:        pnpm dev            (api on 3001 and web on 5173, concurrently)
-- build:      pnpm build          (web/dist + api/dist)
+- build:      pnpm build          (vite build -> dist/web)
 - typecheck:  pnpm typecheck
 - lint:       pnpm lint
-- test:       pnpm test           (vitest, all packages)
+- test:       pnpm test           (vitest)
 - tooling:    pnpm test:tooling   (node --test tests/codex-usage.test.mjs)
 - reset:      pnpm db:reset       (same as POST /api/demo/reset)
 - tunnel:     pnpm tunnel         (cloudflared quick tunnel to 3001)
 Run typecheck, lint and test before you say a task is done.
 
 ## Folder layout
-- web/src/pages/customer/     customer chat screen
-- web/src/pages/cs/           CS workspace, demo bar
-- web/src/lib/api.ts          typed fetch client, base = VITE_API_BASE
-- api/src/routes/             Hono routes: demo, conversations, messages, upload,
-                              agent, cases, orders, health, files
-- api/src/db/schema.ts        Drizzle schema, single source of truth for tables
-- api/src/store/CaseStore.ts  interface; sqlite.ts adapter; seed.ts loads 04-demo-data
-- api/src/ai/                 tools.ts, agent.ts, triage.ts, prompt loader
-- api/src/routing/decide.ts   pure rule engine reading config/*.json
-- api/src/demo/clock.ts       demo clock (Next day moves it one day)
-- shared/src/                 Zod schemas: tables, AgentSuggestion, API envelopes
-- config/                     routing-policy.json, teams.json
-- prompts/                    build prompts and runtime prompt (do not edit unless asked)
-- docs/codex-log.md           log of every Codex task (rule 10)
+- src/web/pages/Customer.tsx, Cs.tsx; src/web/lib/api.ts (fetch client, VITE_API_BASE)
+- src/api/routes/        demo, conversations, messages, upload, agent, cases, orders, health, files
+- src/api/store/CaseStore.ts  interface; json.ts adapter; seed.ts loads data/seed.json
+- src/api/ai/            tools.ts, agent.ts, prompt loader (reads prompts/03-runtime-prompt.md)
+- src/api/demo/clock.ts  demo clock (Next day moves it one day)
+- src/shared/            Zod schemas: rows, AgentSuggestion, API envelopes
+- data/seed.json         the "Start" and "After Demo 1" states from prompts/04-demo-data.md
+- config/, prompts/, docs/codex-log.md as before
 
 ## Hard rules
-1. The repo is PUBLIC. Never commit secrets. Keys live only in `api/.env`
-   (git-ignored). Keep `api/.env.example` and `web/.env.example` with names only.
-2. OPENAI_API_KEY lives only in `api/`. The web bundle never contains a secret.
+1. The repo is PUBLIC. Never commit secrets. Keys live only in `.env` (git-ignored).
+   Keep `.env.example` with names only.
+2. OPENAI_API_KEY is read only in `src/api`. The web bundle never contains a secret.
    The demo token is typed once into the demo bar and kept in sessionStorage.
 3. The AI never writes to the database. It calls tools; the API validates
    the arguments with Zod and runs the query.
