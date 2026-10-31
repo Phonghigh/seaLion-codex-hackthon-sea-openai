@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:41:52.578Z (UTC).
+Generated: 2026-10-31T05:54:18.416Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:41:00.314Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:51:07.046Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 244 |
-| sessions | 5 |
-| prompts | 5 |
-| tool_invocations | 113 |
-| tool_results | 111 |
+| hook_events | 320 |
+| sessions | 6 |
+| prompts | 6 |
+| tool_invocations | 149 |
+| tool_results | 147 |
 | manual_entries | 12 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -22,7 +22,7 @@ Models reported by hooks: gpt-6-astra, unknown.
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | apply_patch | codex_builtin | 11 | 11 | 11 | 0 | 0 | 11 | 0 |
-| Bash | codex_builtin | 94 | 94 | 93 | 0 | 0 | 93 | 1 |
+| Bash | codex_builtin | 130 | 130 | 129 | 0 | 0 | 129 | 1 |
 | mcp__cua_repl__js | mcp_external | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
 | view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
 | webrun | unknown | 6 | 6 | 6 | 0 | 0 | 6 | 0 |
@@ -38,6 +38,7 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T05:20:49.996Z | 5d76cdaab94a | ec04ebeace48 | b944f8530d16 |
 | 2026-10-31T05:28:26.241Z | 6287045ff306 | ec370cbbbad9 | cd9c29830a44 |
 | 2026-10-31T05:35:32.062Z | dbc7154b19a9 | 8c2990faaa54 | dbecd8665862 |
+| 2026-10-31T05:42:11.969Z | b51ab2502b2d | 380a257edb4f | 34ebe701e005 |
 
 ### Prompt 68507c1e0b3d
 
@@ -213,6 +214,37 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt 34ebe701e005
+
+    Read apps/api/README.md and apps/api/src/workspace.ts for the real route shapes and the
+    { ok, data, error } envelope before writing the client. The CS identity switcher maps
+    An -> CS_A and Binh -> CS_B when calling the API. Demo token for local use is in
+    apps/api/.env (DEMO_RESET_TOKEN); never hard-code it in web code.
+
+    Also fix in apps/api: when approve creates a case, write case_created before
+    assignee_changed, and skip assignee_changed when before equals after. Add a test.
+
+    Read AGENTS.md and apps/api routes. In apps/customer and apps/customer-service add
+    src/lib/api.ts: typed fetch client over NEXT_PUBLIC_API_BASE (default
+    [REDACTED URL] using the Zod schemas from @seapilot/contracts. Replace reads and
+    writes that use packages/demo with API calls: conversations, messages, upload or seed
+    image, suggest, link, approve, case panel, demo bar (Reset, Next day, Start from Demo 2
+    with the demo token asked once and kept in sessionStorage). Keep packages/demo behind
+    NEXT_PUBLIC_USE_FIXTURES=1 for offline UI work. Show "Sent" or "Escalated" only after
+    ok: true. Disable approve buttons when ok is false. Poll the conversation every 2 s.
+    Done when pnpm typecheck, lint, test and pnpm build pass, and a scripted check
+    (apps/api/scripts or a vitest test that calls the same api.ts client against the app
+    object) runs Scene 1 -> Next day -> Scene 2 -> Scene 3 three times after Reset with the
+    mocked model. Next dev may not start inside the sandbox (Turbopack FSEvent error); do
+    not fight it, rely on build and the scripted check. Do not commit or push; end with a
+    short report including which UI flows you could not verify visually.
+
+    Add NEXT_PUBLIC_API_BASE and NEXT_PUBLIC_USE_FIXTURES to both apps' .env.example.
+    Environment notes: pnpm 10.28.2 active; Postgres in Docker; an API may be listening on
+    4000, do not kill it. Append a row to docs/codex-log.md. Keep the existing visual design.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -332,6 +364,42 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T05:40:31.750Z | dbc7154b19a9 | 8c2990faaa54 | Bash | unknown |
 | 2026-10-31T05:40:39.705Z | dbc7154b19a9 | 8c2990faaa54 | Bash | unknown |
 | 2026-10-31T05:40:49.891Z | dbc7154b19a9 | 8c2990faaa54 | Bash | unknown |
+| 2026-10-31T05:42:17.830Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:18.104Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:18.337Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:27.017Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:27.283Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:27.540Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:27.776Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:33.849Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:34.108Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:34.341Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:51.046Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:51.351Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:42:57.593Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:43:03.462Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:43:03.741Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:43:17.547Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:43:17.861Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:43:47.944Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:44:28.893Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:45:19.872Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:46:15.295Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:46:22.083Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:47:05.024Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:47:12.433Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:47:12.446Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:47:12.455Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:47:35.234Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:48:03.949Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:48:05.180Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:48:18.044Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:49:17.305Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:49:18.516Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:49:47.791Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:49:59.804Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:50:53.442Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T05:50:53.987Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
 
 ## Self-reported external activity
 

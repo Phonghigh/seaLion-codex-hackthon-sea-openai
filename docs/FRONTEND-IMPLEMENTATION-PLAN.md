@@ -1,6 +1,12 @@
 # seaPilot frontend foundation — implementation plan
 
-Status: frontend base and shadcn/branding refinement implemented, 31 October 2026.
+Current integration update (31 October 2026): both apps now use the Hono API by
+default; the original offline UI remains behind `NEXT_PUBLIC_USE_FIXTURES=1`.
+The user's new integration request supersedes API deferral statements in the
+historical foundation plan below. See [the current runbook](FRONTEND-BASE.md) for
+configuration, completed client/database checks and outstanding visual QA.
+
+Historical foundation status: frontend base and shadcn/branding refinement implemented, 31 October 2026.
 Two independent Next.js sites run with **separate in-memory fixtures**. The user
 explicitly deferred API discovery and integration: no shared HTTP mock service,
 API client, cross-window synchronization or deployment is included in this phase.

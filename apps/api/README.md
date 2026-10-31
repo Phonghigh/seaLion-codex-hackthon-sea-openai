@@ -65,7 +65,8 @@ node --env-file=apps/api/.env -e 'const {spawnSync}=require("node:child_process"
 
 Then `pnpm db:reset` restores Start. Migration changes are generated with
 `pnpm --filter @seapilot/api db:generate`; commit the SQL and Drizzle metadata together.
-The existing frontend remains on its local fixtures until a later integration task.
+Both frontend apps now use the typed API client by default; set
+`NEXT_PUBLIC_USE_FIXTURES=1` for offline UI work. See [the frontend runbook](../../docs/FRONTEND-BASE.md).
 
 ## Agent tools and trial script
 
@@ -144,3 +145,9 @@ Both commands load the existing API `.env` without printing it and require the
 configured PostgreSQL role to create/drop a temporary database. They never reset
 the configured demo database. The curl harness serves the app on an ephemeral
 loopback port and closes only its own server; port 4000 is left alone.
+
+The isolated suite also runs `tests/web-client.test.ts`: both web `src/lib/api.ts`
+clients call the app object for three full Reset → Scene 1 → Next day → Scene 2 →
+Scene 3 cycles with the mocked model. It verifies `CS_A`/`CS_B` identity mapping,
+case-created ordering, no-op assignment suppression, multipart and seed uploads,
+error envelopes and the escalation-before-reply gate.

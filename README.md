@@ -17,13 +17,13 @@ Build direction: 02, AI-Native Products & Operations.
 4. [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) - the 6-minute demo and fallbacks.
 5. [prompts/02-build-tasks.md](prompts/02-build-tasks.md) - Codex prompts, owners, schedule.
 
-Status: the two-site Next.js/shadcn frontend is implemented with independent local
-fixtures. Run `pnpm install` and `pnpm dev`: Customer uses port 3000 and Customer
-Service port 3001. See the [frontend runbook](docs/FRONTEND-BASE.md),
-[implementation plan](docs/FRONTEND-IMPLEMENTATION-PLAN.md) and
-[brand guide](docs/BRANDING.md). API integration and deployment remain deferred.
-The incoming backend/demo documents describe future work; their Vite scaffold
-and port choices must be reconciled with the existing frontend before execution.
+Status: the two-site Next.js/shadcn frontend now calls the Hono/PostgreSQL API.
+Customer uses port 3000, Customer Service 3001, and API 4000. See the
+[frontend runbook](docs/FRONTEND-BASE.md) and [API setup](apps/api/README.md).
+Set `NEXT_PUBLIC_USE_FIXTURES=1` for the original offline previews. Three complete
+client-driven demo cycles pass with a mocked model and disposable PostgreSQL;
+visual browser checks, live-model behavior and deployment remain unverified.
+The incoming one-package/Vite scaffold does not replace these Next.js apps.
 
 ## Problem
 ## Solution

@@ -125,8 +125,8 @@ export function registerWorkspace(app: Hono, store: CaseStore, now: () => string
           const next = Math.max(0, ...cases.map(item => /^CS\d+$/.test(item.id) ? Number(item.id.slice(2)) : 0)) + 1;
           caseId = `CS${String(next).padStart(3, '0')}`;
           await tx.createCase({ id: caseId, customer_id: conversation.customer_id, order_id: order.id, title: body.title, status: 'open', assignee: body.actor, created_at: now() });
-          await tx.linkConversation(conversation.id, caseId, body.actor, now());
           await tx.addEvent({ case_id: caseId, type: 'case_created', actor: body.actor, payload: { conversation_id: conversation.id }, created_at: now() });
+          await tx.linkConversation(conversation.id, caseId, body.actor, now());
         }
         const events = await tx.list('case_events', { case_id: caseId, type: 'ai_suggestion' });
         const tasks = await tx.list('tasks', { case_id: caseId, team: 'operations' });

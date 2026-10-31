@@ -1,9 +1,6 @@
 import { z } from 'zod';
 import type { FunctionTool } from 'openai/resources/responses/responses';
-import {
-  CaseRowSchema, MessageRowSchema, EvidenceRowSchema, CaseEventRowSchema,
-  TaskRowSchema, OrderRowSchema, OrderItemRowSchema, ConversationRowSchema,
-} from '@seapilot/contracts';
+import { CaseRowSchema } from '@seapilot/contracts';
 import type { CaseStore } from '../store/CaseStore';
 
 // Only these two store capabilities are available to model tools.
@@ -15,19 +12,9 @@ export const FindCasesResultSchema = z.array(z.object({
   score: z.number().min(0).max(1), reason: z.string(),
 }));
 export const GetCaseContextArgsSchema = z.object({ case_id: id }).strict();
-export const GetCaseContextResultSchema = z.object({
-  case: CaseRowSchema,
-  conversations: z.array(ConversationRowSchema.pick({ id: true, channel: true, opened_at: true }).extend({ summary: z.string() })),
-  messages: z.array(MessageRowSchema).max(20),
-  evidence: z.array(EvidenceRowSchema.pick({ id: true, type: true, path: true, source: true, created_at: true })),
-  events: z.array(CaseEventRowSchema).max(20), open_tasks: z.array(TaskRowSchema),
-  changes_since_last_contact: z.array(z.object({ parcel_code: z.string(), before: z.string(), after: z.string() })),
-});
+export { CaseContextSchema as GetCaseContextResultSchema, OrderShipmentsSchema as GetOrderShipmentsResultSchema } from '@seapilot/contracts/client';
+import { CaseContextSchema as GetCaseContextResultSchema, OrderShipmentsSchema as GetOrderShipmentsResultSchema } from '@seapilot/contracts/client';
 export const GetOrderShipmentsArgsSchema = z.object({ order_id: id }).strict();
-export const GetOrderShipmentsResultSchema = z.object({
-  order: OrderRowSchema,
-  parcels: z.array(z.object({ parcel_code: z.string(), items: z.array(OrderItemRowSchema), status: z.string(), updated_at: z.iso.datetime({ offset: true }) })),
-});
 
 export class ToolNotFoundError extends Error {}
 export const chronological = <T extends { id: string; created_at: string }>(rows: T[]): T[] =>

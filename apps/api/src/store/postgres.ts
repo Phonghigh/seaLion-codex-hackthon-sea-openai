@@ -93,7 +93,7 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
         await tx.update(tables.evidence).set({ case_id: caseId }).where(eq(tables.evidence.conversation_id, conversationId));
         await inner.updateCase(caseId, { assignee: actor });
         await inner.addEvent({ case_id: caseId, type: 'conversation_linked', actor, payload: { conversation_id: conversationId }, created_at: at });
-        await inner.addEvent({ case_id: caseId, type: 'assignee_changed', actor, payload: { before: target.assignee, after: actor }, created_at: at });
+        if (target.assignee !== actor) await inner.addEvent({ case_id: caseId, type: 'assignee_changed', actor, payload: { before: target.assignee, after: actor }, created_at: at });
       });
     },
     async resetTo(input) {
