@@ -20,29 +20,35 @@ export function CustomerChat() {
   const generation = useRef(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [readError, setReadError] = useState('');
+  const [orderError, setOrderError] = useState('');
+  const [orderLoading, setOrderLoading] = useState(true);
+  const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
   const draft = drafts[selected] ?? '';
   const refresh = useCallback(async () => {
     const version = ++generation.current;
     const [list, shipments] = await Promise.all([api.conversations('CUST001'), api.shipments('DH001')]);
     if (version !== generation.current) return;
-    if (!list.ok) { setError(list.error); setLoading(false); return; }
+    if (shipments.ok) { setOrder(shipments.data); setOrderError(''); } else setOrderError(shipments.error);
+    setOrderLoading(false);
+    if (!list.ok) { setReadError(list.error); setLoading(false); return; }
     const sorted = list.data.sort((a, b) => a.opened_at.localeCompare(b.opened_at));
     setConversations(sorted);
     const id = sorted.some(item => item.id === selected) ? selected : sorted.at(-1)?.id ?? '';
     if (id !== selected) { setSelected(id); setThread(null); setAttachment(''); setFile(null); setDrafts({}); }
-    if (shipments.ok) setOrder(shipments.data);
+
     if (id) {
       const result = await api.conversation(id);
       if (version !== generation.current) return;
-      if (result.ok) setThread(result.data); else { setThread(null); setError(result.error); }
-    } else setThread(null);
+      if (result.ok) { setThread(result.data); setReadError(''); if (shipments.ok) setLastSynced(new Date().toLocaleTimeString()); } else { setThread(null); setReadError(result.error); }
+    } else { setThread(null); setReadError(''); if (shipments.ok) setLastSynced(new Date().toLocaleTimeString()); }
     setLoading(false);
   }, [selected]);
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setTimeout>;
-    const poll = async () => { await refresh(); if (active) timer = setTimeout(poll, 2000); };
+    const poll = async () => { if (!pending.current) await refresh(); if (active) timer = setTimeout(poll, 2000); };
     void poll();
     return () => { active = false; clearTimeout(timer); generation.current += 1; };
   }, [refresh]);
@@ -73,20 +79,20 @@ export function CustomerChat() {
     } finally { await refresh(); pending.current = false; setBusy(false); }
   }
   return <>
-    <header className="customer-header"><Brand /><div className="row"><span className="header-help">A little help, without starting over.</span><Badge tone="green">Connected demo</Badge><Avatar name="Lan Nguyen" /></div></header>
+    <header className="customer-header"><Brand /><div className="row"><span className="header-help">Customer support</span><Badge>Demo</Badge><Badge role="status" tone={readError || orderError ? 'amber' : loading ? 'neutral' : 'green'}>{readError || orderError ? (lastSynced ? 'Reconnecting' : 'Unavailable') : loading ? 'Connecting…' : 'Connected'}</Badge><Avatar name="Lan Nguyen" /></div></header>
     <main id="main" className="customer-main">
-      <div className="customer-intro"><div><h1>We’re here to help, Lan.</h1><p>One conversation closer to getting things sorted.</p></div><Button variant="outline" onClick={() => void newConversation()} disabled={busy || loading}><Plus />New conversation</Button></div>
+      <div className="customer-intro"><div><h1>Hi Lan. Let’s get it sorted.</h1><p>Your order, your messages, and a team ready to pick up where you left off.</p></div><Button variant="outline" onClick={() => void newConversation()} disabled={busy || loading}><Plus />New conversation</Button></div>
       <div className="customer-grid">
         <Card className="customer-chat" role="region" aria-label="Support conversation">
-          <div className="chat-header"><div className="row"><span className="brand-symbol"><MessageSquare size={18} /></span><div><h2>Your support team</h2><p className="muted small">We’ll keep the context, so you don’t have to.</p></div></div><Badge>{order?.order.id ?? 'Order'}</Badge></div>
-          <div className="customer-messages" role="log" aria-label="Messages" aria-live="polite">
+          <div className="chat-header"><div className="row"><span className="brand-symbol"><MessageSquare size={18} /></span><div><h2>Conversation with support</h2><p className="muted small">Your earlier messages and attachments stay on file.</p></div></div><Badge>{order?.order.id ?? 'Order'}</Badge></div>
+          {readError && <Alert variant="destructive"><AlertDescription>Could not refresh conversations. {readError}<Button variant="outline" size="sm" disabled={busy} onClick={() => void refresh()}>Retry conversations</Button></AlertDescription></Alert>}<div className="customer-messages" role="log" aria-label="Messages" aria-live="polite">
             <div className="day-divider">{thread ? `${formatTime(thread.conversation.opened_at)} · ${thread.conversation.id}` : loading ? 'Loading conversations…' : 'New conversation'}</div>
-            {!thread?.messages.length && <EmptyState title="What can we help with?">{selected ? 'Tell us what happened with your order.' : 'Start a new conversation to contact support.'} Your earlier conversations stay on file.</EmptyState>}
+            {!loading && !readError && !thread?.messages.length && <EmptyState title="What can we help with?">{selected ? 'Tell us what happened with your order.' : 'Start a new conversation to contact support.'} Your earlier conversations stay on file.</EmptyState>}
             {thread?.messages.map(message => <article key={message.id} className={`message ${message.role === 'customer' ? 'own' : ''}`}><Avatar small name={message.role === 'customer' ? 'Lan Nguyen' : actorName(message.actor)} /><div className="message-body"><div className="message-meta"><strong>{message.role === 'customer' ? 'You' : `${actorName(message.actor)} · Support`}</strong><time>{formatTime(message.created_at)}</time><CheckCheck size={12} aria-label="Saved" /></div><div className="bubble">{message.text}</div></div></article>)}
             <div className="evidence-grid">{thread?.evidence.map(item => <Button variant="outline" key={item.id} onClick={() => setEvidence(item)}><Paperclip />{item.id} · {item.path.includes('/demo/') ? 'Sample image' : 'Image'}</Button>)}</div>
           </div>
           <form className="composer" onSubmit={event => { event.preventDefault(); void send(); }}>
-            <div className="composer-box"><Label className="sr-only" htmlFor="customer-message">Your message</Label><Textarea id="customer-message" placeholder={selected ? 'Tell us what’s on your mind…' : 'Start a new conversation first'} maxLength={4000} value={draft} onChange={e => setDrafts(previous => ({ ...previous, [selected]: e.target.value }))} disabled={busy || !selected} />
+            <div className="composer-box"><Label className="sr-only" htmlFor="customer-message">Your message</Label><Textarea id="customer-message" placeholder={selected ? 'Write your message…' : 'Start a new conversation first'} maxLength={4000} value={draft} onChange={e => setDrafts(previous => ({ ...previous, [selected]: e.target.value }))} disabled={busy || !selected} />
               <div className="composer-tools"><Button variant="ghost" size="sm" aria-expanded={pickerOpen} onClick={() => setPickerOpen(!pickerOpen)} disabled={busy || !selected}><Paperclip />{file ? file.name : attachment ? '1 sample attached' : 'Attach image'}</Button><Button type="submit" disabled={busy || !selected || (!draft.trim() && !attachment && !file)}>{busy ? 'Sending…' : 'Send'}<ArrowUp /></Button></div>
               {pickerOpen && <div className="attachment-picker"><Label htmlFor="customer-file">Upload an image</Label><Input key={file?.name ?? 'empty'} id="customer-file" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { setFile(event.target.files?.[0] ?? null); setAttachment(''); }} /><Label htmlFor="customer-attachment" className="small">Or use a demo image</Label><Select value={attachment || 'none'} onValueChange={value => { setAttachment(value === 'none' ? '' : value as 'parcel_a' | 'parcel_b_open'); setFile(null); }} disabled={busy}><SelectTrigger id="customer-attachment"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="none">Choose a sample</SelectItem><SelectItem value="parcel_a">Parcel A · shipping label</SelectItem><SelectItem value="parcel_b_open">Parcel B · opened parcel</SelectItem></SelectContent></Select>{(attachment || file) && <Button variant="ghost" size="icon" aria-label="Remove attachment" onClick={() => { setAttachment(''); setFile(null); }}><X /></Button>}<p className="muted small">JPEG, PNG or WebP, up to 10 MiB. Sample images are labeled illustrations.</p></div>}
             </div>
@@ -94,11 +100,11 @@ export function CustomerChat() {
             <p className="status-note" role="status">{notice}</p>{error && <Alert variant="destructive" className="error-note"><AlertDescription>{error}</AlertDescription></Alert>}
           </form>
         </Card>
-        <aside className="customer-aside" aria-label="Order context"><Card className="order-aside"><div className="row between"><h2>Your order</h2><Package size={18} className="muted" /></div><p className="order-meta">{order?.order.id ?? 'Loading order…'} · {order?.parcels.length ?? 0} parcels</p>{order?.parcels.map(parcel => <div className="product-row" key={parcel.parcel_code}><div className="product-mark"><Package size={24} strokeWidth={1.3} /></div><div><p className="product-name">{parcel.items.map(item => item.name).join(', ')}</p><p className="product-detail">Parcel {parcel.parcel_code}</p><Badge tone={parcel.status === 'delivered' ? 'green' : 'amber'}>{parcel.status.replaceAll('_', ' ')}</Badge></div></div>)}<p className="order-note"><Truck size={15} style={{ display: 'inline', marginRight: 6 }} />Your items travel separately. We can help if something is missing from a delivered parcel.</p></Card>
-          <div className="support-note"><h3>A fresh chat. The same context.</h3><p>You don’t need to send your story or attachments again. Your support team can pick up where you left off.</p></div>
+        <aside className="customer-aside" aria-label="Order context"><Card className="order-aside"><div className="row between"><h2>Your order</h2><Package size={18} className="muted" /></div><p className="order-meta">{order ? `${order.order.id} · ${order.parcels.length} parcels` : orderLoading ? 'Loading order…' : 'Order unavailable'}</p>{orderError && <Alert variant="destructive"><AlertDescription>{order ? 'Showing previously loaded order details. They may be out of date. ' : 'Could not load your order. '}{orderError}<Button variant="outline" size="sm" disabled={busy} onClick={() => void refresh()}>Retry order</Button></AlertDescription></Alert>}{order?.parcels.map(parcel => <div className="product-row" key={parcel.parcel_code}><div className="product-mark"><Package size={24} strokeWidth={1.3} /></div><div><p className="product-name">{parcel.items.map(item => item.name).join(', ')}</p><p className="product-detail">Parcel {parcel.parcel_code}</p><Badge tone={parcel.status === 'delivered' ? 'green' : 'amber'}>{parcel.status.replaceAll('_', ' ')}</Badge></div></div>)}<p className="order-note"><Truck size={15} style={{ display: 'inline', marginRight: 6 }} />Your items travel separately. We can help if something is missing from a delivered parcel.</p></Card>
+          <div className="support-note"><h3>No need to start over.</h3><p>You don’t need to send your story or attachments again. Your support team can pick up where you left off.</p></div>
           <Accordion type="single" collapsible className="customer-history"><AccordionItem value="history"><AccordionTrigger>Earlier conversations ({conversations.length})</AccordionTrigger><AccordionContent>{conversations.map(c => <Button key={c.id} size="sm" disabled={busy} variant={selected === c.id ? 'secondary' : 'outline'} onClick={() => { generation.current += 1; setSelected(c.id); setThread(null); setAttachment(''); setFile(null); }}>{c.id} · {formatTime(c.opened_at)}</Button>)}</AccordionContent></AccordionItem></Accordion>
         </aside>
-      </div><div className="local-notice">Connected to your support team. Messages refresh every 2 seconds.</div>
+      </div><div className="local-notice">{readError || orderError ? 'Connection interrupted. Retrying automatically.' : 'Messages refresh automatically.'} {lastSynced && `Last synced ${lastSynced}.`}</div>
     </main>
     <Sheet open={!!evidence} onOpenChange={open => !open && setEvidence(null)} title="Conversation attachment" description="Customer-supplied evidence. Seed images are illustrative.">{evidence && <div className="case-section"><Image unoptimized width={640} height={480} src={api.fileUrl(evidence.path)} alt={`Customer attachment ${evidence.id}`} style={{ width: '100%', height: 'auto' }} /><Badge tone="blue">{evidence.source}</Badge><p>{formatTime(evidence.created_at)}</p></div>}</Sheet>
   </>;

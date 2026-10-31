@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T06:31:43.443Z (UTC).
+Generated: 2026-10-31T07:36:13.836Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:31:26.156Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:35:50.202Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:31:26.156Z.
 | prompts | 9 |
 | tool_invocations | 275 |
 | tool_results | 268 |
-| manual_entries | 15 |
+| manual_entries | 19 |
 
 Models reported by hooks: gpt-6-astra, unknown.
 
@@ -748,6 +748,30 @@ These entries are not automatic evidence and are excluded from tool counts.
     Resolve in-progress main merge of origin/feat/front-end. Preserve main integrated API/frontend clients and canonical migration; retain Sites static export with fixture switch, merge logs and all evidence. Manual entry does not assert live hook coverage.
 
     Resolve conflicts
+
+- 2026-10-31T07:10:17.886Z — codex-desktop/manual (unverified; 7a7b58ff3f59)
+
+    Installed repository UI/UX Pro Max skill from pinned upstream; performed source-based UX review and documented proposed improvements only. Current turn hook coverage not verified; this is manual evidence, not automatic tool evidence.
+
+    Add skill https://github.com/nextlevelbuilder/ui-ux-pro-max-skill then using this skill: Analyze current UX/UI; Spread out current limit; Spread out suggestion update; Do not implement when I haven't approved
+
+- 2026-10-31T07:13:26.341Z — codex-desktop/manual (unverified; 02336b3433b3)
+
+    Approval interpreted as Package A UX01–UX05 from UI-UX-REVIEW.md. Implementing draft preservation, regeneration review, connection/recovery feedback and compact-screen Suggest. Manual evidence; current-turn automatic hook coverage unverified.
+
+    Approve
+
+- 2026-10-31T07:23:09.985Z — codex-desktop/manual (unverified; 25cc12e0eed9)
+
+    Redesigning both sites with stronger Sea identity while retaining shadcn and approved workflows. Manual evidence; not a claim of automatic hook coverage.
+
+    Please refractor UI, current UI is not good, too simple, too AI. Direction: More expressive color and a stronger Sea identity.
+
+- 2026-10-31T07:35:50.194Z — codex-desktop/manual (unverified; 7842bc94d9ce)
+
+    Starting local sites for UI verification. Manual evidence; automatic hook coverage unverified.
+
+    run for me
 
 
 ## Coverage and interpretation

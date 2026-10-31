@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T06:31:43.443Z",
+  "generated_at": "2026-10-31T07:36:13.836Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T06:31:26.156Z",
+    "last_recorded_at": "2026-10-31T07:35:50.202Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 9,
     "tool_invocations": 275,
     "tool_results": 268,
-    "manual_entries": 15
+    "manual_entries": 19
   },
   "models": [
     "gpt-6-astra",
@@ -3788,6 +3788,66 @@
       },
       "note": {
         "text": "Resolve in-progress main merge of origin/feat/front-end. Preserve main integrated API/frontend clients and canonical migration; retain Sites static export with fixture switch, merge logs and all evidence. Manual entry does not assert live hook coverage.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "7a7b58ff3f59",
+      "recorded_at": "2026-10-31T07:10:17.918Z",
+      "occurred_at": "2026-10-31T07:10:17.886Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Add skill https://github.com/nextlevelbuilder/ui-ux-pro-max-skill then using this skill: Analyze current UX/UI; Spread out current limit; Spread out suggestion update; Do not implement when I haven't approved",
+        "truncated": false
+      },
+      "note": {
+        "text": "Installed repository UI/UX Pro Max skill from pinned upstream; performed source-based UX review and documented proposed improvements only. Current turn hook coverage not verified; this is manual evidence, not automatic tool evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "02336b3433b3",
+      "recorded_at": "2026-10-31T07:13:26.375Z",
+      "occurred_at": "2026-10-31T07:13:26.341Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Approve",
+        "truncated": false
+      },
+      "note": {
+        "text": "Approval interpreted as Package A UX01–UX05 from UI-UX-REVIEW.md. Implementing draft preservation, regeneration review, connection/recovery feedback and compact-screen Suggest. Manual evidence; current-turn automatic hook coverage unverified.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "25cc12e0eed9",
+      "recorded_at": "2026-10-31T07:23:10.019Z",
+      "occurred_at": "2026-10-31T07:23:09.985Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Please refractor UI, current UI is not good, too simple, too AI. Direction: More expressive color and a stronger Sea identity.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Redesigning both sites with stronger Sea identity while retaining shadcn and approved workflows. Manual evidence; not a claim of automatic hook coverage.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "7842bc94d9ce",
+      "recorded_at": "2026-10-31T07:35:50.202Z",
+      "occurred_at": "2026-10-31T07:35:50.194Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "run for me",
+        "truncated": false
+      },
+      "note": {
+        "text": "Starting local sites for UI verification. Manual evidence; automatic hook coverage unverified.",
         "truncated": false
       }
     }

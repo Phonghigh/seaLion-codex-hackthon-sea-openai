@@ -109,3 +109,26 @@ earlier fixture-only releases. Static export is supported with
 and retains `NEXT_PUBLIC_USE_FIXTURES`. A future API-mode publication needs a
 reachable `NEXT_PUBLIC_API_BASE` and matching API CORS origins. This merge does
 not publish or change the hosted versions.
+
+
+## Draft recovery and connection feedback
+
+CS draft text and new-case titles survive switching conversations within the current
+page. Approval readiness does not: run Suggest again after returning to a thread.
+Generating a different reply preserves existing text and asks whether to replace it
+or keep the edited draft. Closing the comparison keeps approval blocked until that
+choice is reviewed. Failed generation preserves text and disables approval.
+Drafts are held in memory, not local storage; reload and local demo reset/jump clear
+them. Advancing the day retains text and invalidates the suggestion.
+
+The Demo badge is independent of connection status. Customer conversation and order
+read errors have contextual Retry controls; stale orders remain visibly marked.
+Successful polling clears read errors without clearing unrelated send errors.
+
+### Sea visual refactor
+
+The current visual specification is root `DESIGN.md`: cobalt customer welcome,
+midnight CS navigation, cool work surfaces, existing mascot, and mobile CS branding.
+The visual refactor applies to API and fixture components; the hosted fixture builds
+are unchanged until explicitly redeployed. Local visual evidence is in
+`.impeccable/review/sea-redesign/` (ignored review artifacts).

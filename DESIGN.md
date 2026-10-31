@@ -2,44 +2,54 @@
 name: seaPilot
 description: Calm customer support and evidence-led case work.
 colors:
-  navy: "#101d3a"
-  signal: "#67e8f9"
-  primary: "#2457d6"
-  primary-hover: "#1c43a6"
+  welcome: "#1f4dcc"
+  welcome-copy: "#deebff"
+  change-bg: "#dff3f4"
+  change-ink: "#174c57"
+  navy: "#102746"
+  signal: "#79e6ec"
+  primary: "#2254db"
+  primary-hover: "#1943b6"
   on-primary: "#ffffff"
-  ink: "#17243e"
-  muted: "#58677e"
-  canvas: "#f4f7fc"
+  ink: "#16243c"
+  muted: "#5d6c80"
+  canvas: "#eef3f8"
   surface: "#ffffff"
-  rail: "#edf2fb"
-  border: "#dce3ef"
-  focus: "#2457d6"
-  secondary: "#e9efff"
-  secondary-hover: "#dce6ff"
-  source-system-bg: "#e8f4ed"
+  rail: "#e8effa"
+  border: "#d9e2ec"
+  focus: "#2254db"
+  secondary: "#e8effa"
+  secondary-hover: "#dce6f7"
+  source-system-bg: "#e7f3ec"
   source-system-ink: "#22674f"
-  source-customer-bg: "#eaf0f9"
-  source-customer-ink: "#3b5e8d"
-  source-unverified-bg: "#fff3df"
+  source-customer-bg: "#e8effb"
+  source-customer-ink: "#365d94"
+  source-unverified-bg: "#fff2da"
   source-unverified-ink: "#89541a"
-  neutral-badge-bg: "#eef1ef"
-  neutral-badge-ink: "#58665e"
+  neutral-badge-bg: "#edf1f5"
+  neutral-badge-ink: "#526171"
   error: "#a52e35"
 typography:
+  display:
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif"
+    fontSize: "34px"
+    fontWeight: 700
+    lineHeight: 1.15
+    letterSpacing: "-1px"
   body:
-    fontFamily: "Arial, Helvetica, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.5
   label:
-    fontFamily: "Arial, Helvetica, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif"
     fontSize: "13px"
     fontWeight: 600
     lineHeight: 1.35
 rounded:
   control: "8px"
-  composer: "10px"
-  panel: "12px"
+  composer: "12px"
+  panel: "14px"
   chat: "14px"
   badge: "5px"
 spacing:
@@ -83,89 +93,87 @@ components:
 
 **Creative North Star: "Continuity in blue"**
 
-The shared interface uses cobalt actions, midnight brand framing, small cyan accents and cool light working surfaces. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Both use familiar task controls and precise status copy.
+The shared interface uses expressive cobalt, midnight navigation, small cyan accents and chalk-white working surfaces to strengthen the Sea team identity. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Familiar controls, strong weight hierarchy and precise status copy keep the conversation central.
 
-This is a code-led record of the current local frontend. Source files are `packages/ui/src/styles.css`, `packages/ui/src/index.tsx`, the official shadcn sources in `packages/ui/src/components/` and the components in both apps. Page strategy remains in `.impeccable/surfaces/`; this document records shared visual behavior.
+This records the approved “More expressive color and a stronger Sea identity” direction as implemented in `packages/ui/src/styles.css`, shared shadcn components and both apps. The existing seaLion mascot remains the brand asset. Surface strategy and the direction seed reference (`seed:9d89fc1ae9991f84`) live in `.impeccable/surfaces/`.
 
 **Key Characteristics:**
-- Cobalt actions on light surfaces, with midnight and cyan brand framing.
-- An original connected-path mark and pattern express continuity between contacts.
+- Cobalt welcome and actions, midnight agent navigation, small cyan brand accents.
+- Existing seaLion mascot paired with the seaPilot wordmark.
 - Spacious customer conversation; compact agent workspace.
-- Source labels, explicit approval controls and honest demo status.
+- Visible fact sources, explicit approval controls and accurate API or fixture status.
 
 ## Colors
 
 ### Primary
 
-Cobalt identifies primary actions and active navigation. A darker cobalt marks hover. Pale blue secondary buttons offer a quieter route into a draft. The focus color provides a visible keyboard outline.
+Cobalt marks primary actions, keyboard focus and the customer's outgoing bubbles. A separate welcome cobalt fills the customer introduction, with white headings and pale blue supporting text. Primary hover darkens the action color. Secondary buttons use the pale `rail` surface.
 
 ### Brand framing
 
-Midnight navy frames the Customer header and CS navigation rail. Signal cyan accents the original mark and connected-path motif; never use cyan as body text on white. The palette takes visual cues from the Sea × OpenAI Codex Hackathon reference, while the mark and pattern are original seaPilot assets. See `docs/BRANDING.md` and `docs/brand/seaPilot-brand-board.svg`; these are not partner logos or an endorsement.
+Midnight navy fills the CS navigation rail. The customer header is white above the cobalt welcome band. Signal cyan accents the wordmark dot on the dark rail. Preserve the existing mascot; do not invent a replacement logo or imply a partner endorsement.
 
 ### Neutral
 
-White surfaces sit on a cool pale canvas. The `rail` token is a light hover/empty-state surface; the actual navigation rail uses `navy`. Dark blue ink carries content; muted blue-gray supports metadata. Light borders divide working panes without heavy framing.
+White work areas sit against a cool canvas. The `rail` token is a light interaction surface, while the actual navigation rail uses `navy`. Ink carries content; muted blue-gray carries metadata. Light borders divide the panes. Selected queue rows are white with a blue border against the tinted inbox.
 
 ### Semantic accents
 
-System facts use green badges, customer claims use blue, and unverified claims use amber. Neutral badges carry identifiers and fixture labels. Error copy uses the error token. Always pair these colors with visible text.
+System facts use green badges, customer claims use blue, and unverified claims use amber. Neutral badges carry identifiers. Error copy uses the error token. Shipment changes receive a pale cyan block with dark teal copy. Pair every state color with visible text.
 
 **The Source Label Rule.** Preserve the visible source word; color alone never establishes a fact's provenance.
 
 ## Typography
 
-The current UI body and controls use Arial with Helvetica and sans-serif fallbacks. Semibold labels separate actions and section headings from regular prose. Timestamps use tabular numerals.
+Body and controls use the platform system stack: `-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`. There is no external font dependency. Body copy is 14px/1.5; buttons are 13px/1.35 at weight 600. Timestamps use tabular numerals.
 
-Implemented hierarchy: the customer introduction is 36px, reducing to 29px on mobile; the workspace heading is 20px, reducing to 18px. Conversation bubbles in both sites use 16px with 1.7 line-height; agent density comes from pane structure and metadata, not smaller message text. Mobile composer text is 16px. These describe the build, not a new display-type standard. Compact metadata and badges currently descend to 9–11px; do not extend that density to new essential content without a legibility review.
+The customer introduction is 34px/1.15 at weight 700 with -1px tracking; it becomes 29px below 901px and 30px below 768px with -0.7px tracking. The workspace title is 22px. On mobile it remains available to screen readers while the visible header shows the mascot and a 20px seaPilot wordmark. Section headings range from 14–17px at weight 650. Conversation bubbles are 15px/1.7. Metadata and badges are mainly 11–12px; queue timestamps are 10px. Mobile composer text is 16px. Keep essential message content at the readable conversation scale.
 
 ## Layout
 
-The customer site has an 80px header and a centered main container capped at 1120px including 32px side padding. Its chat and 286px order aside use a 24px gap. Below 768px, chat comes first, the aside follows in normal flow, and side padding becomes 16px. The order panel is not collapsible in the current build; earlier conversations use the shared shadcn Accordion. Mobile message height uses `clamp(220px,32dvh,320px)`.
+The customer header is at least 76px tall. The main container is capped at 1240px including 28px side padding, with a 28px top margin. A cobalt welcome band uses 32px by 36px padding. The conversation and 300px order aside share a 24px gap. At 900px and below the aside becomes 260px and the gap 18px. Below 768px the chat and order aside stack, page padding becomes 16px and the welcome content stacks. Customer messages use a 320px scroll area on desktop and `clamp(260px,40dvh,390px)` on mobile.
 
-The agent workspace fills `100dvh`. A 76px rail precedes a 248px inbox, flexible thread with a 320px minimum, and 370px case pane. At 1600px, the inbox and case pane grow to 290px and 420px. Below 1280px the case pane moves into a right-side sheet and the inbox is 240px. Below 768px the rail disappears and either inbox or selected thread occupies the width. Each long pane scrolls independently; composers remain outside message scroll regions.
+The CS workspace fills `100dvh`. Its labelled navy rail is 188px wide at 1400px and above; from 768–1399px it is a 72px icon rail. The columns are a 260px inbox, flexible thread with a 300px minimum, and 330px case context. At 1600px they become 290px, at least 400px, and 380px. Below 1280px the case context moves into a right-side sheet and the inbox becomes 250px. Below 768px the rail disappears and either inbox or selected thread fills the width. Long panes scroll independently, with the composer following the message region. The sheet is at most 460px wide and becomes full viewport width on mobile.
 
-Spacing centers on 8px, 16px and 24px with contextual 10px, 12px, 14px, 20px and 22px steps. Standard buttons are at least 40px tall, increasing to 44px on mobile. Compact buttons also maintain 40px desktop and 44px mobile minimum heights. Mobile filter tabs are at least 44px tall, and icon buttons are 44px wide.
+Spacing centers on 8px, 16px and 24px with contextual 10px, 12px, 14px, 20px, 22px, 26px and 28px steps. Standard and small buttons are at least 40px tall, increasing to 44px on mobile. Mobile tabs and icon controls also use 44px targets.
 
 ## Elevation & Depth
 
-Pane borders and tonal surfaces provide most depth. Cards are flat. The right-side sheet uses a structural shadow (`-8px 0 32px rgb(0 0 0 / 12%)`) above a dim overlay (`rgb(18 38 30 / 35%)`). Select popovers use the registry overlay shadow; ordinary cards and buttons suppress registry shadows. Composer focus adds a small tonal ring rather than elevating the whole form.
+Pane borders and tonal surfaces provide depth. Ordinary cards and buttons suppress shadows. The right-side sheet uses `-8px 0 32px rgb(0 0 0 / 12%)` above a `rgb(16 39 70 / 35%)` overlay. Registry popovers retain their overlay treatment. Composer focus changes its border and adds a 2px pale blue outline with a 1px offset.
 
 **The Flat Surface Rule.** Use borders and tonal differences for ordinary containers; reserve the structural shadow for overlays.
 
 ## Shapes
 
-Controls use softly rounded corners, with a larger radius for the composer and prominent customer panels. Badges have compact corners; avatars are circular. Message bubbles have one square upper corner indicating the sender side. Evidence tiles crop their illustration region within a small bordered frame. Keep these shapes functional and consistent across both sites.
+Controls use 8px corners, composers 12px, chat and order panels 14px, and the desktop welcome band 16px. Badges use 5px corners, evidence tiles 10px, and avatars are circular. Bubbles have a tighter 3px upper corner on the sender side and 14px elsewhere. Case sections remain flat, divided rectangles.
 
 ## Components
 
 ### Component foundation
 
-Use the owned official shadcn New York components: Button, Badge, Card, Input, Textarea, Label, Select, Tabs, Accordion, Avatar, Sheet and Alert. Product wrappers supply sizing, colors and focus return. Applications use these controls rather than raw button/input/textarea/select/details elements; native document landmarks, forms, headings and text remain semantic HTML. Badge intentionally renders an inline span for use within source-labelled paragraphs. See `packages/ui/SHADCN-SOURCES.md` for registry provenance and adaptations.
+Use the owned official shadcn New York components: Button, Badge, Card, Input, Textarea, Label, Select, Tabs, Accordion, Avatar, Sheet and Alert. Shared wrappers supply product sizing, colors and focus behavior. Native landmarks, headings and forms remain semantic HTML. Badge renders an inline span for source-labelled paragraphs. See `packages/ui/SHADCN-SOURCES.md` for registry provenance.
 
-### Buttons
+### Buttons and fields
 
-Primary, outline, ghost and secondary variants share semibold labels, an 8px icon gap and the control radius. Outline and ghost hover use the rail surface. Secondary hover deepens its pale blue background. Buttons transition background and text color over 160ms with ease; disabled buttons reduce opacity to .48 and do not accept pointer interactions. Keyboard focus uses a 3px focus outline with 3px offset. Reduced-motion preferences remove transitions.
+Primary, outline, ghost and secondary variants share 9px by 14px padding, an 8px icon gap and weight 600. Outline and ghost hover use the pale rail surface. Background and text color transition over 160ms ease. Disabled controls use .48 opacity and no pointer interaction. Keyboard focus uses a 3px cobalt outline with a 3px offset. Reduced-motion preferences remove transitions.
 
-### Fields and composer
+The composer groups a labelled textarea and actions in a frame with 14px padding, a light border and 12px corners. Focus within adds the pale blue outline. Search has its own compact frame and 2px focus outline. Preserve accessible field names and 16px mobile entry text.
 
-The composer groups a labelled textarea and actions inside a bordered rounded frame. Focus within changes the border and adds a two-pixel pale blue ring. Search uses a compact border and its own two-pixel focus outline. Hidden labels retain accessible field names. Mobile textarea sizing prevents undersized entry text.
+### Navigation and sources
 
-### Badges and navigation
+The wide rail shows text labels beside icons; compact rail controls retain accessible names. Active navigation uses cobalt on navy. Queue selection uses a white surface and blue border. Filter Tabs use cobalt text and a 2px underline. Mobile keeps the mascot and wordmark in its header and exposes back-to-inbox, case details and suggestion controls. Source badges spell out System, Customer and Unverified; status color always accompanies readable words.
 
-Source badges spell out System, Customer and Unverified. Case metadata carries System provenance; the team label is marked Unverified. Status badges similarly include text. Selected inbox rows gain a pale blue fill; active filter Tabs use cobalt text and a two-pixel underline. Radix Tabs provide keyboard selection and associated panels. The desktop identity rail uses icon controls with accessible names. Mobile uses an explicit back-to-inbox control and a case-details trigger.
+### Panels, evidence and approval
 
-### Panels, sheets and evidence
-
-The customer order card has a light border and generous padding. The agent case pane uses divided sections, a tinted shipment-change block and a separate missing-fact area. Reply approval and escalation approval remain separate controls. The shadcn Sheet over Radix Dialog provides a title, description, close control and focus return. Evidence tiles use inline parcel artwork and the label Sample attachment; their detail view explains that no actual photo was supplied.
+The customer order card has a light border and 24px padding. Case context uses divided sections, a cyan shipment-change block and a separate missing-fact area. Reply approval and escalation approval remain separate actions. The Sheet provides its title, description, close action and focus handling. Evidence tiles remain clearly identified as evidence or labelled sample attachments; brand artwork is never evidence.
 
 ### Conversation and state
 
-Sender names, times and bubble alignment distinguish participants. Status notices announce accepted local operations; error notices use shadcn Alert. Attachment choice uses Select, and earlier conversations use Accordion. When a draft becomes stale, an amber review status and explicit review action keep it from being approved against outdated context. Empty states provide a short task-oriented explanation. Both sites display Local demo and explain that state is independent. Keep demo controls visually subordinate to the working conversation.
+Names, timestamps and alignment distinguish participants. Customer outgoing bubbles use cobalt with white text; agent-side outgoing bubbles use pale blue with dark text. Pending, failed and stale-draft states retain explicit text and appropriate approval gating. API mode is primary; fixture mode is a labelled fallback. Demo controls remain subordinate to the conversation. Never claim completion before an action succeeds.
 
 ### Brand assets
 
-`packages/ui/src/brand.tsx` owns the original connected-path mark; `packages/ui/src/brand-pattern.svg` supplies the low-opacity Customer header motif. Keep at least 8px clear space around the mark. The three nodes express continuity, not operation status or progress. Keep decorative paths away from message content and case facts.
+`packages/ui/src/brand.tsx` renders the existing seaLion mascot from the supplied team asset documented in `packages/ui/src/assets/sealion-icon.svg`. The mark sits in a compact rounded white or pale-blue container beside the seaPilot wordmark. Preserve its proportions and source provenance. The implemented headers do not use the older connected-path motif.
 
 ## Do's and Don'ts
 
@@ -174,10 +182,10 @@ Sender names, times and bubble alignment distinguish participants. Status notice
 - Do preserve the spacious customer layout and compact agent layout within the shared palette.
 - Do show source words, readable status text and explicit approval actions.
 - Do retain visible keyboard focus, labelled controls and reduced-motion behavior.
-- Do describe placeholder evidence and local operations accurately.
+- Do describe evidence and API or fixture operations accurately.
 
 ### Don't:
-- Don't copy partner logos or use cyan text on white.
+- Don't replace the existing mascot or use cyan text on white.
 - Don't add decorative dashboard metrics to these task surfaces.
 - Don't use color alone to distinguish fact source or operation status.
 - Don't turn ordinary case sections into raised cards.
