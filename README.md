@@ -4,7 +4,10 @@ The current seaPilot architecture is planned as a local PostgreSQL/filesystem
 backend exposed with Cloudflare Quick Tunnel and a static FE hosted on ChatGPT
 Sites. See the [implementation plan](plans/261031-1037-local-api-sites/plan.md)
 and [CLI deployment runbook](plans/261031-1037-local-api-sites/phase-02-local-deploy-quick-tunnel.md).
-The application and deployment scripts have not been implemented yet.
+The two-site Next.js frontend base is implemented with independent local fixtures.
+See the [frontend runbook](docs/FRONTEND-BASE.md) and run `pnpm dev` for Customer
+on port 3000 and Customer Service on port 3001. Backend integration and deployment
+remain future work.
 
 ## Codex usage evidence
 

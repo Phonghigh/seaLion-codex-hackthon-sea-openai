@@ -33,20 +33,18 @@ Exact demo data: prompts/04-demo-data.md
 - typecheck: pnpm typecheck
 - lint:      pnpm lint
 - test:      pnpm test
-- reset:     pnpm db:reset   (same as POST /api/demo/reset)
+- reset:     use the local preview Reset control (no backend reset exists yet)
 Run typecheck, lint and test before you say a task is done.
 
-## Folder layout
-- app/customer/        customer chat screen
-- app/cs/              CS workspace
-- app/api/             route handlers
-- lib/db/              Supabase client and queries (server only)
-- lib/ai/              agent loop, tools, runtime prompt loader
-- lib/schemas/         Zod schemas, the single source of truth for types
-- supabase/            migrations and seed
-- tests/               Vitest tests, including tests/continuity.test.ts
-- prompts/             build prompts and runtime prompt (do not edit unless asked)
-- docs/codex-log.md    log of every Codex task (see rule 10)
+## Frontend foundation
+The current frontend has two independent apps: `apps/customer` and
+`apps/customer-service`, sharing `packages/ui`, `packages/contracts` and
+`packages/demo`. For frontend work, read `docs/FRONTEND-BASE.md` for the current
+scope and run instructions, and `DESIGN.md` for shared visual tokens.
+The user deferred API discovery/integration for this phase. Keep fixture state
+local to each page; shared backend synchronization is future work.
+Runtime prompts in `prompts/` remain unchanged. Log each task in
+`docs/codex-log.md`.
 
 ## Hard rules
 1. The repo is PUBLIC. Never commit secrets. Keys live only in .env.local
@@ -88,6 +86,6 @@ Case status: open -> waiting_customer -> waiting_ops -> resolved.
 
 ## Done means
 - typecheck, lint and tests pass
-- the demo still runs after POST /api/demo/reset
+- the frontend demo still runs after its local Reset control; verify backend reset only once implemented
 - no secret in the diff
 - docs/codex-log.md updated

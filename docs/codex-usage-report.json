@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T03:49:18.318Z",
+  "generated_at": "2026-10-31T04:33:50.057Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T03:44:48.806Z",
+    "last_recorded_at": "2026-10-31T04:17:56.707Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 0,
     "tool_invocations": 0,
     "tool_results": 0,
-    "manual_entries": 3
+    "manual_entries": 7
   },
   "models": [],
   "tools": [],
@@ -74,6 +74,66 @@
       },
       "note": {
         "text": "Actual user request in this chat. Manually recorded because native hook execution has not been observed. Time is first task inspection, not a verified message timestamp; not automatic tool evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "566f0acf6804",
+      "recorded_at": "2026-10-31T03:59:25.893Z",
+      "occurred_at": "2026-10-31T03:59:07.000Z",
+      "service_tool": "Codex/planning",
+      "status": "unverified",
+      "prompt": {
+        "text": "Based on `docs/PRODUCT-BRIEF.md`, firstly, please create implementation plan to develop front-end base. Request [@Sites](plugin://sites@openai-curated-remote) to create NextJS for FE. Don't implement code in this phase",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported planning task in Codex desktop. Read PRODUCT-BRIEF.md, AGENTS.md, routing configuration and Sites skill/tool capabilities. Automatic hook coverage is unverified; status showed zero observed hook events. User requested a frontend implementation plan only, with Next.js and Sites; no application implementation or deployment is performed in this phase.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "49beb40bce54",
+      "recorded_at": "2026-10-31T04:07:18.543Z",
+      "occurred_at": "2026-10-31T04:06:30.000Z",
+      "service_tool": "Codex/planning",
+      "status": "unverified",
+      "prompt": {
+        "text": "We need to create 2 site, one for Customer and one for Customer Service. Did the plan include that",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported clarification: revise frontend plan from one Next.js app with two routes to two independently deployable Next.js sites in the same repository. Documentation only; automatic hook coverage remains unverified.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "9fc16d9511e0",
+      "recorded_at": "2026-10-31T04:09:34.009Z",
+      "occurred_at": "2026-10-31T04:08:52.000Z",
+      "service_tool": "Codex/planning",
+      "status": "unverified",
+      "prompt": {
+        "text": "Request to use https://github.com/pbakaus/impeccable for FE development",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported planning amendment: require the already-installed Impeccable skill for both Next.js sites, alongside Sites. Read the skill and workflow reference. Context launcher returned permission denied; followed documented direct-context fallback. No application implementation, dependency installation or deployment.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "a1802ce3271b",
+      "recorded_at": "2026-10-31T04:17:56.707Z",
+      "occurred_at": "2026-10-31T04:17:12.000Z",
+      "service_tool": "Codex/implementation",
+      "status": "unverified",
+      "prompt": {
+        "text": "[$implement] Follow FE implementation plan, using Sites, start implementing the FE base for 2 sites. Do not detect any API for now",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported implementation start. Following implement, Sites local-only and Impeccable with direct-context fallback because its launcher is not executable. Two Next.js frontend sites, local fixtures only; no application API discovery or integration. Automatic hooks remain unverified. Baseline commit 8d79dd8f320d4a4ffbad2d8b6e038d614c2d4180; pre-existing planning edits retained.",
         "truncated": false
       }
     }
