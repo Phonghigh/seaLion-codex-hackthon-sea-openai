@@ -147,6 +147,13 @@ describe.skipIf(!url)('BE05 scenes and async routing (disposable PostgreSQL, moc
     expect((await routed(id)).routing.decision.mode).toBe('human');
     expect(automatic.responses.create).not.toHaveBeenCalled();
   });
+  it('auto-answers an order contents question from system facts', async () => {
+    classify.mockResolvedValue(final({ ...low, category: 'order_contents' }));
+    const id = await create(); await send(id, 'Which items are in my order?');
+    const data = await routed(id);
+    expect(data.routing.decision).toMatchObject({ mode: 'ai', rule: 'category in ai_allowed_categories and all_facts_from_system -> ai' });
+    expect(data.conversation.mode).toBe('auto');
+  });
   it('routes to a human if the suggest agent fails rather than showing Auto', async () => {
     automatic.responses.create.mockRejectedValue(new Error('offline'));
     const id = await create(); await send(id);

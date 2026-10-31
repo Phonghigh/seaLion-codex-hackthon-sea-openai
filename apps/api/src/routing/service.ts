@@ -48,7 +48,7 @@ export function createRoutingService(store: CaseStore, clock: DemoClock, now: ()
   const pending = new Set<Promise<void>>();
   const active = new Map<string, number>();
   const routingFacts = (data: NonNullable<Awaited<ReturnType<typeof readFacts>>>, result: Triage) => ({
-    ...data.facts, all_facts_from_system: data.facts.all_facts_from_system && ['order_status', 'confirm_receipt'].includes(result.category),
+    ...data.facts, all_facts_from_system: data.facts.all_facts_from_system && ['order_status', 'order_contents', 'confirm_receipt'].includes(result.category),
   });
   async function processConversation(conversationId: string, version: number, started: number) {
     const valid = () => epoch === started && versions.get(conversationId) === version;

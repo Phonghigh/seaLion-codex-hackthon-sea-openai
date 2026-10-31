@@ -1,7 +1,7 @@
 {
   "thresholds": { "needs_human": 0.5, "risk": 3, "min_category_confidence": 0.7 },
   "human_categories": ["refund_request", "damaged", "missing_item", "complaint"],
-  "ai_allowed_categories": ["order_status", "return_howto", "confirm_receipt"],
+  "ai_allowed_categories": ["order_status", "order_contents", "return_howto", "confirm_receipt"],
   "rules_in_order": [
     "open_case_exists -> human (keep owner if on shift)",
     "has_attachment -> human",
