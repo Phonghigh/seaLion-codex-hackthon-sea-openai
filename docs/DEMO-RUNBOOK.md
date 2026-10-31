@@ -6,7 +6,7 @@ Phong (architecture + Codex, 4:50-6:00). Two browser tabs side by side:
 
 ## Before the slot
 1. `git pull` the frozen build, `pnpm install`, fill `api/.env`.
-2. `pnpm db:reset && pnpm dev`, open `/api/health`. `pnpm tunnel`, confirm the Sites
+2. `docker compose up -d db && pnpm db:migrate && pnpm db:reset && pnpm dev`, open `/api/health`. `pnpm tunnel`, confirm the Sites
    page loads data from the tunnel URL.
 3. Run all scenes once, then click Reset. Leave both tabs open.
 
@@ -32,6 +32,7 @@ Timing: 0:00 problem · 0:50 Scene 1 · 2:00 Scene 2 · 3:30 Scene 3 · 4:30 wha
   last successful suggestion saved per scene in `api/data/replay/`. Say so to the judges.
 - Venue Wi-Fi down: phone hotspot (only OpenAI needs the network).
 - Sites cannot reach the tunnel: open the tunnel URL directly, it serves the same app.
+- Docker/Postgres down: `docker compose restart db`, then Reset. If still down, backup video.
 - Everything down: backup video recorded at 16:10 on Minh's Mac.
 - Triage not ready by 15:30: demo is Scenes 1-2-3, switch agent by hand, pitch says
   triage is next.

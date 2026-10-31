@@ -20,12 +20,13 @@ One package, two entry points:
                 Exposed with `cloudflared tunnel --url http://127.0.0.1:3001`.
                 Also serves `dist/web` at `/` so the tunnel URL alone shows the whole app.
 - `src/shared/` Zod schemas and types imported by both sides.
-- Data: JSON file `data/store.json` behind the `CaseStore` interface (`src/api/store/`).
-  Reset copies `data/seed.json` over it. Writes go to a temp file then rename.
+- Data: PostgreSQL 16 in Docker (`docker compose up -d db`, port 5432), Drizzle ORM with
+  the `postgres` driver, migrations in `drizzle/`. All access goes through the
+  `CaseStore` interface (`src/api/store/`). Reset = truncate all tables, insert seed.
   Images: `public/demo/` (seed) and `data/uploads/`, served at `/files/*` without auth.
 - OpenAI SDK, Responses API with function tools. Vitest. `tests/codex-usage.test.mjs`
   uses node:test and runs under `pnpm test:tooling`, excluded from Vitest.
-No Next.js, no database server, no ORM, no Vercel, no auth, no shadcn.
+No Next.js, no Supabase, no Vercel, no auth, no shadcn.
 Scope today: Scenes 1, 2, 3 only. Triage (T07b), Scene 0, Scene 4, replay, voice are cut.
 
 ## Commands (run from repo root)
@@ -36,6 +37,7 @@ Scope today: Scenes 1, 2, 3 only. Triage (T07b), Scene 0, Scene 4, replay, voice
 - lint:       pnpm lint
 - test:       pnpm test           (vitest)
 - tooling:    pnpm test:tooling   (node --test tests/codex-usage.test.mjs)
+- db:         docker compose up -d db; pnpm db:migrate
 - reset:      pnpm db:reset       (same as POST /api/demo/reset)
 - tunnel:     pnpm tunnel         (cloudflared quick tunnel to 3001)
 Run typecheck, lint and test before you say a task is done.
@@ -43,16 +45,19 @@ Run typecheck, lint and test before you say a task is done.
 ## Folder layout
 - src/web/pages/Customer.tsx, Cs.tsx; src/web/lib/api.ts (fetch client, VITE_API_BASE)
 - src/api/routes/        demo, conversations, messages, upload, agent, cases, orders, health, files
-- src/api/store/CaseStore.ts  interface; json.ts adapter; seed.ts loads data/seed.json
+- src/api/db/schema.ts   Drizzle schema, single source of truth; drizzle/ migrations
+- src/api/store/CaseStore.ts  interface; postgres.ts adapter; seed.ts loads data/seed.json
 - src/api/ai/            tools.ts, agent.ts, prompt loader (reads prompts/03-runtime-prompt.md)
 - src/api/demo/clock.ts  demo clock (Next day moves it one day)
 - src/shared/            Zod schemas: rows, AgentSuggestion, API envelopes
 - data/seed.json         the "Start" and "After Demo 1" states from prompts/04-demo-data.md
+- docker-compose.yml     postgres:16, volume, POSTGRES_PASSWORD from .env
 - config/, prompts/, docs/codex-log.md as before
 
 ## Hard rules
 1. The repo is PUBLIC. Never commit secrets. Keys live only in `.env` (git-ignored).
-   Keep `.env.example` with names only.
+   Keep `.env.example` with names only. DATABASE_URL and POSTGRES_PASSWORD are env too;
+   a dev-only default may appear in docker-compose.yml.
 2. OPENAI_API_KEY is read only in `src/api`. The web bundle never contains a secret.
    The demo token is typed once into the demo bar and kept in sessionStorage.
 3. The AI never writes to the database. It calls tools; the API validates

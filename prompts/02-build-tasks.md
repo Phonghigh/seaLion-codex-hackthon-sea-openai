@@ -1,7 +1,7 @@
 # 02 - Build tasks (Codex prompts)
 
 Revised 31 Oct 12:30 (Asia/Saigon): one package, `src/web` static on ChatGPT Sites,
-`src/api` Hono + JSON store on Minh's Mac behind a Cloudflare tunnel. See AGENTS.md.
+`src/api` Hono + Docker Postgres on Minh's Mac behind a Cloudflare tunnel. See AGENTS.md.
 
 How to use: each task is one prompt pasted into Codex, in order. One person may run two
 tasks in parallel if they do not touch the same package. Every task has "Done when";
@@ -48,27 +48,32 @@ Create ONE pnpm package at the repo root with two entry points:
 - src/shared: Zod schemas folder (empty index for now).
 Scripts: dev (api + web with concurrently), build, typecheck, lint, test (vitest,
 exclude tests/codex-usage.test.mjs), test:tooling (node --test tests/codex-usage.test.mjs),
-db:reset (placeholder calling src/api/store/seed.ts), tunnel (cloudflared tunnel --url
+db:reset and db:migrate (placeholders until T02), tunnel (cloudflared tunnel --url
 http://127.0.0.1:3001). .env.example with OPENAI_API_KEY, OPENAI_MODEL,
-DEMO_RESET_TOKEN, CORS_ORIGINS, VITE_API_BASE. .gitignore: .env, data/store.json,
-data/uploads, node_modules, dist. Keep data/.gitkeep and public/demo/ with
+DEMO_RESET_TOKEN, CORS_ORIGINS, VITE_API_BASE, DATABASE_URL, POSTGRES_PASSWORD.
+.gitignore: .env, data/uploads, node_modules, dist. Keep data/.gitkeep and public/demo/ with
 parcel_a.jpg and parcel_b_open.jpg (simple generated placeholder JPEGs with the label
 text if real photos are missing). Append a T01 row to docs/codex-log.md.
 Done when: pnpm typecheck, lint, test, test:tooling pass; pnpm dev serves the 3 pages
 and GET http://127.0.0.1:3001/api/health answers. Commit as feat(T01): scaffold.
 ```
 
-## T02 - Store, seed, demo routes (Minh)
+## T02 - Database, store, seed, demo routes (Minh)
 
 ```text
 Read AGENTS.md (data model, decisions) and prompts/04-demo-data.md.
-1. src/shared/schemas.ts: Zod schemas for every table row in AGENTS.md and for
-   AgentSuggestion and the API envelope { ok, data?, error? }.
+0. docker-compose.yml with postgres:16, a named volume, POSTGRES_PASSWORD from .env
+   (dev default allowed), port 5432. DATABASE_URL in .env.example.
+   src/api/db/schema.ts: Drizzle schema for every table in AGENTS.md, text ids,
+   jsonb for payload and evidence_ids, timestamptz. drizzle.config.ts; pnpm db:migrate
+   runs drizzle-kit migrate; generate the first migration into drizzle/.
+1. src/shared/schemas.ts: Zod schemas for every table row (drizzle-zod where it fits)
+   and for AgentSuggestion and the API envelope { ok, data?, error? }.
 2. src/api/store/CaseStore.ts: interface with the reads and writes routes and tools
    need: get/list for every table, createConversation, addMessage, addEvidence,
    createCase, linkConversation, addEvent, createTask, updateShipment, updateCase.
-   src/api/store/json.ts implements it over data/store.json: load on boot, write
-   after every change to a temp file then rename.
+   src/api/store/postgres.ts implements it with Drizzle. Reset truncates all tables in
+   one statement (TRUNCATE ... CASCADE) then inserts the seed in one transaction.
 3. data/seed.json holds the "Start" and "After Demo 1" states (customers, order DH001,
    items, shipments, case CS001, CONV1, M1, R1, EV1, events). If Nhu already committed
    it, validate it with the Zod schemas instead of rewriting. Timestamps are offsets in
@@ -80,10 +85,12 @@ Read AGENTS.md (data model, decisions) and prompts/04-demo-data.md.
    case_event shipment_updated if a case exists),
    POST /api/demo/jump?to=demo2 (load After Demo 1).
    Make pnpm db:reset call the same reset function.
-Tests: reset twice gives identical rows (ignore timestamps); jump demo2 gives exactly
+Tests (against the Docker database, skip with a clear message if DATABASE_URL is
+unset): reset twice gives identical rows (ignore timestamps); jump demo2 gives exactly
 one case CS001, one conversation, one evidence row; advance-day after jump writes
-shipment_updated. Done when tests pass and the 3 routes answer with curl.
-Commit as feat(T02): store, seed, demo routes.
+shipment_updated. Done when docker compose up -d db, pnpm db:migrate, pnpm db:reset
+work from a clean clone, tests pass and the 3 routes answer with curl.
+Commit as feat(T02): postgres, store, seed, demo routes.
 ```
 
 ## T03 - Tool functions (Minh, run together with T04 in one Codex session)

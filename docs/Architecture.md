@@ -10,7 +10,7 @@ flowchart LR
     Site -->|HTTPS fetch, VITE_API_BASE| Edge[https://xxx.trycloudflare.com]
     subgraph Mac["Demo laptop (Minh, macOS)"]
         Tunnel[cloudflared] --> API[api: Hono on 127.0.0.1:3001]
-        API --> DB[(JSON file data/store.json)]
+        API --> DB[(PostgreSQL 16 in Docker)]
         API --> Files[images: public/demo + data/uploads]
         API --> Dist[fallback: serves dist/web]
     end
@@ -22,7 +22,7 @@ flowchart LR
 |---|---|---|
 | web | ChatGPT Sites (public) | Two screens `/customer` and `/cs`, demo bar. Static. Talks only to `VITE_API_BASE`. |
 | api | Minh's Mac, port 3001 | Routes, Zod validation, CaseStore, agent loop, triage, approvals, CORS, files. |
-| JSON store | data/store.json next to the api | All demo data. Reset = copy seed over it. Never exposed. |
+| Postgres | Docker on the Mac, port 5432 | All demo data, Drizzle migrations. Reset = truncate + seed. Never exposed. |
 | cloudflared | Minh's Mac | Quick tunnel, random hostname, no account. Restart = new URL. |
 | OpenAI | cloud | Only outbound network call during the demo. |
 
@@ -30,8 +30,9 @@ flowchart LR
 - The judged logic (link case, what changed, one question, approve-then-act) lives in
   `api/src/ai` and `api/src/store`. The storage engine is behind `CaseStore`; swap
   the adapter for Postgres later without touching logic.
-- JSON file store: zero install on the demo laptop, deterministic reset, same on macOS and
-  Windows dev machines. Postgres adds setup time and no score.
+- Postgres in Docker: the demo laptop already runs Docker, so one `docker compose up`
+  gives a real schema with migrations and no local install. Storage stays behind
+  `CaseStore`, so the demo could run on another adapter if Docker fails.
 - Static FE on Sites: public, shareable link. The API serves `web/dist` too, so if
   Sites cannot reach the tunnel (CSP), the tunnel URL alone still shows the full app.
 
@@ -50,7 +51,8 @@ flowchart LR
    UI shows "Sent" or "Escalated" only after `ok: true`.
 
 ## Env
-- api/.env: `OPENAI_API_KEY`, `OPENAI_MODEL`, `DEMO_RESET_TOKEN`, `CORS_ORIGINS`,
+- .env: `OPENAI_API_KEY`, `OPENAI_MODEL`, `DEMO_RESET_TOKEN`, `CORS_ORIGINS`, `DATABASE_URL`,
+  `POSTGRES_PASSWORD`,
   later `TRIAGE_PROVIDER`, `DECISIONS_MODEL`.
 - web/.env: `VITE_API_BASE`.
 
@@ -60,7 +62,8 @@ error responses too. `GET /files/*` is public (demo images are not sensitive).
 The web app stores file paths relative to the API, never the tunnel hostname.
 
 ## Operating the tunnel
-- Start: `pnpm db:reset && pnpm dev` (api) then `pnpm tunnel`. Copy the printed URL.
+- Start: `docker compose up -d db && pnpm db:migrate && pnpm db:reset && pnpm dev`, then
+  `pnpm tunnel`. Copy the printed URL.
 - New URL after restart: set `VITE_API_BASE`, rebuild web, republish Sites.
   `CORS_ORIGINS` changes only if the Sites origin changes.
 - Limits: no uptime promise, no SSE. The agent endpoint returns a complete response.
