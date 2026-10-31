@@ -197,3 +197,42 @@ and "How we used Codex" built from docs/codex-log.md (number of tasks,
 tests, commits).
 Done when the test passes and README is complete.
 ```
+
+## T07b – Triage and routing (P2, start only after Scene 2 runs)
+
+```text
+Read AGENTS.md, docs/PRODUCT-BRIEF.md section 3, config/routing-policy.json,
+config/teams.json and prompts/04-demo-data.md (customers 2 and 3, agents, demo clock).
+1. lib/ai/triage.ts: triage(message, context) -> { category, category_confidence,
+   needs_human, risk, language }. Two adapters behind one interface, chosen by env
+   TRIAGE_PROVIDER: "decisions" (POST /v1/decisions, model from env DECISIONS_MODEL,
+   questions: category choice, needs_human predicate, risk score 1-5, language choice)
+   and "responses" (Responses API with a strict JSON schema, confidence = 1.0 for choice).
+   If the decisions call fails, fall back to "responses" and log it.
+2. lib/routing/decide.ts: pure functions, no model calls.
+   decideMode(triage, caseFacts, policy) -> { mode: "ai"|"human", rule: string, reason }
+   applies the rules in config/routing-policy.json in order, first match wins.
+   routeHuman(category, customerLanguage, clock, teams, openCaseOwner, openCounts)
+   -> { team, agent, reason, flag? } following human_routing order.
+   Unit tests for every rule and every routing step, using config files as fixtures.
+3. Demo clock: lib/demo/clock.ts holds the current demo time; "Next day" advances it
+   one day. On-shift checks use it, never the real clock.
+4. Wire it: when a customer message arrives, run triage -> decideMode -> if ai: run the
+   agent with read-only tools, send the reply, write case_event "auto_reply", mark the
+   conversation "auto"; if human: routeHuman, set assignee, write case_event "routed".
+5. UI: a Triage card above the AI suggestion on /cs showing category + confidence,
+   needs_human, risk, language, mode, team/agent and the reason. An "Auto-handled"
+   tab lists auto conversations.
+Tests: Scene 0 -> ai; Scene 1 -> human/delivery/an; after Next day Scene 2 -> human,
+existing case CS001, binh; Scene 4 -> human, carlos.
+Done when tests pass and Scenes 0, 1, 2 show the card with the expected decisions.
+```
+
+## T11 – Voice for the customer (optional, after 15:30 and after the backup video)
+
+```text
+Add a mic button on /customer: record, transcribe with the OpenAI audio API,
+put the text into the existing message input, then send through the normal flow.
+No voice for CS. If anything fails, the text input must keep working.
+Done when one spoken message reaches /cs as text.
+```

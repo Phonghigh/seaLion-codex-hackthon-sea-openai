@@ -82,3 +82,33 @@ R3 (Demo 3, sent only after the escalation succeeds)
 - case_events include conversation_linked (CS_B), shipment_updated,
   reply_sent (CS_A), reply_sent (CS_B), action_executed (CS_B)
 - no reply asks the customer for the parcel A photo again
+
+## Additions for triage and routing (Scenes 0 and 4)
+
+### Customer 2 (Scene 0, AI-handled)
+- Minh Tran, customer_id CUST002, order DH002, 1 item (water bottle), 1 parcel,
+  status in_transit, tracking DS-1002, expected delivery day 0.
+- M0 VI: Đơn DH002 của tôi đến đâu rồi?
+     EN: Where is my order DH002?
+- Expected: triage category order_status (high), needs_human low, risk 1 -> mode "ai".
+  AI reply from shipment data, sent at once, case_event "auto_reply", badge "Auto".
+
+### Customer 3 (Scene 4, ambiguous, English)
+- Sam Lee, customer_id CUST003, order DH003 delivered day -1, no case.
+- M4 EN: Hi, something's wrong with my order, can you help?
+- Expected: category spread out / "other", confidence < 0.7 or category not allowed
+  -> human, General Support, Carlos (EN, on shift by his timezone). Reason shown.
+
+### Agents and teams
+See config/teams.json. Demo clock: day 0 09:00 Asia/Ho_Chi_Minh; "Next day" -> day 1 09:00.
+Scene 1 expected: human, delivery, An (on shift day 0, VI).
+Scene 2 expected: human, existing case CS001, An off shift -> Binh (on shift day 1, VI).
+
+### Triage expectations per scene (for tests and the Triage card)
+| Scene | category | needs_human | risk | mode | assignee | rule |
+|---|---|---|---|---|---|---|
+| 0 | order_status | low | 1 | ai | - | ai allow-list |
+| 1 | missing_item | high | 4 | human | an | attachment / human category |
+| 2 | missing_item | high | 4 | human | binh | open case exists; owner off shift |
+| 3 | missing_item | high | 4 | human | binh | open case exists |
+| 4 | other (low confidence) | mid | 2 | human | carlos | low confidence; language en |
