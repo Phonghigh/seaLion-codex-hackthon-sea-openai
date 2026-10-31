@@ -500,3 +500,13 @@ Removed the CS rail and moved branding/help to the top header. The desktop case-
 toggle is now an accessible icon beside conversation status. Case summary fields
 use aligned rows. Both composers expand/collapse without clearing drafts; choosing
 a suggested reply opens the composer. Approval handlers and warning visibility remain.
+
+## 19. Automatic reply suggestions
+
+Opening a conversation whose latest message is from the customer automatically
+requests a suggestion after triage completes. Each opening attempts once; polling
+does not retry failed requests. Suggest remains available for retry or refresh.
+The empty composer previews the reply: unmodified Tab or Accept suggestion fills
+the draft without sending. Shift+Tab retains normal navigation. Existing edits
+are preserved; case linking, escalation and explicit send approval still apply.
+Fixture mode offers the same acceptance interaction using local suggestions.

@@ -321,3 +321,4 @@ time { font-variant-numeric:tabular-nums; }
 .composer-chevron.collapsed { transform:rotate(180deg); }
 .composer-collapsed-note { font-size:12px; color:var(--muted); padding-bottom:4px; }
 @media(max-width:767px) { .workspace-brand { border:0; padding:0; margin:0; } .workspace-heading > .button { display:none; } .approval-caption { display:none; } }
+.suggestion-accept { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; padding:8px 0; color:var(--muted); font-size:12px; }
