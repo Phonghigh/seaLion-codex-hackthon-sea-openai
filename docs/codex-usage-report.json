@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T07:40:26.680Z",
+  "generated_at": "2026-10-31T08:08:13.766Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T07:39:09.128Z",
+    "last_recorded_at": "2026-10-31T08:06:05.776Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 11,
     "tool_invocations": 334,
     "tool_results": 325,
-    "manual_entries": 20
+    "manual_entries": 23
   },
   "models": [
     "gpt-6-astra",
@@ -4593,6 +4593,51 @@
       },
       "note": {
         "text": "Resolving current Git conflicts while preserving merged backend and local Sea UI work. Automatic hook coverage unverified; manual evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "e533bc8b9cd9",
+      "recorded_at": "2026-10-31T07:48:40.475Z",
+      "occurred_at": "2026-10-31T07:48:40.463Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Remove Customer service caption; make sheets expandable/collapsible; make conversation list more colorful using CRM patterns.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Refining both API and fixture CS UI. Manual evidence; automatic coverage unverified.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "36372bca01f2",
+      "recorded_at": "2026-10-31T07:58:12.610Z",
+      "occurred_at": "2026-10-31T07:58:12.596Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Use https://buddy-bound-base.lovable.app/TND4K2PZ1/inbox as reference and update current UI; include only relevant components.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Inspected rendered reference inbox. Adapting compact inbox density, counted queue filters, sorting and pane hierarchy; preserving case workflows.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "d36b90ab3343",
+      "recorded_at": "2026-10-31T08:06:05.776Z",
+      "occurred_at": "2026-10-31T08:06:05.767Z",
+      "service_tool": "codex-desktop/manual",
+      "status": "unverified",
+      "prompt": {
+        "text": "Apply screenshot feedback: remove left rail, move case toggle to conversation header as icon, change case summary layout, add composer expand/collapse.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Updating both CS modes while preserving drafts and approval controls; manual evidence, automatic coverage unverified.",
         "truncated": false
       }
     }

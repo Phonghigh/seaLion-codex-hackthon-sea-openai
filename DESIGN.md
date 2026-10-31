@@ -115,7 +115,7 @@ Midnight navy fills the CS navigation rail. The customer header is white above t
 
 ### Neutral
 
-White work areas sit against a cool canvas. The `rail` token is a light interaction surface, while the actual navigation rail uses `navy`. Ink carries content; muted blue-gray carries metadata. Light borders divide the panes. Selected queue rows are white with a blue border against the tinted inbox.
+White work areas sit against a cool canvas. The `rail` token is a light interaction surface, while the actual navigation rail uses `navy`. Ink carries content; muted blue-gray carries metadata. Light borders divide the panes. Inbox rows use amber for Needs reply, green for Replied, and blue for Auto-handled, always paired with a visible status label. Selected rows use a cobalt outline and blue surface. Rows are flat and separated by thin rules, with a single-line preview and paired case/status metadata. Counted filter tabs and a newest/oldest control sit above the queue.
 
 ### Semantic accents
 
@@ -133,7 +133,7 @@ The customer introduction is 34px/1.15 at weight 700 with -1px tracking; it beco
 
 The customer header is at least 76px tall. The main container is capped at 1240px including 28px side padding, with a 28px top margin. A cobalt welcome band uses 32px by 36px padding. The conversation and 300px order aside share a 24px gap. At 900px and below the aside becomes 260px and the gap 18px. Below 768px the chat and order aside stack, page padding becomes 16px and the welcome content stacks. Customer messages use a 320px scroll area on desktop and `clamp(260px,40dvh,390px)` on mobile.
 
-The CS workspace fills `100dvh`. Its labelled navy rail is 188px wide at 1400px and above; from 768–1399px it is a 72px icon rail. The columns are a 260px inbox, flexible thread with a 300px minimum, and 330px case context. At 1600px they become 290px, at least 400px, and 380px. Below 1280px the case context moves into a right-side sheet and the inbox becomes 250px. Below 768px the rail disappears and either inbox or selected thread fills the width. Long panes scroll independently, with the composer following the message region. The sheet is at most 460px wide and becomes full viewport width on mobile.
+The CS workspace fills `100dvh`. The navigation rail is removed. The mascot and wordmark sit in the top header, followed by the workspace title and help control. The desktop columns are a 300px inbox, flexible thread with a 300px minimum, and 330px case context. At 1600px they become 320px, at least 400px, and 380px. Below 1280px the case context moves into a right-side sheet and the inbox becomes 250px. Below 768px either inbox or selected thread fills the width. Long panes scroll independently, with the composer following the message region. The sheet is at most 460px wide and becomes full viewport width on mobile.
 
 Spacing centers on 8px, 16px and 24px with contextual 10px, 12px, 14px, 20px, 22px, 26px and 28px steps. Standard and small buttons are at least 40px tall, increasing to 44px on mobile. Mobile tabs and icon controls also use 44px targets.
 
@@ -148,6 +148,8 @@ Pane borders and tonal surfaces provide depth. Ordinary cards and buttons suppre
 Controls use 8px corners, composers 12px, chat and order panels 14px, and the desktop welcome band 16px. Badges use 5px corners, evidence tiles 10px, and avatars are circular. Bubbles have a tighter 3px upper corner on the sender side and 14px elsewhere. Case sections remain flat, divided rectangles.
 
 ## Components
+
+Case-detail sections use shadcn Accordion triggers with visible chevrons and keyboard expansion. Review & reply starts open; the timeline starts collapsed. An icon button beside the conversation status toggles the desktop case panel. Case summary fields use aligned label/value rows. The reply composer has a keyboard-accessible collapse control that preserves its mounted draft and leaves status/warnings visible; using a suggestion expands it. The compact sidebar caption is omitted beneath the wordmark.
 
 ### Component foundation
 
