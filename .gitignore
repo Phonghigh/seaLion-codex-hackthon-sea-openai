@@ -23,3 +23,7 @@ coverage/
 # API credentials and uploaded evidence
 apps/api/.env
 apps/api/data/uploads/
+
+# Static exports and isolated Sites publishing checkouts
+out/
+.sites/

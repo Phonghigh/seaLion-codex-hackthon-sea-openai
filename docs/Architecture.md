@@ -1,25 +1,21 @@
 # seaPilot - Architecture
 
-Merge status: this document preserves main's planned integrated backend/demo
-architecture. The current code is two Next.js/shadcn apps on ports 3000/3001,
-with independent local fixtures; see [FRONTEND-BASE.md](FRONTEND-BASE.md).
-The Vite/static frontend, API, database and tunnel below are not implemented.
-Before integration, adapt the frontend paths/build assumptions and choose an API
-port that does not collide with Customer Service on 3001. Deployment remains deferred.
-
-Decided 31 Oct 2026, 12:00 (Asia/Saigon). Supersedes every earlier topology note.
+Current topology: two independent Next.js/shadcn apps on ports 3000/3001 and
+`apps/api` (Hono on Node 20) on port 4000. PostgreSQL 16 runs in Docker behind
+Drizzle and the CaseStore interface. `NEXT_PUBLIC_API_BASE` is the API connection
+setting for both web apps; both web apps now call the API by default, with explicit fixture mode available.
+See [API-BASE.md](API-BASE.md) and [API setup](../apps/api/README.md) for the merged runtime, environment and migration boundaries.
 
 ## Topology
 
 ```mermaid
 flowchart LR
     Judge[Judge or demo operator] --> Site[ChatGPT Sites: static web build]
-    Site -->|HTTPS fetch, VITE_API_BASE| Edge[https://xxx.trycloudflare.com]
+    Site -->|HTTPS fetch, NEXT_PUBLIC_API_BASE| Edge[https://xxx.trycloudflare.com]
     subgraph Mac["Demo laptop (Minh, macOS)"]
-        Tunnel[cloudflared] --> API[api: Hono on 127.0.0.1:3001]
+        Tunnel[cloudflared] --> API[api: Hono on 127.0.0.1:4000]
         API --> DB[(PostgreSQL 16 in Docker)]
         API --> Files[images: public/demo + data/uploads]
-        API --> Dist[fallback: serves dist/web]
     end
     Edge --> Tunnel
     API -->|server side| OpenAI[OpenAI Responses API / Decisions API]
@@ -27,28 +23,27 @@ flowchart LR
 
 | Part | Where | Responsibility |
 |---|---|---|
-| web | ChatGPT Sites (public) | Two screens `/customer` and `/cs`, demo bar. Static. Talks only to `VITE_API_BASE`. |
-| api | Minh's Mac, port 3001 | Routes, Zod validation, CaseStore, agent loop, triage, approvals, CORS, files. |
+| web | Two private ChatGPT Sites | `apps/customer` (3000), `apps/customer-service` (3001). API calls use `NEXT_PUBLIC_API_BASE`. |
+| api | Minh's Mac, port 4000 | Routes, Zod validation, CaseStore, agent loop, triage, approvals, CORS, files. |
 | Postgres | Docker on the Mac, port 5432 | All demo data, Drizzle migrations. Reset = truncate + seed. Never exposed. |
 | cloudflared | Minh's Mac | Quick tunnel, random hostname, no account. Restart = new URL. |
 | OpenAI | cloud | Only outbound network call during the demo. |
 
 ## Why this shape
 - The judged logic (link case, what changed, one question, approve-then-act) lives in
-  `api/src/ai` and `api/src/store`. The storage engine is behind `CaseStore`; swap
-  the adapter for Postgres later without touching logic.
+  `apps/api/src/ai` and `apps/api/src/store`. The PostgreSQL adapter implements `CaseStore`; agent logic uses that interface.
 - Postgres in Docker: the demo laptop already runs Docker, so one `docker compose up`
   gives a real schema with migrations and no local install. Storage stays behind
   `CaseStore`, so the demo could run on another adapter if Docker fails.
-- Static FE on Sites: public, shareable link. The API serves `web/dist` too, so if
-  Sites cannot reach the tunnel (CSP), the tunnel URL alone still shows the full app.
+- Static Next.js exports run on separate Sites. The API serves data and demo
+  files only; frontend hosting and its sign-in gate are independent.
 
-## Gates (time, Asia/Saigon)
-- 13:30 Sites gate: a hello page on Sites must fetch `GET /api/health` through the
-  tunnel from a phone. If it fails, demo link = tunnel URL only. No further debate.
+## Historical integration gates (not T01b/T02 acceptance)
+- Historical 13:30 Sites gate: verify health through the tunnel from a phone.
+  The current API does not host either frontend; a tunnel URL alone is not a UI fallback.
 - 14:30 Scene 2 runs end to end on Minh's Mac. WIP submission uses the tunnel URL.
 
-## Request flow
+## Future integrated request flow
 1. Customer sends a message on `/customer` -> `POST /api/conversations/:id/messages`.
 2. API runs triage (T07b, after Scene 2) -> `decideMode` -> human: `routeHuman`, set
    assignee, event `routed`; ai: run agent read-only, send reply, event `auto_reply`.
@@ -61,7 +56,7 @@ flowchart LR
 - .env: `OPENAI_API_KEY`, `OPENAI_MODEL`, `DEMO_RESET_TOKEN`, `CORS_ORIGINS`, `DATABASE_URL`,
   `POSTGRES_PASSWORD`,
   later `TRIAGE_PROVIDER`, `DECISIONS_MODEL`.
-- web/.env: `VITE_API_BASE`.
+- Each web app: `NEXT_PUBLIC_API_BASE` (build-time for static exports).
 
 ## CORS and files
 Exact-origin allowlist, `Vary: Origin`, OPTIONS answered before auth, CORS headers on
@@ -69,9 +64,9 @@ error responses too. `GET /files/*` is public (demo images are not sensitive).
 The web app stores file paths relative to the API, never the tunnel hostname.
 
 ## Operating the tunnel
-- Start: `docker compose up -d db && pnpm db:migrate && pnpm db:reset && pnpm dev`, then
+- Start: `docker compose up -d db && pnpm db:migrate && pnpm db:reset && pnpm dev:api`, then
   `pnpm tunnel`. Copy the printed URL.
-- New URL after restart: set `VITE_API_BASE`, rebuild web, republish Sites.
+- New URL after restart: set `NEXT_PUBLIC_API_BASE`, rebuild web, republish Sites.
   `CORS_ORIGINS` changes only if the Sites origin changes.
 - Limits: no uptime promise, no SSE. The agent endpoint returns a complete response.
 - Keep the Mac awake, plugged in, notifications off. Phone hotspot as backup.

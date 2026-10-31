@@ -21,7 +21,7 @@ Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md
   with the `postgres` driver, migrations in `apps/api/drizzle`. All data access
   goes through a `CaseStore` interface in `apps/api/src/store`.
 - OpenAI Responses API with function tools, server side only, model from `OPENAI_MODEL`.
-- Both web apps will call the API through `NEXT_PUBLIC_API_BASE`. `packages/demo`
+- Both web apps call the API through `NEXT_PUBLIC_API_BASE`. `packages/demo`
   stays only as a fallback for UI development.
 - Exposed for the demo with: `cloudflared tunnel --url http://127.0.0.1:4000`
 - Vitest plus the Node usage-recorder suite. Both run through `pnpm test`.
@@ -31,29 +31,28 @@ Exact demo data: prompts/04-demo-data.md. Build tasks: prompts/02-build-tasks.md
 
 For frontend work, read `docs/FRONTEND-BASE.md` for commands and scope,
 `DESIGN.md` for tokens and components, and `docs/FRONTEND-IMPLEMENTATION-PLAN.md`
-for delivery status. For backend work, read `docs/Architecture.md` and
-`prompts/02-build-tasks.md`: they preserve main's Hono/PostgreSQL/Drizzle/tunnel
-integration plan, not implemented services. Adapt their one-package/Vite paths
-to this workspace before implementation. Do not replace the frontend or deploy
-without a new user instruction.
+for delivery status. For backend work, read `apps/api/README.md` for the active
+implementation, migrations and environment setup. `docs/SITES-DEPLOYMENT.md`
+records the existing private fixture deployments; they are not automatically
+updated by this merge. Preserve the integrated API and its migration history.
 
 ## Commands (run from repo root)
 - install: `pnpm install`
-- dev: `pnpm dev` (Customer 3000, Customer Service 3001)
+- dev: `pnpm dev` (Customer 3000, Customer Service 3001, API 4000)
 - build: `pnpm build` (both independent Next.js builds)
 - typecheck: `pnpm typecheck`
 - lint: `pnpm lint`
 - test: `pnpm test` (Vitest and Node recorder tests)
-- reset: local preview Reset control (no backend reset exists yet)
+- database: `pnpm db:up`, `pnpm db:migrate`, `pnpm db:reset`
+- API verification: `pnpm test:api:integration`, `pnpm test:api:curl`
+- tunnel: `pnpm tunnel`
 Run typecheck, lint and test before you say a task is done.
-Database, migration and tunnel commands in the integration plan are not available
-in the current package scripts.
 
 ## Hard rules
 1. The repo is PUBLIC. Never commit secrets. Keys live only in `.env` (git-ignored).
    Keep `.env.example` with names only. DATABASE_URL and POSTGRES_PASSWORD are env too;
    a dev-only default may appear in docker-compose.yml.
-2. When backend integration is implemented, OPENAI_API_KEY is server-only. The
+2. OPENAI_API_KEY is server-only. The
    web bundle never contains a secret. The planned demo token stays in sessionStorage.
 3. The AI never writes to the database. It calls tools; the API validates
    the arguments with Zod and runs the query.
@@ -80,7 +79,7 @@ in the current package scripts.
 12. CORS on the API: exact-origin allowlist from env CORS_ORIGINS, never `*`.
     Handle OPTIONS before auth. `GET /files/*` and `GET /api/health` need no token.
 
-## Planned backend data model
+## Backend data model
 customers, orders, order_items, shipments (parcel_code, status, updated_at),
 cases (id = code e.g. CS001, status, assignee, order_id, title),
 conversations (id, case_id nullable, customer_id, channel, opened_at, mode "human"|"auto"),
@@ -105,6 +104,6 @@ waiting_customer -> waiting_ops -> resolved. Team id "operations", label "Wareho
 
 ## Done means
 - typecheck, lint and tests pass
-- the frontend demo still runs after its local Reset control; verify backend reset once implemented
+- database-backed continuity and reset checks pass; use disposable databases for tests
 - no secret in the diff
 - docs/codex-log.md updated

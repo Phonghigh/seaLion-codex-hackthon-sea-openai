@@ -16,7 +16,11 @@
     "db:migrate": "pnpm --filter @seapilot/api db:migrate",
     "db:reset": "pnpm --filter @seapilot/api db:reset",
     "tunnel": "cloudflared tunnel --url http://127.0.0.1:4000",
-    "try:suggest": "pnpm --filter @seapilot/api try:suggest"
+    "try:suggest": "pnpm --filter @seapilot/api try:suggest",
+    "db:generate": "pnpm --filter @seapilot/api db:generate",
+    "test:api": "vitest run apps/api",
+    "test:api:integration": "pnpm --filter @seapilot/api exec tsx scripts/test-isolated.ts",
+    "test:api:curl": "pnpm --filter @seapilot/api exec tsx scripts/verify-continuity.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
