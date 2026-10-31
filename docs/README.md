@@ -4,6 +4,10 @@
 topology, public ChatGPT Sites frontend, and the CLI deployment plan for
 Cloudflare Quick Tunnel, including CORS and URL changes.
 
+[Cloudflare CLI deployment runbook](cloudflare-quick-tunnel-deploy.md) provides
+the macOS Terminal flow for opening the local API to the public, connecting
+the frontend, checking CORS, and restarting the demo.
+
 The [earlier architecture review (Vietnamese, 31 October)](architecture-review-2026-10-31.md)
 records the previous design and its missing contracts. Its hosting topology is
 superseded by Architecture.md.

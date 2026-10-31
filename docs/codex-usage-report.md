@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T04:05:02.283Z (UTC).
+Generated: 2026-10-31T04:28:57.947Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:02:30.578Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:28:15.285Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:02:30.578Z.
 | prompts | 0 |
 | tool_invocations | 0 |
 | tool_results | 0 |
-| manual_entries | 6 |
+| manual_entries | 8 |
 
 Models reported by hooks: none.
 
@@ -86,6 +86,21 @@ These entries are not automatic evidence and are excluded from tool counts.
     tạo 1 file Architecture mới trong docs,
     plan để deploy API local thông quan cloudeflare quicktunnel,
     Không build plan detail để build toàn bộ project
+
+- 2026-10-31T04:25:01.000Z — CodexDesktop/cloudflare_deploy_runbook (unverified; fa1ccb5ae45c)
+
+    Self-reported user prompts observed in this conversation, including the interrupted request and its clarification; not automatic hook evidence. Scope: create a Git branch and Markdown deployment instructions.
+
+    tạo 1 branch mới, tạo cho tôi 1 flow detail để deploy bằng cloudflare cli,
+
+    Clarification after interrupted turn:
+    tạo 1 branch mới, tạo cho tôi 1 file .md để deploy bằng cloudflare cli,
+
+- 2026-10-31T04:27:38.000Z — CodexDesktop/macos_cloudflare_runbook (unverified; 78ced064f773)
+
+    Self-reported user request observed in this conversation; interpreted Mac IOS as macOS host with iPhone/iOS browser verification. Not automatic hook evidence.
+
+    play deploy cho Mac IOS
 
 
 ## Coverage and interpretation

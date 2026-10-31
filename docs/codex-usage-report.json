@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T04:05:02.283Z",
+  "generated_at": "2026-10-31T04:28:57.947Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T04:02:30.578Z",
+    "last_recorded_at": "2026-10-31T04:28:15.285Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 0,
     "tool_invocations": 0,
     "tool_results": 0,
-    "manual_entries": 6
+    "manual_entries": 8
   },
   "models": [],
   "tools": [],
@@ -116,6 +116,36 @@
       },
       "note": {
         "text": "Self-reported user request observed in this conversation; not automatic hook evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "fa1ccb5ae45c",
+      "recorded_at": "2026-10-31T04:26:31.879Z",
+      "occurred_at": "2026-10-31T04:25:01.000Z",
+      "service_tool": "CodexDesktop/cloudflare_deploy_runbook",
+      "status": "unverified",
+      "prompt": {
+        "text": "tạo 1 branch mới, tạo cho tôi 1 flow detail để deploy bằng cloudflare cli,\n\nClarification after interrupted turn:\ntạo 1 branch mới, tạo cho tôi 1 file .md để deploy bằng cloudflare cli,",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported user prompts observed in this conversation, including the interrupted request and its clarification; not automatic hook evidence. Scope: create a Git branch and Markdown deployment instructions.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "78ced064f773",
+      "recorded_at": "2026-10-31T04:28:15.285Z",
+      "occurred_at": "2026-10-31T04:27:38.000Z",
+      "service_tool": "CodexDesktop/macos_cloudflare_runbook",
+      "status": "unverified",
+      "prompt": {
+        "text": "play deploy cho Mac IOS",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported user request observed in this conversation; interpreted Mac IOS as macOS host with iPhone/iOS browser verification. Not automatic hook evidence.",
         "truncated": false
       }
     }
