@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:28:08.486Z (UTC).
+Generated: 2026-10-31T05:35:17.268Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:27:20.453Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:34:48.612Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 102 |
-| sessions | 3 |
-| prompts | 3 |
-| tool_invocations | 46 |
-| tool_results | 44 |
+| hook_events | 186 |
+| sessions | 4 |
+| prompts | 4 |
+| tool_invocations | 86 |
+| tool_results | 84 |
 | manual_entries | 12 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -21,11 +21,11 @@ Models reported by hooks: gpt-6-astra, unknown.
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| apply_patch | codex_builtin | 3 | 3 | 3 | 0 | 0 | 3 | 0 |
-| Bash | codex_builtin | 39 | 39 | 38 | 0 | 0 | 38 | 1 |
+| apply_patch | codex_builtin | 9 | 9 | 9 | 0 | 0 | 9 | 0 |
+| Bash | codex_builtin | 71 | 71 | 70 | 0 | 0 | 70 | 1 |
 | mcp__cua_repl__js | mcp_external | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
 | view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
-| webrun | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
+| webrun | unknown | 4 | 4 | 4 | 0 | 0 | 4 | 0 |
 
 ## Prompt trail
 
@@ -36,6 +36,7 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T05:18:37.224Z | 759ea8cb07d0 | 8c352424834e | 68507c1e0b3d |
 | 2026-10-31T05:18:55.971Z | 964fb863149d | cdcd9c2b0ec8 | a633d76f12ed |
 | 2026-10-31T05:20:49.996Z | 5d76cdaab94a | ec04ebeace48 | b944f8530d16 |
+| 2026-10-31T05:28:26.241Z | 6287045ff306 | ec370cbbbad9 | cd9c29830a44 |
 
 ### Prompt 68507c1e0b3d
 
@@ -120,6 +121,52 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt cd9c29830a44
+
+    Read AGENTS.md, prompts/03-runtime-prompt.md and apps/api/src/store.
+    1. apps/api/src/ai/tools.ts: three read-only functions on CaseStore, each with a Zod
+       schema for arguments and result and a JSON schema export for the Responses API:
+       - find_cases({ customer_id?, order_id?, text? }) -> [{ case_id, status,
+         last_activity_at, score, reason }]. Rules from docs/Architecture.md "How find_cases
+         decides": open cases of the same customer; same order adds to 0.9; each keyword
+         found in cases.title or the last 20 messages adds 0.05, capped at 1.0; reason is a
+         plain sentence.
+       - get_case_context({ case_id }) -> { case, conversations[{id, channel, opened_at,
+         summary}], messages (last 20), evidence[{id, type, path, source, created_at}],
+         events (last 20), open_tasks, changes_since_last_contact[{ parcel_code, before,
+         after }] } where changes compare the shipment_snapshot of the latest reply_sent
+         event with current shipments.
+       - get_order_shipments({ order_id }) -> { order, parcels[{ parcel_code, items[],
+         status, updated_at }] }.
+       Expose GET /api/cases/:id/context and GET /api/orders/:id/shipments with the same functions.
+    2. packages/contracts/src/agent.ts: AgentSuggestion Zod schema exactly as in
+       prompts/02-build-tasks.md T04, plus envelope { ok: boolean, suggestion: AgentSuggestion|null,
+       error?: string }.
+    3. apps/api/src/ai/agent.ts: suggest(conversation_id). Input = conversation messages and
+       customer id. Responses API with the 3 tools, runtime prompt file as instructions,
+       model from OPENAI_MODEL, no temperature/top_p. Tool loop max 6 calls, 30 s total
+       timeout. Parse with AgentSuggestion; on failure retry once with the validation error;
+       then return { ok: false, error, suggestion: null }. Write case_event ai_suggestion
+       when the conversation has a case.
+    4. POST /api/agent/suggest { conversation_id } -> envelope.
+    Tests with a mocked OpenAI client: tool loop, schema retry, failure envelope;
+    find_cases scores CS001 >= 0.9 for Lan + DH001; changes_since_last_contact after
+    jump + advance-day returns B in_transit -> delivered.
+    Also write apps/api/scripts/try-suggest.ts that resets to After Demo 1, advances a day,
+    creates no data of its own except what it needs, calls suggest() on the real model and
+    prints the JSON. OPENAI_API_KEY is intentionally empty on this machine: do not run the
+    real call and do not ask for a key; the script must fail with a clear message when the
+    key is missing. Add a root script try:suggest.
+    Done when pnpm typecheck, lint and test pass. Do not commit or push; end with a short
+    report of what passed.
+
+    Environment notes: pnpm 10.28.2 is active. Postgres is running in Docker; apps/api/.env
+    exists with DATABASE_URL and DEMO_RESET_TOKEN. An API process may already be listening on
+    4000; do not kill it, use the app object in tests. Add the official openai npm package
+    to apps/api. Append a row to docs/codex-log.md.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -172,6 +219,46 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T05:26:54.160Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
 | 2026-10-31T05:26:55.405Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
 | 2026-10-31T05:27:13.833Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:28:32.481Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:32.495Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:32.501Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:36.966Z | 6287045ff306 | ec370cbbbad9 | webrun | unknown |
+| 2026-10-31T05:28:42.256Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:42.525Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:47.601Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:47.612Z | 6287045ff306 | ec370cbbbad9 | webrun | unknown |
+| 2026-10-31T05:28:47.625Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:47.631Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:54.822Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:28:55.100Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:29:02.395Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:29:03.626Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:29:21.578Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:29:53.121Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:30:30.115Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:30:30.553Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:31:11.974Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:32:06.008Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:32:06.224Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:32:23.106Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:32:23.122Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:32:23.130Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:32:47.408Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:32:47.810Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:33:08.322Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:33:09.587Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:33:22.911Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:33:33.914Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:33:35.155Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:33:42.239Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:09.094Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:09.386Z | 6287045ff306 | ec370cbbbad9 | apply_patch | unknown |
+| 2026-10-31T05:34:09.523Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:09.538Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:09.545Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:20.140Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:40.450Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
+| 2026-10-31T05:34:40.808Z | 6287045ff306 | ec370cbbbad9 | Bash | unknown |
 
 ## Self-reported external activity
 

@@ -11,14 +11,17 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:reset": "tsx src/demo/reset-cli.ts"
+    "db:reset": "tsx src/demo/reset-cli.ts",
+    "try:suggest": "tsx scripts/try-suggest.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.5",
     "@seapilot/contracts": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.14",
-    "postgres": "^4.0.0"
+    "openai": "^6.49.0",
+    "postgres": "^4.0.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.11",

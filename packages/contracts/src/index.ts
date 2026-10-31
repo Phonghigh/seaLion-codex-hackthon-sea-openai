@@ -40,3 +40,4 @@ export interface Suggestion {
 }
 
 export * from './db';
+export * from './agent';

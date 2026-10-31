@@ -5,6 +5,7 @@ import { createPostgresStore } from './postgres';
 import { createDemoService } from '../demo/service';
 import { buildSeed } from '../demo/seed';
 import { createApp } from '../app';
+import { find_cases } from '../ai/tools';
 
 // Deliberately do not load .env: integration tests truncate the explicitly selected DB.
 const url = process.env.DATABASE_URL;
@@ -86,5 +87,16 @@ describe.skipIf(!url)('PostgreSQL integration (real database; resets all demo ta
     await demo.reset('After Demo 1');
     expect((await app.request('/api/demo/reset', { method: 'POST', headers: { 'x-demo-token': 'test-only' } })).status).toBe(200);
     expect(await store.list('cases')).toEqual([]);
+  });
+  it('reads tool context and shipment changes after jump + advance through the app', async () => {
+    const app = createApp(store, { token: 'test-only', demo });
+    const post = { method: 'POST', headers: { 'x-demo-token': 'test-only' } };
+    expect((await app.request('/api/demo/jump?to=demo2', post)).status).toBe(200);
+    expect((await find_cases(store, { customer_id: 'CUST001', order_id: 'DH001' }))[0]).toMatchObject({ case_id: 'CS001', score: 0.9 });
+    expect((await app.request('/api/demo/advance-day', post)).status).toBe(200);
+    const context = await (await app.request('/api/cases/CS001/context')).json();
+    expect(context.changes_since_last_contact).toEqual([{ parcel_code: 'B', before: 'in_transit', after: 'delivered' }]);
+    const shipments = await (await app.request('/api/orders/DH001/shipments')).json();
+    expect(shipments.parcels).toContainEqual(expect.objectContaining({ parcel_code: 'B', status: 'delivered', items: [expect.objectContaining({ id: 'ITEM2' })] }));
   });
 });
