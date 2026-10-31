@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T07:42:07.863Z (UTC).
+Generated: 2026-10-31T07:59:37.637Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:39:09.128Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:59:37.287Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 881 |
-| sessions | 13 |
-| prompts | 14 |
-| tool_invocations | 419 |
-| tool_results | 408 |
+| hook_events | 983 |
+| sessions | 15 |
+| prompts | 16 |
+| tool_invocations | 470 |
+| tool_results | 455 |
 | manual_entries | 20 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -21,17 +21,17 @@ Models reported by hooks: gpt-6-astra, unknown.
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| apply_patch | codex_builtin | 21 | 21 | 21 | 0 | 0 | 21 | 0 |
-| Bash | codex_builtin | 339 | 339 | 338 | 0 | 0 | 338 | 1 |
+| apply_patch | codex_builtin | 22 | 22 | 22 | 0 | 0 | 22 | 0 |
+| Bash | codex_builtin | 377 | 377 | 372 | 0 | 0 | 372 | 5 |
 | clockcurr_time | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
 | mcp__codex_apps__sites__create_site | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__create_source_repository_write_credential | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__deploy_site_version | mcp_external | 4 | 4 | 2 | 2 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__create_source_repository_write_credential | mcp_external | 6 | 6 | 6 | 6 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__deploy_site_version | mcp_external | 6 | 6 | 4 | 4 | 0 | 0 | 2 |
 | mcp__codex_apps__sites__get_deployment_status | mcp_external | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__get_site | mcp_external | 18 | 18 | 16 | 16 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__get_site | mcp_external | 22 | 22 | 20 | 20 | 0 | 0 | 2 |
 | mcp__codex_apps__sites__get_site_version | mcp_external | 4 | 4 | 4 | 4 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__list_site_versions | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__save_site_version | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| mcp__codex_apps__sites__save_site_version | mcp_external | 4 | 4 | 4 | 4 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__save_version_and_deploy_private | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__update_site_access | mcp_external | 4 | 4 | 2 | 2 | 0 | 0 | 2 |
 | mcp__cua_repl__js | mcp_external | 6 | 6 | 2 | 2 | 0 | 0 | 4 |
@@ -59,6 +59,8 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T07:22:46.141Z | c9b906cabe21 | 827291d4767f | 5668b1b74abd |
 | 2026-10-31T07:30:19.639Z | c9b906cabe21 | 6626287dc1b3 | fc8d27a1a530 |
 | 2026-10-31T07:34:17.842Z | 91e717519951 | 8cc37a5ad4dc | 94cfd334c5b3 |
+| 2026-10-31T07:52:38.664Z | 31528f7fae02 | 59d10a551782 | 3329b2af80a8 |
+| 2026-10-31T07:55:24.571Z | 05315e47626e | e6a4e0baf643 | 0b2547708934 |
 
 ### Prompt 68507c1e0b3d
 
@@ -444,6 +446,18 @@ Truncated during capture: no.
 ### Prompt 94cfd334c5b3
 
     Use the Sites plugin. Deploy the already saved version 2 of appgprj_6ae58941057881918fe726f0e4859674 and appgprj_6ae589671c8481918691460557ce4c4e. Do not rebuild and do not change access.
+
+Truncated during capture: no.
+
+### Prompt 3329b2af80a8
+
+    Use the Sites plugin. Task DEPLOY05: build and SAVE a new version of Hoang's two existing Sites from main at commit 237a65c, exactly like DEPLOY04 (scripts/sites/build-export.mjs, NEXT_PUBLIC_USE_FIXTURES unset, NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com)./ Customer: appgprj_6ae58941057881918fe726f0e4859674. Customer Service: appgprj_6ae589671c8481918691460557ce4c4e. Put ~/.nvm/versions/node/v24.22.1/bin first in PATH so node is arm64 (the /usr/local/bin node is x64 and breaks esbuild). You may commit and push to the two Sites hosting repositories as the Sites helper requires; never commit or push this GitHub repository. Do not change access. Save the version; then try to deploy it. If deploy needs approval, stop and report the saved version numbers. Never read apps/api/.env. Append a DEPLOY05 row to docs/codex-log.md. Be fast: skip the full repo test suite, it already passed.
+
+Truncated during capture: no.
+
+### Prompt 0b2547708934
+
+    Use the Sites plugin. Task DEPLOY05: build and SAVE a new version of Hoang's two existing Sites from main at commit 4b6a4aa, exactly like DEPLOY04 (scripts/sites/build-export.mjs, NEXT_PUBLIC_USE_FIXTURES unset, NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com)./ Customer: appgprj_6ae58941057881918fe726f0e4859674. Customer Service: appgprj_6ae589671c8481918691460557ce4c4e. Put ~/.nvm/versions/node/v24.22.1/bin first in PATH so node is arm64 (the /usr/local/bin node is x64 and breaks esbuild). You may commit and push to the two Sites hosting repositories as the Sites helper requires; never commit or push this GitHub repository. Do not change access. Save the version; then try to deploy it. If deploy needs approval, stop and report the saved version numbers. Never read apps/api/.env. Append a DEPLOY05 row to docs/codex-log.md. Be fast: skip the full repo test suite, it already passed.
 
 Truncated during capture: no.
 
@@ -872,6 +886,57 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T07:36:17.261Z | 91e717519951 | 8cc37a5ad4dc | Bash | unknown |
 | 2026-10-31T07:36:18.473Z | 91e717519951 | 8cc37a5ad4dc | Bash | unknown |
 | 2026-10-31T07:36:35.080Z | 91e717519951 | 8cc37a5ad4dc | Bash | unknown |
+| 2026-10-31T07:52:45.680Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:52:45.691Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:52:45.705Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:52:51.246Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:00.009Z | 31528f7fae02 | 59d10a551782 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T07:53:01.747Z | 31528f7fae02 | 59d10a551782 | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T07:53:05.019Z | 31528f7fae02 | 59d10a551782 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T07:53:06.840Z | 31528f7fae02 | 59d10a551782 | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T07:53:11.349Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:24.234Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:24.581Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:25.846Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:33.736Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:42.049Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:55.029Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:53:56.252Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:54:07.272Z | 31528f7fae02 | 59d10a551782 | Bash | no result observed |
+| 2026-10-31T07:54:07.289Z | 31528f7fae02 | 59d10a551782 | Bash | no result observed |
+| 2026-10-31T07:54:16.185Z | 31528f7fae02 | 59d10a551782 | Bash | unknown |
+| 2026-10-31T07:54:17.671Z | 31528f7fae02 | 59d10a551782 | Bash | no result observed |
+| 2026-10-31T07:55:30.354Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:55:30.354Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:55:35.056Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:55:39.917Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T07:55:39.923Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T07:55:42.057Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:55:53.441Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:55:53.804Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T07:55:57.066Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__create_source_repository_write_credential | success |
+| 2026-10-31T07:56:10.054Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:10.579Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:11.805Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:20.388Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:26.608Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:42.366Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:50.706Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:51.945Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:56:59.437Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:00.669Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:18.526Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:24.098Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:32.352Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:39.095Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:47.209Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:57:51.329Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__save_site_version | success |
+| 2026-10-31T07:57:58.523Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__save_site_version | success |
+| 2026-10-31T07:58:12.721Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__deploy_site_version | success |
+| 2026-10-31T07:58:44.731Z | 05315e47626e | e6a4e0baf643 | mcp__codex_apps__sites__deploy_site_version | success |
+| 2026-10-31T07:59:21.955Z | 05315e47626e | e6a4e0baf643 | Bash | unknown |
+| 2026-10-31T07:59:37.073Z | 05315e47626e | e6a4e0baf643 | apply_patch | unknown |
+| 2026-10-31T07:59:37.287Z | 05315e47626e | e6a4e0baf643 | Bash | no result observed |
 
 ## Self-reported external activity
 
