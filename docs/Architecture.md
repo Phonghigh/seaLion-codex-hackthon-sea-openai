@@ -127,3 +127,29 @@ The agent is stateless. Its memory is the case, read through three tools on ever
 3. `get_order_shipments` - the facts right now, parcel by parcel.
 The model writes nothing back; the API records `ai_suggestion` and the human's decisions
 as events. Chat memory dies with the conversation; case memory does not. That is the product.
+
+### The three tables that make a case survive a shift change
+- `evidence` is what the customer gave. It has both `conversation_id` and a nullable
+  `case_id`: a photo is born in a conversation and attached to the case when CS clicks
+  Link, so it is never lost and never duplicated. `source` is the badge the UI shows.
+- `case_events` is what happened, append-only: who approved what, what the AI proposed,
+  what the system changed, whether an action succeeded. It feeds the timeline, holds the
+  `shipment_snapshot` baseline for "what changed", and is the audit trail that proves a
+  human approved every reply and action.
+- `tasks` is what another team must do. Created only by an approved `escalate_to_ops`,
+  with the evidence ids attached; the case moves to `waiting_ops` in the same write and
+  the Scene 3 reply is allowed only after this row exists.
+
+### How find_cases decides a conversation belongs to an existing case
+1. Hard keys first: open cases with the same `customer_id`, then the same `order_id`
+   (order code in the message, else the customer's most recent order). Both match: 0.9.
+2. Keywords rank among several: words from the message matched with ILIKE against
+   `cases.title` and the last 20 messages of each case, +0.05 each, capped at 1.0.
+3. Every candidate carries a plain-language `reason`; the model copies it into
+   `link_reason`. The model suggests a case only when exactly one candidate is above
+   the threshold, never creates one.
+4. Nothing is linked until a human clicks Link.
+No embeddings today: rule 1 of triage ("an open case exists") must be a database fact,
+not a similarity score, and CS must be able to read the reason. Next step when customers
+stop quoting order codes: pgvector in the same Postgres, an `embedding` column on cases,
+and a fourth scoring step restricted to the same customer's cases. The interface stays.
