@@ -29,20 +29,21 @@ describe('suggest agent with mocked OpenAI', () => {
     await store.updateShipment('SHIP2', { status: 'delivered' });
     const client = mockClient();
     client.responses.create
-      .mockResolvedValueOnce(toolResponse({ type: 'reasoning', id: 'reasoning-1', summary: [] }, toolCall('find_cases', { customer_id: 'CUST001', order_id: 'DH001' }, 'find')))
+      .mockResolvedValueOnce(toolResponse({ type: 'reasoning', id: 'reasoning-1', summary: [], encrypted_content: 'encrypted-state' }, toolCall('find_cases', { customer_id: 'CUST001', order_id: 'DH001' }, 'find')))
       .mockResolvedValueOnce(toolResponse(toolCall('get_case_context', { case_id: 'CS001' }, 'context'), toolCall('get_order_shipments', { order_id: 'DH001' }, 'shipments')))
       .mockResolvedValueOnce(final());
     const result = await createAgent(store, { client }).suggest('CONV1');
     expect(result).toEqual({ ok: true, suggestion });
     const requests = client.responses.create.mock.calls.map(([body]) => body);
     expect(requests).toHaveLength(3);
+    for (const request of requests) expect(request.include).toEqual(['reasoning.encrypted_content']);
     expect(requests[0]).toMatchObject({ model: 'configured-test-model', store: false });
     expect(requests[0].instructions).toContain('You are seaPilot');
     expect(requests[0].instructions).toContain('Never ask for information or evidence that is already in the case');
-    expect(requests[0].input).toEqual([{ role: 'user', content: JSON.stringify({ conversation_id: 'CONV1', customer_id: 'CUST001', messages: await store.list('messages', { conversation_id: 'CONV1' }) }) }]);
+    expect(requests[0].input).toEqual([{ role: 'user', content: JSON.stringify({ conversation_id: 'CONV1', customer_id: 'CUST001', messages: await store.list('messages', { conversation_id: 'CONV1' }), evidence: await store.list('evidence', { conversation_id: 'CONV1' }), order_id: 'DH001' }) }]);
     expect(requests.every(body => !('temperature' in body) && !('top_p' in body))).toBe(true);
     expect(requests[2].input).toEqual(expect.arrayContaining([
-      expect.objectContaining({ type: 'reasoning', id: 'reasoning-1' }),
+      expect.objectContaining({ type: 'reasoning', id: 'reasoning-1', encrypted_content: 'encrypted-state' }),
       expect.objectContaining({ type: 'function_call_output', call_id: 'find' }),
       expect.objectContaining({ type: 'function_call_output', call_id: 'context', output: expect.stringContaining('"before":"in_transit","after":"delivered"') }),
       expect.objectContaining({ type: 'function_call_output', call_id: 'shipments' }),
@@ -60,6 +61,7 @@ describe('suggest agent with mocked OpenAI', () => {
     expect((await createAgent(store, { client, model: 'test' }).suggest('CONV1')).ok).toBe(true);
     expect(JSON.stringify(client.responses.create.mock.calls[1][0].input)).toContain('missing_info');
     expect(JSON.stringify(client.responses.create.mock.calls[1][0].input)).toContain('Validation error');
+    for (const [request] of client.responses.create.mock.calls) expect(request.include).toEqual(['reasoning.encrypted_content']);
     expect(store.addEvent).toHaveBeenCalledTimes(1);
   });
 

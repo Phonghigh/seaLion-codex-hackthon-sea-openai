@@ -1,6 +1,8 @@
 import { fileURLToPath } from 'node:url';
 import { mkdirSync } from 'node:fs';
 import { Hono } from 'hono';
+import { z } from 'zod';
+import { registerWorkspace, RequestError } from './workspace';
 import { cors } from 'hono/cors';
 import { serveStatic } from '@hono/node-server/serve-static';
 import type { CaseStore } from './store/CaseStore';
@@ -13,13 +15,20 @@ export const DEFAULT_ORIGINS = 'http://127.0.0.1:3000,http://127.0.0.1:3001,http
 export function createApp(store: CaseStore, options: { token?: string; origins?: string; demo?: ReturnType<typeof createDemoService>; agent?: AgentOptions } = {}) {
   const app = new Hono();
   const demo = options.demo ?? createDemoService(store);
-  const agent = createAgent(store, { now: () => demo.clock.now(), ...options.agent });
+  let lastWrite = 0;
+  const now = () => new Date(lastWrite = Math.max(demo.clock.now().getTime(), lastWrite + 1));
+  const agent = createAgent(store, { now, ...options.agent });
   const origins = (options.origins ?? DEFAULT_ORIGINS).split(',').map(value => value.trim()).filter(Boolean);
   app.use('*', cors({
     origin: origin => origins.includes(origin) ? origin : '',
     allowMethods: ['GET', 'POST', 'OPTIONS'], allowHeaders: ['Content-Type', 'x-demo-token'],
   }));
-  app.onError((error, c) => c.json({ ok: false, error: error instanceof ToolNotFoundError ? error.message : 'Request failed' }, error instanceof ToolNotFoundError ? 404 : 500));
+  app.onError((error, c) => {
+    if (error instanceof RequestError) return c.json({ ok: false, error: error.message }, error.status);
+    if (error instanceof z.ZodError || error instanceof SyntaxError) return c.json({ ok: false, error: 'Invalid request body' }, 400);
+    return c.json({ ok: false, error: error instanceof ToolNotFoundError ? error.message : 'Request failed' }, error instanceof ToolNotFoundError ? 404 : 500);
+  });
+  registerWorkspace(app, store, () => now().toISOString());
   app.get('/api/cases/:id/context', async c => c.json(await get_case_context(store, { case_id: c.req.param('id') })));
   app.get('/api/orders/:id/shipments', async c => c.json(await get_order_shipments(store, { order_id: c.req.param('id') })));
   app.post('/api/agent/suggest', async c => {
@@ -37,11 +46,15 @@ export function createApp(store: CaseStore, options: { token?: string; origins?:
     if (!options.token || c.req.header('x-demo-token') !== options.token) return c.json({ ok: false, error: 'Unauthorized' }, 401);
     await next();
   });
-  app.post('/api/demo/reset', async c => c.json({ ok: true, ...await demo.reset() }));
+  app.post('/api/demo/reset', async c => {
+    const result = await demo.reset(); lastWrite = 0;
+    return c.json({ ok: true, ...result });
+  });
   app.post('/api/demo/advance-day', async c => c.json({ ok: true, ...await demo.advanceDay() }));
   app.post('/api/demo/jump', async c => {
     if (c.req.query('to') !== 'demo2') return c.json({ ok: false, error: 'Expected to=demo2' }, 400);
-    return c.json({ ok: true, ...await demo.reset('After Demo 1') });
+    const result = await demo.reset('After Demo 1'); lastWrite = 0;
+    return c.json({ ok: true, ...result });
   });
   app.notFound(c => c.json({ ok: false, error: 'Not found' }, 404));
   return app;

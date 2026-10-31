@@ -36,18 +36,23 @@ export function createAgent(store: CaseStore, options: AgentOptions = {}) {
       const client = options.client ?? new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0 });
       const conversation = await withinDeadline(store.get('conversations', conversation_id));
       if (!conversation) throw new SuggestionError('Conversation not found');
-      const [messages, instructions] = await withinDeadline(Promise.all([
+      const [messages, evidence, orders, instructions] = await withinDeadline(Promise.all([
         store.list('messages', { conversation_id }),
+        store.list('evidence', { conversation_id }),
+        store.list('orders', { customer_id: conversation.customer_id }),
         readFile(new URL('../../../../prompts/03-runtime-prompt.md', import.meta.url), 'utf8'),
       ]));
       const input: ResponseInputItem[] = [{ role: 'user', content: JSON.stringify({
         conversation_id, customer_id: conversation.customer_id, messages: chronological(messages),
+        evidence: chronological(evidence),
+        order_id: orders.sort((a, b) => b.placed_at.localeCompare(a.placed_at) || b.id.localeCompare(a.id))[0]?.id ?? null,
       }) }];
       let calls = 0;
       let retried = false;
       while (true) {
         const response = await withinDeadline(client.responses.create({
           model, instructions, tools: responseTools, input: [...input], store: false,
+          include: ['reasoning.encrypted_content'],
         }, { signal: controller.signal, maxRetries: 0 }));
         if (response.status !== 'completed') throw new SuggestionError('Model response did not complete');
         input.push(...toResponseInputItems(response.output));

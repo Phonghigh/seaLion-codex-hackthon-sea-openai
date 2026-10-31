@@ -81,12 +81,14 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
     },
     async linkConversation(conversationId, caseId, actor, at) {
       await db.transaction(async tx => {
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(7362741)`);
         const inner = createPostgresStore(tx);
         const conversation = await inner.get('conversations', conversationId);
         const target = await inner.get('cases', caseId);
         if (!conversation || !target) throw new Error('Conversation or case not found');
         if (conversation.customer_id !== target.customer_id) throw new Error('Customer mismatch');
         if (conversation.case_id && conversation.case_id !== caseId) throw new Error('Conversation already linked');
+        if (conversation.case_id === caseId) return;
         await tx.update(tables.conversations).set({ case_id: caseId }).where(eq(tables.conversations.id, conversationId));
         await tx.update(tables.evidence).set({ case_id: caseId }).where(eq(tables.evidence.conversation_id, conversationId));
         await inner.updateCase(caseId, { assignee: actor });
@@ -97,6 +99,7 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
     async resetTo(input) {
       const state = DatabaseStateSchema.parse(input);
       await db.transaction(async tx => {
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(7362741)`);
         await tx.execute(sql`TRUNCATE TABLE tasks, case_events, evidence, messages, conversations, cases, shipments, order_items, orders, customers RESTART IDENTITY CASCADE`);
         if (state.customers.length) await tx.insert(tables.customers).values(state.customers);
         if (state.orders.length) await tx.insert(tables.orders).values(state.orders);
@@ -110,7 +113,11 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
         if (state.tasks.length) await tx.insert(tables.tasks).values(state.tasks);
       });
     },
-    transaction: work => db.transaction(tx => work(createPostgresStore(tx))),
+    // Serialize workspace writes across app instances, including case numbering and approvals.
+    transaction: work => db.transaction(async tx => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(7362741)`);
+      return work(createPostgresStore(tx));
+    }),
   };
   return store;
 }

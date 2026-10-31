@@ -92,3 +92,55 @@ before connecting or changing data when `OPENAI_API_KEY` is missing. With a key,
 this script intentionally replaces demo data; its clock is separate from a running
 API process, as with `db:reset`. The automated script check forces an empty key and
 does not contact OpenAI.
+
+## Conversation continuity and approvals
+
+Workspace routes are public (no demo token); only `/api/demo/*` controls require
+`x-demo-token`. JSON writes validate bodies with Zod and return `{ ok, data }` or
+`{ ok: false, error }`. Missing records return 404, invalid input 400, and blocked
+links/replies 409.
+
+- `POST /api/conversations` — `{ customer_id }`; creates an unlinked chat.
+- `GET /api/conversations?customer_id=CUST001` — filtered list (omit the filter for all).
+- `GET /api/conversations/:id` — conversation, messages, evidence, and `case` summary.
+- `POST /api/conversations/:id/messages` — `{ role: "customer", text }`.
+- `POST /api/upload` — multipart `conversation_id` and `file` (JPEG/PNG/WebP,
+  up to 10 MiB), or JSON `{ conversation_id, seed: "parcel_a" | "parcel_b_open" }`.
+  Uploaded filenames are generated; bytes live in `apps/api/data/uploads`.
+  Both forms create customer evidence with the conversation's current case ID.
+- `POST /api/cases/:id/link-conversation` — `{ conversation_id, actor }`.
+  Attaches pending evidence and records the handover. Repeating the same link does
+  nothing, even if another actor retries. Cross-customer/relink attempts fail.
+- `POST /api/approve` — `{ conversation_id, kind: "reply", text, actor, title? }`.
+  `title` is required when creating a first case. Uses the latest customer order,
+  assigns the next `CSnnn`, and saves the approved message plus shipment snapshot.
+- `POST /api/approve` — `{ conversation_id, kind: "action", actor,
+  action: { type: "escalate_to_ops", reason, evidence_ids } }`.
+  Evidence must belong to the case. Creates one operations task per case, updates
+  status and records `action_executed` in one transaction. Repeated/concurrent
+  approvals return the existing task. Failure rolls back and records `action_failed`.
+  A case with an escalation suggestion cannot send a reply until its task exists.
+- `GET /api/cases/:id` — case, events, evidence and tasks.
+
+The agent includes pending conversation evidence and the latest order ID in its
+initial context, and requests `reasoning.encrypted_content` on every Responses call,
+including tool continuations and validation retries. No mock fallback is enabled in
+production.
+
+Run the full test suite safely using disposable, migrated PostgreSQL databases:
+
+```sh
+pnpm --filter @seapilot/api exec tsx scripts/test-isolated.ts
+```
+
+Run the same three-scene story with actual curl requests and a mocked Responses
+client (the API key is forced empty):
+
+```sh
+pnpm --filter @seapilot/api exec tsx scripts/verify-continuity.ts
+```
+
+Both commands load the existing API `.env` without printing it and require the
+configured PostgreSQL role to create/drop a temporary database. They never reset
+the configured demo database. The curl harness serves the app on an ephemeral
+loopback port and closes only its own server; port 4000 is left alone.
