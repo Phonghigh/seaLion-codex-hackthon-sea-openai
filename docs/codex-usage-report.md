@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T03:49:18.318Z (UTC).
+Generated: 2026-10-31T04:05:02.283Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T03:44:48.806Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:02:30.578Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T03:44:48.806Z.
 | prompts | 0 |
 | tool_invocations | 0 |
 | tool_results | 0 |
-| manual_entries | 3 |
+| manual_entries | 6 |
 
 Models reported by hooks: none.
 
@@ -65,6 +65,27 @@ These entries are not automatic evidence and are excluded from tool counts.
     Actual user request in this chat. Manually recorded because native hook execution has not been observed. Time is first task inspection, not a verified message timestamp; not automatic tool evidence.
 
     commit, push lên
+
+- 2026-10-31T03:50:10.000Z — CodexDesktop/architecture_clarification (unverified; 9783efbd5605)
+
+    Self-reported audience answer observed during this planning turn, approximate observation time; not automatic hook evidence.
+
+    Frontend trên ChatGPT Sites: Public để chia sẻ demo.
+
+- 2026-10-31T03:58:22.000Z — CodexDesktop/delegated_plan_review (unverified; e43d5f1d68ca)
+
+    Self-reported orchestration summary for this task, not captured tool events or exact forked context. Used a read-only scout for old-plan conflicts, a researcher for Sites/CORS, a planner owning four plan files, and three read-only review scopes covering consistency/security/failure modes. Parent wrote CLI runbook, updated active docs and integrated findings. No application implementation, installation or deployment occurred.
+
+
+
+- 2026-10-31T04:00:13.000Z — CodexDesktop/architecture_scope_correction (unverified; 6bf4a11b8f6e)
+
+    Self-reported user request observed in this conversation; not automatic hook evidence.
+
+    Tôi không nhờ bạn build toàn bộ project.
+    tạo 1 file Architecture mới trong docs,
+    plan để deploy API local thông quan cloudeflare quicktunnel,
+    Không build plan detail để build toàn bộ project
 
 
 ## Coverage and interpretation

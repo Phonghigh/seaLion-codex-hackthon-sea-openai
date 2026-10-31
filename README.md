@@ -2,9 +2,9 @@
 
 The current seaPilot architecture is planned as a local PostgreSQL/filesystem
 backend exposed with Cloudflare Quick Tunnel and a static FE hosted on ChatGPT
-Sites. See the [implementation plan](plans/261031-1037-local-api-sites/plan.md)
-and [CLI deployment runbook](plans/261031-1037-local-api-sites/phase-02-local-deploy-quick-tunnel.md).
-The application and deployment scripts have not been implemented yet.
+Sites. See [Architecture and local API deployment](docs/Architecture.md).
+This documents the agreed topology and Quick Tunnel commands; the application
+has not been implemented in this checkout yet.
 
 ## Codex usage evidence
 

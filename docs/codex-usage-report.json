@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T03:49:18.318Z",
+  "generated_at": "2026-10-31T04:05:02.283Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T03:44:48.806Z",
+    "last_recorded_at": "2026-10-31T04:02:30.578Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 0,
     "tool_invocations": 0,
     "tool_results": 0,
-    "manual_entries": 3
+    "manual_entries": 6
   },
   "models": [],
   "tools": [],
@@ -74,6 +74,48 @@
       },
       "note": {
         "text": "Actual user request in this chat. Manually recorded because native hook execution has not been observed. Time is first task inspection, not a verified message timestamp; not automatic tool evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "9783efbd5605",
+      "recorded_at": "2026-10-31T03:51:24.168Z",
+      "occurred_at": "2026-10-31T03:50:10.000Z",
+      "service_tool": "CodexDesktop/architecture_clarification",
+      "status": "unverified",
+      "prompt": {
+        "text": "Frontend trên ChatGPT Sites: Public để chia sẻ demo.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported audience answer observed during this planning turn, approximate observation time; not automatic hook evidence.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "e43d5f1d68ca",
+      "recorded_at": "2026-10-31T03:59:06.393Z",
+      "occurred_at": "2026-10-31T03:58:22.000Z",
+      "service_tool": "CodexDesktop/delegated_plan_review",
+      "status": "unverified",
+      "prompt": null,
+      "note": {
+        "text": "Self-reported orchestration summary for this task, not captured tool events or exact forked context. Used a read-only scout for old-plan conflicts, a researcher for Sites/CORS, a planner owning four plan files, and three read-only review scopes covering consistency/security/failure modes. Parent wrote CLI runbook, updated active docs and integrated findings. No application implementation, installation or deployment occurred.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "6bf4a11b8f6e",
+      "recorded_at": "2026-10-31T04:02:30.578Z",
+      "occurred_at": "2026-10-31T04:00:13.000Z",
+      "service_tool": "CodexDesktop/architecture_scope_correction",
+      "status": "unverified",
+      "prompt": {
+        "text": "Tôi không nhờ bạn build toàn bộ project.\ntạo 1 file Architecture mới trong docs,\nplan để deploy API local thông quan cloudeflare quicktunnel,\nKhông build plan detail để build toàn bộ project",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported user request observed in this conversation; not automatic hook evidence.",
         "truncated": false
       }
     }

@@ -1,5 +1,11 @@
 # seaPilot — Prep 31/10
 
+> Historical source snapshots. The user subsequently selected local PostgreSQL
+> and filesystem storage, a Cloudflare Quick Tunnel API, and ChatGPT Sites FE.
+> See [Architecture](../Architecture.md) for the agreed topology and API
+> deployment commands. This imported pack retains its original build plan;
+> its Supabase/Vercel hosting assumptions are historical.
+
 Reviewed and imported on 31 October 2026 from the **seaPilot — Prep 31/10 (draft; source title translated)**
 tab and its seven named companion tabs in
 [HACKATHON SEA](https://docs.google.com/document/d/1iIN2QEa0cxI_5_xbRE3vugApgIfFUR_lxfgfxBI2qkg/edit?tab=t.myqrrbn0pgpa).
