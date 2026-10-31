@@ -449,3 +449,32 @@ repeat the relevant checks for each changed surface.
 4. Update brand board, DESIGN.md and frontend runbook.
 5. Verify component keyboard behavior, mobile layouts, contrast, typecheck, lint,
    tests and both production builds. No API discovery/integration or deployment.
+
+
+## 14. Approved UX Package A — implemented locally
+
+User approved Package A from [the UI/UX review](UI-UX-REVIEW.md): UX01–UX05.
+Both API-mode sites now show connection/recovery feedback; CS preserves per-thread
+in-memory drafts/titles, requires explicit replacement review, and exposes Suggest
+beside the composer below 1280px. Existing stale-data and action approval gates
+remain enforced. Reload persistence is intentionally outside this package.
+Packages B/C and hosting updates remain unapproved. Browser workflow verification
+used a disposable mock API at the available 522px width; the complete viewport,
+zoom, screen-reader and mobile-keyboard matrix remains pending.
+
+## 15. Sea visual refactor — implemented locally
+
+The user approved a more expressive Sea identity. Both sites now share ocean-blue
+controls, midnight framing, cool neutral work surfaces, and the existing seaPilot
+mascot. The customer site has a cobalt welcome and a clearer conversation/order
+layout. CS has labeled wide-screen navigation, stronger inbox selection, clearer
+case sections, and a compact branded mobile header. Sparkle decoration and repeated
+reassurance copy were removed. DESIGN.md records the current tokens and supersedes
+the earlier visual specifications in section 13; historical deployment assets are
+unchanged.
+
+The refactor preserves shadcn controls, API integration, source attribution,
+Package A draft/recovery behavior, and separate reply/action approvals. No new
+dependencies or backend changes. Fixture-mode visual checks cover desktop and
+375px responsive frames. Production builds use the default API-mode configuration.
+Screen-reader, mobile-keyboard and full zoom testing remain pending. No redeploy.

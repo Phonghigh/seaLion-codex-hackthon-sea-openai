@@ -1,123 +1,413 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-31T04:59:08.807979+00:00",
+  "generatedAt": "2026-10-31T07:34:08.866671+00:00",
   "title": "Design System: seaPilot",
   "extensions": {
     "colorMeta": {
       "primary": {
         "role": "primary",
         "displayName": "Cobalt",
-        "canonical": "#2457d6"
+        "canonical": "#2254db",
+        "tonalRamp": [
+          "oklch(15% 0.1065 264.30)",
+          "oklch(27% 0.1918 264.30)",
+          "oklch(38% 0.2131 264.30)",
+          "oklch(50% 0.2131 264.30)",
+          "oklch(61% 0.2131 264.30)",
+          "oklch(73% 0.2131 264.30)",
+          "oklch(84% 0.1364 264.30)",
+          "oklch(95% 0.0426 264.30)"
+        ]
       },
       "primary-hover": {
         "role": "primary",
         "displayName": "Primary Hover",
-        "canonical": "#1c43a6"
+        "canonical": "#1943b6",
+        "tonalRamp": [
+          "oklch(15% 0.0938 264.33)",
+          "oklch(27% 0.1688 264.33)",
+          "oklch(38% 0.1875 264.33)",
+          "oklch(50% 0.1875 264.33)",
+          "oklch(61% 0.1875 264.33)",
+          "oklch(73% 0.1875 264.33)",
+          "oklch(84% 0.1200 264.33)",
+          "oklch(95% 0.0375 264.33)"
+        ]
       },
       "on-primary": {
         "role": "neutral",
         "displayName": "On Primary",
-        "canonical": "#ffffff"
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(50% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(73% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
-        "canonical": "#17243e"
+        "canonical": "#16243c",
+        "tonalRamp": [
+          "oklch(15% 0.0247 260.66)",
+          "oklch(27% 0.0444 260.66)",
+          "oklch(38% 0.0493 260.66)",
+          "oklch(50% 0.0493 260.66)",
+          "oklch(61% 0.0493 260.66)",
+          "oklch(73% 0.0493 260.66)",
+          "oklch(84% 0.0316 260.66)",
+          "oklch(95% 0.0099 260.66)"
+        ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Muted",
-        "canonical": "#58677e"
+        "canonical": "#5d6c80",
+        "tonalRamp": [
+          "oklch(15% 0.0182 255.68)",
+          "oklch(27% 0.0328 255.68)",
+          "oklch(38% 0.0365 255.68)",
+          "oklch(50% 0.0365 255.68)",
+          "oklch(61% 0.0365 255.68)",
+          "oklch(73% 0.0365 255.68)",
+          "oklch(84% 0.0234 255.68)",
+          "oklch(95% 0.0073 255.68)"
+        ]
       },
       "canvas": {
         "role": "neutral",
         "displayName": "Canvas",
-        "canonical": "#f4f7fc"
+        "canonical": "#eef3f8",
+        "tonalRamp": [
+          "oklch(15% 0.0043 247.91)",
+          "oklch(27% 0.0077 247.91)",
+          "oklch(38% 0.0086 247.91)",
+          "oklch(50% 0.0086 247.91)",
+          "oklch(61% 0.0086 247.91)",
+          "oklch(73% 0.0086 247.91)",
+          "oklch(84% 0.0055 247.91)",
+          "oklch(95% 0.0017 247.91)"
+        ]
       },
       "surface": {
         "role": "neutral",
         "displayName": "Surface",
-        "canonical": "#ffffff"
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(50% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(73% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
       },
       "rail": {
         "role": "neutral",
         "displayName": "Light Interaction Surface",
-        "canonical": "#edf2fb"
+        "canonical": "#e8effa",
+        "tonalRamp": [
+          "oklch(15% 0.0083 259.42)",
+          "oklch(27% 0.0149 259.42)",
+          "oklch(38% 0.0166 259.42)",
+          "oklch(50% 0.0166 259.42)",
+          "oklch(61% 0.0166 259.42)",
+          "oklch(73% 0.0166 259.42)",
+          "oklch(84% 0.0106 259.42)",
+          "oklch(95% 0.0033 259.42)"
+        ]
       },
       "border": {
         "role": "neutral",
         "displayName": "Border",
-        "canonical": "#dce3ef"
+        "canonical": "#d9e2ec",
+        "tonalRamp": [
+          "oklch(15% 0.0084 250.85)",
+          "oklch(27% 0.0151 250.85)",
+          "oklch(38% 0.0168 250.85)",
+          "oklch(50% 0.0168 250.85)",
+          "oklch(61% 0.0168 250.85)",
+          "oklch(73% 0.0168 250.85)",
+          "oklch(84% 0.0107 250.85)",
+          "oklch(95% 0.0034 250.85)"
+        ]
       },
       "focus": {
         "role": "semantic",
         "displayName": "Focus",
-        "canonical": "#2457d6"
+        "canonical": "#2254db",
+        "tonalRamp": [
+          "oklch(15% 0.1065 264.30)",
+          "oklch(27% 0.1918 264.30)",
+          "oklch(38% 0.2131 264.30)",
+          "oklch(50% 0.2131 264.30)",
+          "oklch(61% 0.2131 264.30)",
+          "oklch(73% 0.2131 264.30)",
+          "oklch(84% 0.1364 264.30)",
+          "oklch(95% 0.0426 264.30)"
+        ]
       },
       "secondary": {
         "role": "semantic",
         "displayName": "Secondary",
-        "canonical": "#e9efff"
+        "canonical": "#e8effa",
+        "tonalRamp": [
+          "oklch(15% 0.0083 259.42)",
+          "oklch(27% 0.0149 259.42)",
+          "oklch(38% 0.0166 259.42)",
+          "oklch(50% 0.0166 259.42)",
+          "oklch(61% 0.0166 259.42)",
+          "oklch(73% 0.0166 259.42)",
+          "oklch(84% 0.0106 259.42)",
+          "oklch(95% 0.0033 259.42)"
+        ]
       },
       "secondary-hover": {
         "role": "semantic",
         "displayName": "Secondary Hover",
-        "canonical": "#dce6ff"
+        "canonical": "#dce6f7",
+        "tonalRamp": [
+          "oklch(15% 0.0128 261.14)",
+          "oklch(27% 0.0230 261.14)",
+          "oklch(38% 0.0255 261.14)",
+          "oklch(50% 0.0255 261.14)",
+          "oklch(61% 0.0255 261.14)",
+          "oklch(73% 0.0255 261.14)",
+          "oklch(84% 0.0163 261.14)",
+          "oklch(95% 0.0051 261.14)"
+        ]
       },
       "source-system-bg": {
         "role": "semantic",
         "displayName": "Source System Bg",
-        "canonical": "#e8f4ed"
+        "canonical": "#e7f3ec",
+        "tonalRamp": [
+          "oklch(15% 0.0079 160.62)",
+          "oklch(27% 0.0141 160.62)",
+          "oklch(38% 0.0157 160.62)",
+          "oklch(50% 0.0157 160.62)",
+          "oklch(61% 0.0157 160.62)",
+          "oklch(73% 0.0157 160.62)",
+          "oklch(84% 0.0101 160.62)",
+          "oklch(95% 0.0031 160.62)"
+        ]
       },
       "source-system-ink": {
         "role": "semantic",
         "displayName": "Source System Ink",
-        "canonical": "#22674f"
+        "canonical": "#22674f",
+        "tonalRamp": [
+          "oklch(15% 0.0398 166.43)",
+          "oklch(27% 0.0716 166.43)",
+          "oklch(38% 0.0796 166.43)",
+          "oklch(50% 0.0796 166.43)",
+          "oklch(61% 0.0796 166.43)",
+          "oklch(73% 0.0796 166.43)",
+          "oklch(84% 0.0509 166.43)",
+          "oklch(95% 0.0159 166.43)"
+        ]
       },
       "source-customer-bg": {
         "role": "semantic",
         "displayName": "Source Customer Bg",
-        "canonical": "#eaf0f9"
+        "canonical": "#e8effb",
+        "tonalRamp": [
+          "oklch(15% 0.0089 261.34)",
+          "oklch(27% 0.0160 261.34)",
+          "oklch(38% 0.0178 261.34)",
+          "oklch(50% 0.0178 261.34)",
+          "oklch(61% 0.0178 261.34)",
+          "oklch(73% 0.0178 261.34)",
+          "oklch(84% 0.0114 261.34)",
+          "oklch(95% 0.0036 261.34)"
+        ]
       },
       "source-customer-ink": {
         "role": "semantic",
         "displayName": "Source Customer Ink",
-        "canonical": "#3b5e8d"
+        "canonical": "#365d94",
+        "tonalRamp": [
+          "oklch(15% 0.0499 257.20)",
+          "oklch(27% 0.0899 257.20)",
+          "oklch(38% 0.0999 257.20)",
+          "oklch(50% 0.0999 257.20)",
+          "oklch(61% 0.0999 257.20)",
+          "oklch(73% 0.0999 257.20)",
+          "oklch(84% 0.0639 257.20)",
+          "oklch(95% 0.0200 257.20)"
+        ]
       },
       "source-unverified-bg": {
         "role": "semantic",
         "displayName": "Source Unverified Bg",
-        "canonical": "#fff3df"
+        "canonical": "#fff2da",
+        "tonalRamp": [
+          "oklch(15% 0.0172 82.91)",
+          "oklch(27% 0.0310 82.91)",
+          "oklch(38% 0.0345 82.91)",
+          "oklch(50% 0.0345 82.91)",
+          "oklch(61% 0.0345 82.91)",
+          "oklch(73% 0.0345 82.91)",
+          "oklch(84% 0.0221 82.91)",
+          "oklch(95% 0.0069 82.91)"
+        ]
       },
       "source-unverified-ink": {
         "role": "semantic",
         "displayName": "Source Unverified Ink",
-        "canonical": "#89541a"
+        "canonical": "#89541a",
+        "tonalRamp": [
+          "oklch(15% 0.0497 63.47)",
+          "oklch(27% 0.0895 63.47)",
+          "oklch(38% 0.0995 63.47)",
+          "oklch(50% 0.0995 63.47)",
+          "oklch(61% 0.0995 63.47)",
+          "oklch(73% 0.0995 63.47)",
+          "oklch(84% 0.0637 63.47)",
+          "oklch(95% 0.0199 63.47)"
+        ]
       },
       "neutral-badge-bg": {
         "role": "semantic",
         "displayName": "Neutral Badge Bg",
-        "canonical": "#eef1ef"
+        "canonical": "#edf1f5",
+        "tonalRamp": [
+          "oklch(15% 0.0034 247.90)",
+          "oklch(27% 0.0062 247.90)",
+          "oklch(38% 0.0069 247.90)",
+          "oklch(50% 0.0069 247.90)",
+          "oklch(61% 0.0069 247.90)",
+          "oklch(73% 0.0069 247.90)",
+          "oklch(84% 0.0044 247.90)",
+          "oklch(95% 0.0014 247.90)"
+        ]
       },
       "neutral-badge-ink": {
         "role": "semantic",
         "displayName": "Neutral Badge Ink",
-        "canonical": "#58665e"
+        "canonical": "#526171",
+        "tonalRamp": [
+          "oklch(15% 0.0159 250.16)",
+          "oklch(27% 0.0286 250.16)",
+          "oklch(38% 0.0317 250.16)",
+          "oklch(50% 0.0317 250.16)",
+          "oklch(61% 0.0317 250.16)",
+          "oklch(73% 0.0317 250.16)",
+          "oklch(84% 0.0203 250.16)",
+          "oklch(95% 0.0063 250.16)"
+        ]
       },
       "error": {
         "role": "semantic",
         "displayName": "Error",
-        "canonical": "#a52e35"
+        "canonical": "#a52e35",
+        "tonalRamp": [
+          "oklch(15% 0.0774 21.99)",
+          "oklch(27% 0.1393 21.99)",
+          "oklch(38% 0.1547 21.99)",
+          "oklch(50% 0.1547 21.99)",
+          "oklch(61% 0.1547 21.99)",
+          "oklch(73% 0.1547 21.99)",
+          "oklch(84% 0.0990 21.99)",
+          "oklch(95% 0.0309 21.99)"
+        ]
       },
       "navy": {
         "role": "neutral",
         "displayName": "Midnight",
-        "canonical": "#101d3a"
+        "canonical": "#102746",
+        "tonalRamp": [
+          "oklch(15% 0.0324 256.59)",
+          "oklch(27% 0.0582 256.59)",
+          "oklch(38% 0.0647 256.59)",
+          "oklch(50% 0.0647 256.59)",
+          "oklch(61% 0.0647 256.59)",
+          "oklch(73% 0.0647 256.59)",
+          "oklch(84% 0.0414 256.59)",
+          "oklch(95% 0.0129 256.59)"
+        ]
       },
       "signal": {
         "role": "secondary",
         "displayName": "Signal Cyan",
-        "canonical": "#67e8f9"
+        "canonical": "#79e6ec",
+        "tonalRamp": [
+          "oklch(15% 0.0504 200.19)",
+          "oklch(27% 0.0907 200.19)",
+          "oklch(38% 0.1008 200.19)",
+          "oklch(50% 0.1008 200.19)",
+          "oklch(61% 0.1008 200.19)",
+          "oklch(73% 0.1008 200.19)",
+          "oklch(84% 0.0645 200.19)",
+          "oklch(95% 0.0202 200.19)"
+        ]
+      },
+      "welcome": {
+        "role": "semantic",
+        "displayName": "Welcome",
+        "canonical": "#1f4dcc",
+        "tonalRamp": [
+          "oklch(15% 0.1014 264.43)",
+          "oklch(27% 0.1825 264.43)",
+          "oklch(38% 0.2028 264.43)",
+          "oklch(50% 0.2028 264.43)",
+          "oklch(61% 0.2028 264.43)",
+          "oklch(73% 0.2028 264.43)",
+          "oklch(84% 0.1298 264.43)",
+          "oklch(95% 0.0406 264.43)"
+        ]
+      },
+      "welcome-copy": {
+        "role": "semantic",
+        "displayName": "Welcome Copy",
+        "canonical": "#deebff",
+        "tonalRamp": [
+          "oklch(15% 0.0153 258.94)",
+          "oklch(27% 0.0275 258.94)",
+          "oklch(38% 0.0305 258.94)",
+          "oklch(50% 0.0305 258.94)",
+          "oklch(61% 0.0305 258.94)",
+          "oklch(73% 0.0305 258.94)",
+          "oklch(84% 0.0195 258.94)",
+          "oklch(95% 0.0061 258.94)"
+        ]
+      },
+      "change-bg": {
+        "role": "semantic",
+        "displayName": "Change Bg",
+        "canonical": "#dff3f4",
+        "tonalRamp": [
+          "oklch(15% 0.0105 200.44)",
+          "oklch(27% 0.0190 200.44)",
+          "oklch(38% 0.0211 200.44)",
+          "oklch(50% 0.0211 200.44)",
+          "oklch(61% 0.0211 200.44)",
+          "oklch(73% 0.0211 200.44)",
+          "oklch(84% 0.0135 200.44)",
+          "oklch(95% 0.0042 200.44)"
+        ]
+      },
+      "change-ink": {
+        "role": "semantic",
+        "displayName": "Change Ink",
+        "canonical": "#174c57",
+        "tonalRamp": [
+          "oklch(15% 0.0287 214.20)",
+          "oklch(27% 0.0516 214.20)",
+          "oklch(38% 0.0573 214.20)",
+          "oklch(50% 0.0573 214.20)",
+          "oklch(61% 0.0573 214.20)",
+          "oklch(73% 0.0573 214.20)",
+          "oklch(84% 0.0367 214.20)",
+          "oklch(95% 0.0115 214.20)"
+        ]
       }
     },
     "typographyMeta": {
@@ -135,11 +425,6 @@
         "name": "sheet",
         "value": "-8px 0 32px rgb(0 0 0 / 12%)",
         "purpose": "Right-side overlay sheet."
-      },
-      {
-        "name": "composer-focus",
-        "value": "0 0 0 2px #e6edff",
-        "purpose": "Focus within message entry."
       }
     ],
     "motion": [
@@ -155,8 +440,16 @@
         "value": "767px"
       },
       {
+        "name": "customer-compact-max",
+        "value": "900px"
+      },
+      {
         "name": "details-sheet-max",
         "value": "1279px"
+      },
+      {
+        "name": "icon-rail-max",
+        "value": "1399px"
       },
       {
         "name": "wide-min",
@@ -171,7 +464,7 @@
       "refersTo": "button-primary",
       "description": "Approve and send. Shared button variant.",
       "html": "<button class=\"ds-button ds-primary\">Approve and send</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-primary{background:var(--primary,#2457d6);color:#fff;}.ds-primary:hover{background:var(--primary-hover,#1c43a6)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2254db);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-primary{background:var(--primary,#2254db);color:#fff;}.ds-primary:hover{background:var(--primary-hover,#1943b6)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Outline Button",
@@ -179,7 +472,7 @@
       "refersTo": "button-outline",
       "description": "New conversation. Shared button variant.",
       "html": "<button class=\"ds-button ds-outline\">New conversation</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-outline{background:#fff;color:var(--ink,#17243e);border-color:var(--border,#dce3ef);}.ds-outline:hover{background:var(--rail,#edf2fb)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2254db);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-outline{background:#fff;color:var(--ink,#16243c);border-color:var(--border,#d9e2ec);}.ds-outline:hover{background:var(--rail,#e8effa)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Ghost Button",
@@ -187,7 +480,7 @@
       "refersTo": "button-ghost",
       "description": "Reject draft. Shared button variant.",
       "html": "<button class=\"ds-button ds-ghost\">Reject draft</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-ghost{background:transparent;color:var(--muted,#58677e);}.ds-ghost:hover{background:var(--rail,#edf2fb)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2254db);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-ghost{background:transparent;color:var(--muted,#5d6c80);}.ds-ghost:hover{background:var(--rail,#e8effa)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Secondary Button",
@@ -195,28 +488,28 @@
       "refersTo": "button-secondary",
       "description": "Use suggested reply. Shared button variant.",
       "html": "<button class=\"ds-button ds-secondary\">Use suggested reply</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:#e9efff;color:var(--primary,#2457d6);}.ds-secondary:hover{background:#dce6ff}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2254db);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:var(--rail,#e8effa);color:var(--primary,#2254db);}.ds-secondary:hover{background:#dce6f7}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Message Composer",
       "kind": "input",
       "description": "Labelled draft entry with focus-within treatment.",
       "html": "<div class=\"ds-composer\"><label for=\"ds-message\">Draft reply</label><textarea id=\"ds-message\" placeholder=\"Write a reply\u2026\"></textarea></div>",
-      "css": ".ds-composer{padding:10px 12px;border:1px solid #d6dfed;border-radius:10px;background:#fff;color:var(--ink,#17243e);font:13px Arial,Helvetica,sans-serif}.ds-composer:focus-within{border-color:#7899df;box-shadow:0 0 0 2px #e6edff}.ds-composer label{display:block;margin-bottom:9px;color:var(--muted,#58677e)}.ds-composer textarea{display:block;width:100%;min-height:60px;border:0;background:transparent;outline:0;font:13px Arial,Helvetica,sans-serif;color:inherit;resize:none}.ds-composer textarea::placeholder{color:#58677e}@media(max-width:767px){.ds-composer textarea{font-size:16px}}"
+      "css": ".ds-composer{padding:14px;border:1px solid #c3d1e0;border-radius:12px;background:#fff;color:var(--ink,#16243c);font:15px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif}.ds-composer:focus-within{border-color:var(--focus,#2254db);outline:2px solid #d7e5fc;outline-offset:1px}.ds-composer label{display:block;margin-bottom:9px;color:var(--muted,#5d6c80)}.ds-composer textarea{display:block;width:100%;min-height:68px;border:0;padding:0;background:transparent;outline:0;font:inherit;color:inherit;resize:none}.ds-composer textarea::placeholder{color:var(--muted,#5d6c80)}@media(max-width:767px){.ds-composer textarea{font-size:16px}}"
     },
     {
       "name": "Inbox Filters",
       "kind": "nav",
       "description": "Static visual recipe for the shadcn Tabs; production keyboard behavior comes from Radix.",
       "html": "<div class=\"ds-nav\" role=\"tablist\" aria-label=\"Conversation filters\"><button class=\"ds-tab ds-active\" role=\"tab\" aria-selected=\"true\">All conversations</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Needs reply</button></div>",
-      "css": ".ds-nav{display:flex;gap:12px;border-bottom:1px solid var(--border,#dce3ef)}.ds-tab{min-height:40px;padding:8px 0;border:0;background:transparent;font:11px Arial,Helvetica,sans-serif;color:var(--muted,#58677e);cursor:pointer}.ds-active{color:var(--primary,#2457d6);border-bottom:2px solid var(--primary,#2457d6);font-weight:600}.ds-tab:hover{color:var(--primary,#2457d6)}.ds-tab:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}@media(max-width:767px){.ds-tab{min-height:44px}}"
+      "css": ".ds-nav{display:flex;gap:14px;border-bottom:1px solid var(--border,#d9e2ec)}.ds-tab{min-height:40px;padding:8px 0;border:0;background:transparent;font:12px -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:var(--muted,#5d6c80);cursor:pointer}.ds-active{color:var(--primary,#2254db);border-bottom:2px solid var(--primary,#2254db);font-weight:600}.ds-tab:hover{color:var(--primary,#2254db)}.ds-tab:focus-visible{outline:3px solid var(--focus,#2254db);outline-offset:3px}@media(max-width:767px){.ds-tab{min-height:44px}}"
     },
     {
       "name": "Source Badges",
       "kind": "chip",
       "description": "Text and color together identify provenance.",
       "html": "<span class=\"ds-badge ds-system\">System</span> <span class=\"ds-badge ds-customer\">Customer</span> <span class=\"ds-badge ds-unverified\">Unverified</span>",
-      "css": ".ds-badge{display:inline-flex;padding:3px 7px;border-radius:5px;font:600 10px/1.5 Arial,Helvetica,sans-serif;white-space:nowrap}.ds-system{background:#e8f4ed;color:#22674f}.ds-customer{background:#eaf0f9;color:#3b5e8d}.ds-unverified{background:#fff3df;color:#89541a}"
+      "css": ".ds-badge{display:inline-flex;padding:3px 7px;border-radius:5px;font:550 11px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;white-space:nowrap}.ds-system{background:#e7f3ec;color:#22674f}.ds-customer{background:#e8effb;color:#365d94}.ds-unverified{background:#fff2da;color:#89541a}"
     },
     {
       "name": "Order Card",
@@ -224,17 +517,17 @@
       "refersTo": "order-card",
       "description": "Flat supporting order context.",
       "html": "<section class=\"ds-card\"><h2>Your order</h2><p>DH001 \u00b7 2 items, 2 parcels</p></section>",
-      "css": ".ds-card{background:var(--surface,#fff);border:1px solid var(--border,#dce3ef);border-radius:12px;padding:24px;color:var(--ink,#17243e);font-family:Arial,Helvetica,sans-serif}.ds-card h2{margin:0;font-size:16px;font-weight:600}.ds-card p{margin:6px 0 0;font-size:11px;color:var(--muted,#58677e)}"
+      "css": ".ds-card{background:var(--surface,#fff);border:1px solid var(--border,#d9e2ec);border-radius:14px;padding:24px;color:var(--ink,#16243c);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif}.ds-card h2{margin:0;font-size:17px;font-weight:650}.ds-card p{margin:6px 0 0;font-size:12px;color:var(--muted,#5d6c80)}"
     }
   ],
   "narrative": {
     "northStar": "Continuity in blue",
-    "overview": "The shared interface uses cobalt actions, midnight brand framing, small cyan accents and cool light working surfaces. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Both use familiar task controls and precise status copy.\n\nThis is a code-led record of the current local frontend. Source files are `packages/ui/src/styles.css`, `packages/ui/src/index.tsx`, the official shadcn sources in `packages/ui/src/components/` and the components in both apps. Page strategy remains in `.impeccable/surfaces/`; this document records shared visual behavior.",
+    "overview": "The shared interface uses expressive cobalt, midnight navigation, small cyan accents and chalk-white working surfaces to strengthen the Sea team identity. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Familiar controls, strong weight hierarchy and precise status copy keep the conversation central.\n\nThis records the approved \u201cMore expressive color and a stronger Sea identity\u201d direction as implemented in `packages/ui/src/styles.css`, shared shadcn components and both apps. The existing seaLion mascot remains the brand asset. Surface strategy and the direction seed reference (`seed:9d89fc1ae9991f84`) live in `.impeccable/surfaces/`.",
     "keyCharacteristics": [
-      "Cobalt actions on light surfaces, with midnight and cyan brand framing.",
-      "An original connected-path mark and pattern express continuity between contacts.",
+      "Cobalt welcome and actions, midnight agent navigation, small cyan brand accents.",
+      "Existing seaLion mascot paired with the seaPilot wordmark.",
       "Spacious customer conversation; compact agent workspace.",
-      "Source labels, explicit approval controls and honest demo status."
+      "Visible fact sources, explicit approval controls and accurate API or fixture status."
     ],
     "rules": [
       {
@@ -253,10 +546,10 @@
       "Do preserve the spacious customer layout and compact agent layout within the shared palette.",
       "Do show source words, readable status text and explicit approval actions.",
       "Do retain visible keyboard focus, labelled controls and reduced-motion behavior.",
-      "Do describe placeholder evidence and local operations accurately."
+      "Do describe evidence and API or fixture operations accurately."
     ],
     "donts": [
-      "Don't copy partner logos or use cyan text on white.",
+      "Don't replace the existing mascot or use cyan text on white.",
       "Don't add decorative dashboard metrics to these task surfaces.",
       "Don't use color alone to distinguish fact source or operation status.",
       "Don't turn ordinary case sections into raised cards.",

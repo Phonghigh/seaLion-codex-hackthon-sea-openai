@@ -39,8 +39,8 @@ export function Avatar({ name, small = false }: { name: string; small?: boolean 
     <AvatarFallback className="avatar-fallback">{name.split(' ').map(n => n[0]).slice(0, 2).join('')}</AvatarFallback>
   </ShadcnAvatar>;
 }
-export function Badge({ children, tone = 'neutral', className }: { children: React.ReactNode; tone?: 'neutral' | 'green' | 'amber' | 'blue'; className?: string }) {
-  return <ShadcnBadge variant="secondary" className={cn('badge', `badge-${tone}`, className)}>{children}</ShadcnBadge>;
+export function Badge({ children, tone = 'neutral', className, ...props }: React.HTMLAttributes<HTMLSpanElement> & { children: React.ReactNode; tone?: 'neutral' | 'green' | 'amber' | 'blue' }) {
+  return <ShadcnBadge variant="secondary" className={cn('badge', `badge-${tone}`, className)} {...props}>{children}</ShadcnBadge>;
 }
 export function SourceBadge({ source }: { source: 'customer' | 'system' | 'unverified' }) {
   return <Badge tone={source === 'system' ? 'green' : source === 'customer' ? 'blue' : 'amber'}>{source[0].toUpperCase() + source.slice(1)}</Badge>;
@@ -51,11 +51,11 @@ export function EvidenceTile({ parcel, onClick }: { parcel: 'A' | 'B'; onClick?:
     <span className="evidence-caption"><ImageIcon size={14} />Parcel {parcel}{parcel === 'B' ? ' · opened' : ''}<ArrowUpRight size={14} /></span>
   </Button>;
 }
-export function Sheet({ open, onOpenChange, title, description, children }: { open: boolean; onOpenChange: (open: boolean) => void; title: string; description: string; children: React.ReactNode }) {
+export function Sheet({ open, onOpenChange, title, description, children, onCloseFocus }: { onCloseFocus?: () => void; open: boolean; onOpenChange: (open: boolean) => void; title: string; description: string; children: React.ReactNode }) {
   const returnFocus = React.useRef<HTMLElement | null>(null);
   return <SheetRoot open={open} onOpenChange={onOpenChange}>
     <SheetContent className="sheet-content" onOpenAutoFocus={() => { returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }}
-      onCloseAutoFocus={event => { event.preventDefault(); returnFocus.current?.focus(); }}>
+      onCloseAutoFocus={event => { event.preventDefault(); if (onCloseFocus) onCloseFocus(); else returnFocus.current?.focus(); }}>
       <SheetHeader className="sheet-heading"><SheetTitle>{title}</SheetTitle></SheetHeader>
       <SheetDescription className="sheet-description">{description}</SheetDescription>
       {children}
