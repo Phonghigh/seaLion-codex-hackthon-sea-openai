@@ -1,0 +1,13 @@
+{
+  "clock_note": "The demo clock starts at day 0 09:00 Asia/Ho_Chi_Minh. 'Next day' moves it to day 1 09:00.",
+  "teams": [
+    { "id": "delivery", "name": "Delivery & Logistics", "categories": ["order_status", "missing_item", "damaged"], "lead": "an" },
+    { "id": "payments", "name": "Payments & Refunds", "categories": ["refund_request"], "lead": "binh" },
+    { "id": "general", "name": "General Support", "categories": ["return_howto", "confirm_receipt", "complaint", "other"], "lead": "carlos" }
+  ],
+  "agents": [
+    { "id": "an",     "name": "An",     "team": "delivery", "languages": ["vi", "en"], "timezone": "Asia/Ho_Chi_Minh", "shifts": [{ "day": 0, "start": "08:00", "end": "17:00" }] },
+    { "id": "binh",   "name": "Binh",   "team": "delivery", "languages": ["vi"],       "timezone": "Asia/Ho_Chi_Minh", "shifts": [{ "day": 1, "start": "08:00", "end": "17:00" }] },
+    { "id": "carlos", "name": "Carlos", "team": "general",  "languages": ["en"],       "timezone": "America/New_York", "shifts": [{ "day": 0, "start": "20:00", "end": "05:00" }, { "day": 1, "start": "20:00", "end": "05:00" }] }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "thresholds": { "needs_human": 0.5, "risk": 3, "min_category_confidence": 0.7 },
+  "human_categories": ["refund_request", "damaged", "missing_item", "complaint"],
+  "ai_allowed_categories": ["order_status", "return_howto", "confirm_receipt"],
+  "rules_in_order": [
+    "open_case_exists -> human (keep owner if on shift)",
+    "has_attachment -> human",
+    "category in human_categories -> human",
+    "needs_human >= thresholds.needs_human -> human",
+    "risk >= thresholds.risk -> human",
+    "category_confidence < thresholds.min_category_confidence -> human",
+    "second_message_after_ai_reply -> human",
+    "category in ai_allowed_categories and all_facts_from_system -> ai",
+    "default -> human"
+  ],
+  "human_routing": ["team_by_category", "on_shift_now", "speaks_customer_language", "keep_current_owner", "fewest_open_cases", "fallback_team_lead_with_flag"]
+}
