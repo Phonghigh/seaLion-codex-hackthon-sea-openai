@@ -211,7 +211,7 @@ test('manual entries retain unverified provenance and stay outside automatic cou
 });
 
 test('report omits prompt and manual content by default and safely indents review excerpts', () => {
-  const content = '# synthetic-heading\n```\n<script>alert("synthetic")</script>\n| injected | row |';
+  const content = '# synthetic-heading  \t\n\n \t\n```\n<script>alert("synthetic")</script>  \t\n| injected | row | \t';
   const event = hook({ hook_event_name: 'UserPromptSubmit', prompt: content });
   const report = buildReport([event, manual({ prompt: content, note: content })], { generatedAt: now });
   assert.equal(JSON.stringify(report).includes('synthetic-heading'), false);
@@ -222,6 +222,12 @@ test('report omits prompt and manual content by default and safely indents revie
   assert.ok(!markdown.includes('\n# synthetic-heading'));
   assert.ok(!markdown.includes('\n<script>'));
   assert.ok(!markdown.includes('\n| injected'));
+  assert.ok(markdown.split(/\r?\n/).every((line) => !/[ \t]+$/.test(line)), 'Markdown must not contain trailing whitespace, including on blank lines');
+  const jsonReport = JSON.parse(JSON.stringify(included));
+  assert.equal(jsonReport.prompts[0].content.text, content, 'JSON prompt content must retain original whitespace');
+  assert.equal(jsonReport.manual_entries[0].prompt.text, content);
+  assert.equal(jsonReport.manual_entries[0].note.text, content);
+  assert.equal(event.prompt.text, content, 'Markdown rendering must not mutate captured prompt content');
   included.models = ['<script>|`unsafe`'];
   assert.match(renderMarkdown(included), /&lt;script&gt;&#124;&#96;unsafe&#96;/);
 });

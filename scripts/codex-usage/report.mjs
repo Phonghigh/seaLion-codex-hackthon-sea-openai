@@ -4,7 +4,7 @@ import { label, redactText, preview } from './privacy.mjs';
 const short = (id) => id?.slice(0, 12) ?? 'none';
 const safeCell = (text) => redactText(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/\|/g, '&#124;').replace(/`/g, '&#96;').replace(/\r?\n/g, ' ');
-const safeBlock = (text) => redactText(text).split(/\r?\n/).map((line) => `    ${line}`).join('\n');
+const safeBlock = (text) => redactText(text).split(/\r?\n/).map((line) => line.trim() ? `    ${line.trimEnd()}` : '').join('\n');
 
 export function buildReport(events, { invalid = 0, includePrompts = false, generatedAt = new Date().toISOString() } = {}) {
   const hooks = events.filter((event) => event.source === 'codex_hook');
