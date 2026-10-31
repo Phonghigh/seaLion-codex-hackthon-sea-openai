@@ -1,19 +1,10 @@
 # seaPilot documentation
 
-**[Architecture](Architecture.md)** records the agreed local API/PostgreSQL/disk
-topology, public ChatGPT Sites frontend, and the CLI deployment plan for
-Cloudflare Quick Tunnel, including CORS and URL changes.
+- [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md) - what we build, triage rules, scenes, cut-line, timeline.
+- [Architecture.md](Architecture.md) - decided topology and operating the tunnel.
+- [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md) - operator script, fallbacks, expected end state.
+- [submission/](submission/) - write-up, declarations and pitch drafts for Nhu (16:00).
+- [codex-log.md](codex-log.md) - log of every Codex task.
+- [codex-usage.md](codex-usage.md) and [codex-usage-report.md](codex-usage-report.md) - prompt evidence.
 
-The [earlier architecture review (Vietnamese, 31 October)](architecture-review-2026-10-31.md)
-records the previous design and its missing contracts. Its hosting topology is
-superseded by Architecture.md.
-
-The [31 October preparation pack](prep-2026-10-31/README.md) contains the product
-brief, engineering plan, runtime rules, demo data and runbook, submission drafts,
-pitch, and a review of unresolved implementation and submission details.
-
-The repository has preparation material and development tooling rather than a
-working seaPilot application. Existing build prompts remain as previously
-written; their Supabase/Vercel hosting assumptions differ from Architecture.md.
-
-[Codex task log](codex-log.md) records work performed in this repository.
+Execution copies for Codex: root `AGENTS.md` and `prompts/`.
