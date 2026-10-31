@@ -17,3 +17,5 @@ Use root `AGENTS.md` and `prompts/` as the execution copies.
 [Codex task log](codex-log.md) records work performed in this repository.
 
 - [Frontend base: run, build, scenario walkthrough and limitations](FRONTEND-BASE.md)
+
+- [seaPilot branding and shadcn component contract](BRANDING.md)

@@ -1,323 +1,123 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-31T04:38:17.381694+00:00",
+  "generatedAt": "2026-10-31T04:59:08.807979+00:00",
   "title": "Design System: seaPilot",
   "extensions": {
     "colorMeta": {
       "primary": {
         "role": "primary",
-        "displayName": "Primary",
-        "canonical": "#176b59",
-        "tonalRamp": [
-          "oklch(15% 0.034 167.1)",
-          "oklch(27% 0.047 167.1)",
-          "oklch(39% 0.061 167.1)",
-          "oklch(51% 0.074 167.1)",
-          "oklch(63% 0.070 167.1)",
-          "oklch(75% 0.056 167.1)",
-          "oklch(87% 0.043 167.1)",
-          "oklch(95% 0.034 167.1)"
-        ]
+        "displayName": "Cobalt",
+        "canonical": "#2457d6"
       },
       "primary-hover": {
         "role": "primary",
         "displayName": "Primary Hover",
-        "canonical": "#105342",
-        "tonalRamp": [
-          "oklch(15% 0.035 164.8)",
-          "oklch(27% 0.048 164.8)",
-          "oklch(39% 0.062 164.8)",
-          "oklch(51% 0.076 164.8)",
-          "oklch(63% 0.071 164.8)",
-          "oklch(75% 0.058 164.8)",
-          "oklch(87% 0.044 164.8)",
-          "oklch(95% 0.035 164.8)"
-        ]
+        "canonical": "#1c43a6"
       },
       "on-primary": {
         "role": "neutral",
         "displayName": "On Primary",
-        "canonical": "#ffffff",
-        "tonalRamp": [
-          "oklch(15% 0.000 0.0)",
-          "oklch(27% 0.000 0.0)",
-          "oklch(39% 0.000 0.0)",
-          "oklch(51% 0.000 0.0)",
-          "oklch(63% 0.000 0.0)",
-          "oklch(75% 0.000 0.0)",
-          "oklch(87% 0.000 0.0)",
-          "oklch(95% 0.000 0.0)"
-        ]
+        "canonical": "#ffffff"
       },
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
-        "canonical": "#20342f",
-        "tonalRamp": [
-          "oklch(15% 0.016 165.0)",
-          "oklch(27% 0.023 165.0)",
-          "oklch(39% 0.030 165.0)",
-          "oklch(51% 0.036 165.0)",
-          "oklch(63% 0.034 165.0)",
-          "oklch(75% 0.027 165.0)",
-          "oklch(87% 0.021 165.0)",
-          "oklch(95% 0.016 165.0)"
-        ]
+        "canonical": "#17243e"
       },
       "muted": {
         "role": "neutral",
         "displayName": "Muted",
-        "canonical": "#61716a",
-        "tonalRamp": [
-          "oklch(15% 0.006 153.8)",
-          "oklch(27% 0.008 153.8)",
-          "oklch(39% 0.011 153.8)",
-          "oklch(51% 0.013 153.8)",
-          "oklch(63% 0.013 153.8)",
-          "oklch(75% 0.010 153.8)",
-          "oklch(87% 0.008 153.8)",
-          "oklch(95% 0.006 153.8)"
-        ]
+        "canonical": "#58677e"
       },
       "canvas": {
         "role": "neutral",
         "displayName": "Canvas",
-        "canonical": "#f5f7f5",
-        "tonalRamp": [
-          "oklch(15% 0.000 120.0)",
-          "oklch(27% 0.000 120.0)",
-          "oklch(39% 0.001 120.0)",
-          "oklch(51% 0.001 120.0)",
-          "oklch(63% 0.001 120.0)",
-          "oklch(75% 0.001 120.0)",
-          "oklch(87% 0.000 120.0)",
-          "oklch(95% 0.000 120.0)"
-        ]
+        "canonical": "#f4f7fc"
       },
       "surface": {
         "role": "neutral",
         "displayName": "Surface",
-        "canonical": "#ffffff",
-        "tonalRamp": [
-          "oklch(15% 0.000 0.0)",
-          "oklch(27% 0.000 0.0)",
-          "oklch(39% 0.000 0.0)",
-          "oklch(51% 0.000 0.0)",
-          "oklch(63% 0.000 0.0)",
-          "oklch(75% 0.000 0.0)",
-          "oklch(87% 0.000 0.0)",
-          "oklch(95% 0.000 0.0)"
-        ]
+        "canonical": "#ffffff"
       },
       "rail": {
         "role": "neutral",
-        "displayName": "Rail",
-        "canonical": "#eef3ef",
-        "tonalRamp": [
-          "oklch(15% 0.001 132.0)",
-          "oklch(27% 0.001 132.0)",
-          "oklch(39% 0.002 132.0)",
-          "oklch(51% 0.002 132.0)",
-          "oklch(63% 0.002 132.0)",
-          "oklch(75% 0.001 132.0)",
-          "oklch(87% 0.001 132.0)",
-          "oklch(95% 0.001 132.0)"
-        ]
+        "displayName": "Light Interaction Surface",
+        "canonical": "#edf2fb"
       },
       "border": {
         "role": "neutral",
         "displayName": "Border",
-        "canonical": "#dce5df",
-        "tonalRamp": [
-          "oklch(15% 0.002 140.0)",
-          "oklch(27% 0.002 140.0)",
-          "oklch(39% 0.003 140.0)",
-          "oklch(51% 0.004 140.0)",
-          "oklch(63% 0.003 140.0)",
-          "oklch(75% 0.003 140.0)",
-          "oklch(87% 0.002 140.0)",
-          "oklch(95% 0.002 140.0)"
-        ]
+        "canonical": "#dce3ef"
       },
       "focus": {
         "role": "semantic",
         "displayName": "Focus",
-        "canonical": "#318773",
-        "tonalRamp": [
-          "oklch(15% 0.027 166.0)",
-          "oklch(27% 0.038 166.0)",
-          "oklch(39% 0.049 166.0)",
-          "oklch(51% 0.060 166.0)",
-          "oklch(63% 0.056 166.0)",
-          "oklch(75% 0.046 166.0)",
-          "oklch(87% 0.035 166.0)",
-          "oklch(95% 0.027 166.0)"
-        ]
+        "canonical": "#2457d6"
       },
       "secondary": {
         "role": "semantic",
         "displayName": "Secondary",
-        "canonical": "#e5f2eb",
-        "tonalRamp": [
-          "oklch(15% 0.002 147.7)",
-          "oklch(27% 0.003 147.7)",
-          "oklch(39% 0.004 147.7)",
-          "oklch(51% 0.005 147.7)",
-          "oklch(63% 0.005 147.7)",
-          "oklch(75% 0.004 147.7)",
-          "oklch(87% 0.003 147.7)",
-          "oklch(95% 0.002 147.7)"
-        ]
+        "canonical": "#e9efff"
       },
       "secondary-hover": {
         "role": "semantic",
         "displayName": "Secondary Hover",
-        "canonical": "#d2e9dc",
-        "tonalRamp": [
-          "oklch(15% 0.004 146.1)",
-          "oklch(27% 0.006 146.1)",
-          "oklch(39% 0.008 146.1)",
-          "oklch(51% 0.009 146.1)",
-          "oklch(63% 0.009 146.1)",
-          "oklch(75% 0.007 146.1)",
-          "oklch(87% 0.005 146.1)",
-          "oklch(95% 0.004 146.1)"
-        ]
+        "canonical": "#dce6ff"
       },
       "source-system-bg": {
         "role": "semantic",
         "displayName": "Source System Bg",
-        "canonical": "#e8f4ed",
-        "tonalRamp": [
-          "oklch(15% 0.002 145.0)",
-          "oklch(27% 0.003 145.0)",
-          "oklch(39% 0.004 145.0)",
-          "oklch(51% 0.005 145.0)",
-          "oklch(63% 0.004 145.0)",
-          "oklch(75% 0.004 145.0)",
-          "oklch(87% 0.003 145.0)",
-          "oklch(95% 0.002 145.0)"
-        ]
+        "canonical": "#e8f4ed"
       },
       "source-system-ink": {
         "role": "semantic",
         "displayName": "Source System Ink",
-        "canonical": "#22674f",
-        "tonalRamp": [
-          "oklch(15% 0.029 159.1)",
-          "oklch(27% 0.040 159.1)",
-          "oklch(39% 0.052 159.1)",
-          "oklch(51% 0.063 159.1)",
-          "oklch(63% 0.059 159.1)",
-          "oklch(75% 0.048 159.1)",
-          "oklch(87% 0.036 159.1)",
-          "oklch(95% 0.029 159.1)"
-        ]
+        "canonical": "#22674f"
       },
       "source-customer-bg": {
         "role": "semantic",
         "displayName": "Source Customer Bg",
-        "canonical": "#eaf0f9",
-        "tonalRamp": [
-          "oklch(15% 0.003 216.0)",
-          "oklch(27% 0.004 216.0)",
-          "oklch(39% 0.005 216.0)",
-          "oklch(51% 0.006 216.0)",
-          "oklch(63% 0.005 216.0)",
-          "oklch(75% 0.004 216.0)",
-          "oklch(87% 0.003 216.0)",
-          "oklch(95% 0.003 216.0)"
-        ]
+        "canonical": "#eaf0f9"
       },
       "source-customer-ink": {
         "role": "semantic",
         "displayName": "Source Customer Ink",
-        "canonical": "#3b5e8d",
-        "tonalRamp": [
-          "oklch(15% 0.025 214.4)",
-          "oklch(27% 0.035 214.4)",
-          "oklch(39% 0.045 214.4)",
-          "oklch(51% 0.055 214.4)",
-          "oklch(63% 0.052 214.4)",
-          "oklch(75% 0.042 214.4)",
-          "oklch(87% 0.032 214.4)",
-          "oklch(95% 0.025 214.4)"
-        ]
+        "canonical": "#3b5e8d"
       },
       "source-unverified-bg": {
         "role": "semantic",
         "displayName": "Source Unverified Bg",
-        "canonical": "#fff3df",
-        "tonalRamp": [
-          "oklch(15% 0.005 37.5)",
-          "oklch(27% 0.008 37.5)",
-          "oklch(39% 0.010 37.5)",
-          "oklch(51% 0.012 37.5)",
-          "oklch(63% 0.011 37.5)",
-          "oklch(75% 0.009 37.5)",
-          "oklch(87% 0.007 37.5)",
-          "oklch(95% 0.005 37.5)"
-        ]
+        "canonical": "#fff3df"
       },
       "source-unverified-ink": {
         "role": "semantic",
         "displayName": "Source Unverified Ink",
-        "canonical": "#89541a",
-        "tonalRamp": [
-          "oklch(15% 0.035 31.4)",
-          "oklch(27% 0.049 31.4)",
-          "oklch(39% 0.063 31.4)",
-          "oklch(51% 0.076 31.4)",
-          "oklch(63% 0.072 31.4)",
-          "oklch(75% 0.058 31.4)",
-          "oklch(87% 0.044 31.4)",
-          "oklch(95% 0.035 31.4)"
-        ]
+        "canonical": "#89541a"
       },
       "neutral-badge-bg": {
         "role": "semantic",
         "displayName": "Neutral Badge Bg",
-        "canonical": "#eef1ef",
-        "tonalRamp": [
-          "oklch(15% 0.001 140.0)",
-          "oklch(27% 0.001 140.0)",
-          "oklch(39% 0.001 140.0)",
-          "oklch(51% 0.001 140.0)",
-          "oklch(63% 0.001 140.0)",
-          "oklch(75% 0.001 140.0)",
-          "oklch(87% 0.001 140.0)",
-          "oklch(95% 0.001 140.0)"
-        ]
+        "canonical": "#eef1ef"
       },
       "neutral-badge-ink": {
         "role": "semantic",
         "displayName": "Neutral Badge Ink",
-        "canonical": "#58665e",
-        "tonalRamp": [
-          "oklch(15% 0.006 145.7)",
-          "oklch(27% 0.008 145.7)",
-          "oklch(39% 0.011 145.7)",
-          "oklch(51% 0.013 145.7)",
-          "oklch(63% 0.012 145.7)",
-          "oklch(75% 0.010 145.7)",
-          "oklch(87% 0.007 145.7)",
-          "oklch(95% 0.006 145.7)"
-        ]
+        "canonical": "#58665e"
       },
       "error": {
         "role": "semantic",
         "displayName": "Error",
-        "canonical": "#a52e35",
-        "tonalRamp": [
-          "oklch(15% 0.031 356.5)",
-          "oklch(27% 0.043 356.5)",
-          "oklch(39% 0.056 356.5)",
-          "oklch(51% 0.068 356.5)",
-          "oklch(63% 0.064 356.5)",
-          "oklch(75% 0.052 356.5)",
-          "oklch(87% 0.039 356.5)",
-          "oklch(95% 0.031 356.5)"
-        ]
+        "canonical": "#a52e35"
+      },
+      "navy": {
+        "role": "neutral",
+        "displayName": "Midnight",
+        "canonical": "#101d3a"
+      },
+      "signal": {
+        "role": "secondary",
+        "displayName": "Signal Cyan",
+        "canonical": "#67e8f9"
       }
     },
     "typographyMeta": {
@@ -338,7 +138,7 @@
       },
       {
         "name": "composer-focus",
-        "value": "0 0 0 2px #e8f2eb",
+        "value": "0 0 0 2px #e6edff",
         "purpose": "Focus within message entry."
       }
     ],
@@ -371,7 +171,7 @@
       "refersTo": "button-primary",
       "description": "Approve and send. Shared button variant.",
       "html": "<button class=\"ds-button ds-primary\">Approve and send</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#318773);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-primary{background:var(--primary,#176b59);color:#fff;}.ds-primary:hover{background:var(--primary-hover,#105342)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-primary{background:var(--primary,#2457d6);color:#fff;}.ds-primary:hover{background:var(--primary-hover,#1c43a6)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Outline Button",
@@ -379,7 +179,7 @@
       "refersTo": "button-outline",
       "description": "New conversation. Shared button variant.",
       "html": "<button class=\"ds-button ds-outline\">New conversation</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#318773);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-outline{background:#fff;color:var(--ink,#20342f);border-color:var(--border,#dce5df);}.ds-outline:hover{background:var(--rail,#eef3ef)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-outline{background:#fff;color:var(--ink,#17243e);border-color:var(--border,#dce3ef);}.ds-outline:hover{background:var(--rail,#edf2fb)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Ghost Button",
@@ -387,7 +187,7 @@
       "refersTo": "button-ghost",
       "description": "Reject draft. Shared button variant.",
       "html": "<button class=\"ds-button ds-ghost\">Reject draft</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#318773);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-ghost{background:transparent;color:var(--muted,#61716a);}.ds-ghost:hover{background:var(--rail,#eef3ef)}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-ghost{background:transparent;color:var(--muted,#58677e);}.ds-ghost:hover{background:var(--rail,#edf2fb)}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Secondary Button",
@@ -395,21 +195,21 @@
       "refersTo": "button-secondary",
       "description": "Use suggested reply. Shared button variant.",
       "html": "<button class=\"ds-button ds-secondary\">Use suggested reply</button>",
-      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#318773);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:#e5f2eb;color:var(--primary,#176b59);}.ds-secondary:hover{background:#d2e9dc}@media(max-width:767px){.ds-button{min-height:44px}}"
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border:1px solid transparent;border-radius:var(--radius,8px);font:600 13px/1.35 Arial,Helvetica,sans-serif;cursor:pointer;transition:background 160ms ease,color 160ms ease}.ds-button:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}.ds-button:disabled{opacity:.48;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:#e9efff;color:var(--primary,#2457d6);}.ds-secondary:hover{background:#dce6ff}@media(max-width:767px){.ds-button{min-height:44px}}"
     },
     {
       "name": "Message Composer",
       "kind": "input",
       "description": "Labelled draft entry with focus-within treatment.",
       "html": "<div class=\"ds-composer\"><label for=\"ds-message\">Draft reply</label><textarea id=\"ds-message\" placeholder=\"Write a reply\u2026\"></textarea></div>",
-      "css": ".ds-composer{padding:10px 12px;border:1px solid #d6e0d9;border-radius:10px;background:#fff;color:var(--ink,#20342f);font:13px Arial,Helvetica,sans-serif}.ds-composer:focus-within{border-color:#679781;box-shadow:0 0 0 2px #e8f2eb}.ds-composer label{display:block;margin-bottom:9px;color:var(--muted,#61716a)}.ds-composer textarea{display:block;width:100%;min-height:60px;border:0;background:transparent;outline:0;font:13px Arial,Helvetica,sans-serif;color:inherit;resize:none}.ds-composer textarea::placeholder{color:#68796d}"
+      "css": ".ds-composer{padding:10px 12px;border:1px solid #d6dfed;border-radius:10px;background:#fff;color:var(--ink,#17243e);font:13px Arial,Helvetica,sans-serif}.ds-composer:focus-within{border-color:#7899df;box-shadow:0 0 0 2px #e6edff}.ds-composer label{display:block;margin-bottom:9px;color:var(--muted,#58677e)}.ds-composer textarea{display:block;width:100%;min-height:60px;border:0;background:transparent;outline:0;font:13px Arial,Helvetica,sans-serif;color:inherit;resize:none}.ds-composer textarea::placeholder{color:#58677e}@media(max-width:767px){.ds-composer textarea{font-size:16px}}"
     },
     {
       "name": "Inbox Filters",
       "kind": "nav",
-      "description": "Selected filter uses a teal underline.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Conversation filters\"><button class=\"ds-tab ds-active\" aria-pressed=\"true\">All conversations</button><button class=\"ds-tab\" aria-pressed=\"false\">Needs reply</button></nav>",
-      "css": ".ds-nav{display:flex;gap:18px;border-bottom:1px solid var(--border,#dce5df)}.ds-tab{padding:0 0 10px;border:0;background:transparent;font:11px Arial,Helvetica,sans-serif;color:var(--muted,#61716a);cursor:pointer}.ds-active{color:var(--primary,#176b59);border-bottom:2px solid var(--primary,#176b59);font-weight:600}.ds-tab:hover{color:var(--primary,#176b59)}.ds-tab:focus-visible{outline:3px solid var(--focus,#318773);outline-offset:3px}@media(max-width:767px){.ds-tab{min-height:44px}}"
+      "description": "Static visual recipe for the shadcn Tabs; production keyboard behavior comes from Radix.",
+      "html": "<div class=\"ds-nav\" role=\"tablist\" aria-label=\"Conversation filters\"><button class=\"ds-tab ds-active\" role=\"tab\" aria-selected=\"true\">All conversations</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Needs reply</button></div>",
+      "css": ".ds-nav{display:flex;gap:12px;border-bottom:1px solid var(--border,#dce3ef)}.ds-tab{min-height:40px;padding:8px 0;border:0;background:transparent;font:11px Arial,Helvetica,sans-serif;color:var(--muted,#58677e);cursor:pointer}.ds-active{color:var(--primary,#2457d6);border-bottom:2px solid var(--primary,#2457d6);font-weight:600}.ds-tab:hover{color:var(--primary,#2457d6)}.ds-tab:focus-visible{outline:3px solid var(--focus,#2457d6);outline-offset:3px}@media(max-width:767px){.ds-tab{min-height:44px}}"
     },
     {
       "name": "Source Badges",
@@ -424,14 +224,15 @@
       "refersTo": "order-card",
       "description": "Flat supporting order context.",
       "html": "<section class=\"ds-card\"><h2>Your order</h2><p>DH001 \u00b7 2 items, 2 parcels</p></section>",
-      "css": ".ds-card{background:var(--surface,#fff);border:1px solid var(--border,#dce5df);border-radius:12px;padding:24px;color:var(--ink,#20342f);font-family:Arial,Helvetica,sans-serif}.ds-card h2{margin:0;font-size:16px;font-weight:600}.ds-card p{margin:6px 0 0;font-size:11px;color:var(--muted,#61716a)}"
+      "css": ".ds-card{background:var(--surface,#fff);border:1px solid var(--border,#dce3ef);border-radius:12px;padding:24px;color:var(--ink,#17243e);font-family:Arial,Helvetica,sans-serif}.ds-card h2{margin:0;font-size:16px;font-weight:600}.ds-card p{margin:6px 0 0;font-size:11px;color:var(--muted,#58677e)}"
     }
   ],
   "narrative": {
-    "northStar": "Operate \u2014 a calm working surface",
-    "overview": "The shared interface uses restrained teal, pale green neutrals and clear pane boundaries. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Both use familiar task controls and precise status copy.\n\nThis is a code-led record of the current local frontend. Source files are `packages/ui/src/styles.css`, `packages/ui/src/index.tsx` and the components in both apps. Page strategy remains in `.impeccable/surfaces/`; this document records shared visual behavior.",
+    "northStar": "Continuity in blue",
+    "overview": "The shared interface uses cobalt actions, midnight brand framing, small cyan accents and cool light working surfaces. Customer support feels reassuring and spacious; the CS workspace is compact and evidence-led. Both use familiar task controls and precise status copy.\n\nThis is a code-led record of the current local frontend. Source files are `packages/ui/src/styles.css`, `packages/ui/src/index.tsx`, the official shadcn sources in `packages/ui/src/components/` and the components in both apps. Page strategy remains in `.impeccable/surfaces/`; this document records shared visual behavior.",
     "keyCharacteristics": [
-      "Restrained teal actions on pale neutral surfaces.",
+      "Cobalt actions on light surfaces, with midnight and cyan brand framing.",
+      "An original connected-path mark and pattern express continuity between contacts.",
       "Spacious customer conversation; compact agent workspace.",
       "Source labels, explicit approval controls and honest demo status."
     ],
@@ -448,12 +249,14 @@
       }
     ],
     "dos": [
+      "Do compose application controls from the shared shadcn exports.",
       "Do preserve the spacious customer layout and compact agent layout within the shared palette.",
       "Do show source words, readable status text and explicit approval actions.",
       "Do retain visible keyboard focus, labelled controls and reduced-motion behavior.",
       "Do describe placeholder evidence and local operations accurately."
     ],
     "donts": [
+      "Don't copy partner logos or use cyan text on white.",
       "Don't add decorative dashboard metrics to these task surfaces.",
       "Don't use color alone to distinguish fact source or operation status.",
       "Don't turn ordinary case sections into raised cards.",

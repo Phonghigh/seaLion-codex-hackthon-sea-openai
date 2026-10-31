@@ -59,7 +59,7 @@ Free-form messages are stored but do not receive semantic interpretation.
 | `apps/customer/components` | Chat, composer, history and evidence preview |
 | `apps/customer-service/app` | CS root route and optional demo controls flag |
 | `apps/customer-service/components` | Inbox/thread workspace and case panel |
-| `packages/ui` | Shared tokens, Radix/shadcn-style Button and Sheet, badges, evidence tiles |
+| `packages/ui` | Shared tokens, official shadcn components, cobalt/navy tokens and connected-path brand assets |
 | `packages/contracts` | Zod domain and local-command schemas |
 | `packages/demo` | Pure fixture transitions, suggestions and async in-memory React boundary |
 
@@ -89,3 +89,7 @@ were probed or inferred in this phase.
 
 See [validation and review results](FRONTEND-QA.md) for completed checks and
 remaining browser/integration verification.
+
+The component migration and original hackathon-inspired identity are documented
+in [BRANDING.md](BRANDING.md). All app controls use shared shadcn components; native
+HTML remains for semantic document structure.

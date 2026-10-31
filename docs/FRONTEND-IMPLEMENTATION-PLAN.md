@@ -1,18 +1,18 @@
 # seaPilot frontend foundation — implementation plan
 
-Status: planning baseline, 31 October 2026; frontend implementation is now
-in progress. The user subsequently authorized the FE base and explicitly deferred
-API discovery/integration. This overrides the shared HTTP mock/API-client and
-cross-window synchronization requirements below for the current phase. See
-[FRONTEND-BASE.md](FRONTEND-BASE.md) for implemented scope and local run instructions.
-The remaining sections preserve the original plan and future integration targets.
+Status: frontend base and shadcn/branding refinement implemented, 31 October 2026.
+Two independent Next.js sites run with **separate in-memory fixtures**. The user
+explicitly deferred API discovery and integration: no shared HTTP mock service,
+API client, cross-window synchronization or deployment is included in this phase.
+See [FRONTEND-BASE.md](FRONTEND-BASE.md) for run instructions and
+[FRONTEND-QA.md](FRONTEND-QA.md) for verification and remaining limits.
 
 ## 1. Outcome and source of truth
 
 Build two independently deployable Next.js sites in one repository: a Customer
 site and a Customer Service site. Together they demonstrate the customer-to-CS workflow with
-deterministic mock data, then connects to backend APIs through a replaceable data
-adapter. The central experience is continuing one case across conversations and
+deterministic local fixtures. A future integration phase can connect them through
+a shared backend adapter. The central experience is continuing one case across conversations and
 agents, with visible evidence, changed facts, and explicit approvals.
 
 Priority follows [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md), especially sections 2, 4–6.
@@ -22,15 +22,15 @@ Priority follows [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md), especially sections 2, 4�
 The older [prep review](prep-2026-10-31/review.md) supplies unresolved details;
 its original three-scene scope and schedule do not override the newer brief.
 
-Current checkout: documentation, prompts, routing/team configuration and the
-Codex usage recorder exist. There is no Next.js application or `package.json`.
+Current checkout includes both Next.js applications, shared UI/contracts/demo
+packages, workspace scripts, a pinned lockfile and the Codex usage recorder.
 
 ### Scope and cut line
 
 | Stage | Frontend deliverable | Completion boundary |
 | --- | --- | --- |
 | P0 foundation | Routes, shared shell, design tokens, accessible primitives, typed fixtures and data adapter | Navigable and responsive without backend credentials |
-| P0 demo | Customer chat, CS workspace, case linking, history, source badges, changed facts, editable replies, separate action approval, demo controls | Scenes 1–3 work with mock data across two windows |
+| P0 demo | Customer chat, CS workspace, case linking, history, source badges, changed facts, editable replies, separate action approval, demo controls | Scenes 1–3 demonstrated locally; cross-site synchronization deferred |
 | P2 extension | Triage card, routing reason, owner/shift display, Auto-handled tab, Scene 0 | Only after the core flow works and automatic-reply policy is reconciled |
 | P3 extension | Ambiguous English request and fallback routing, Scene 4 | Only after P2; safe to omit from the core demo |
 
@@ -56,7 +56,7 @@ request endpoint. The Sites skill directs local implementation. Its default
 hosted server starter is Vinext on Cloudflare Workers, which differs from this
 repository's Next.js/Vercel stack.
 
-For the next implementation phase, use the **Sites local-only workflow** in this
+The implemented base uses the **Sites local-only workflow** in this
 checkout and retain actual Next.js. Do not substitute Vinext or create a second
 application repository. Deliver two local previews on separate origins (proposed ports 3000 and 3001).
 Each app must build and run independently. Plan two deployment projects and URLs,
@@ -143,8 +143,7 @@ During implementation:
    evidence and approval decisions. Record separate surface briefs.
 3. Establish a shared `DESIGN.md` for tokens, typography, spacing, source/status
    badges and common component behavior. Allow different density and navigation
-   for each audience. The visual direction below is a proposal to refine through
-   this process, not a reason to replace the user workflows.
+   for each audience. The approved visual direction below preserves these user workflows.
 4. Read Impeccable's `craft-floor` guidance immediately before UI edits. Use the
    shared design system consistently across both Next.js applications.
 5. After each site renders, run `critique` and `audit` against that site's actual
@@ -161,18 +160,40 @@ The context launcher currently returns permission denied; follow the skill's
 documented direct-context fallback if that remains unavailable during development,
 and report unavailable automated checks accurately.
 
-### Proposed visual direction
+### Approved branding and component direction — 31 October 2026
 
-Proposed direction: a calm, compact operations workspace with white surfaces,
-slate text, subtle separators and one restrained teal accent. Reserve green for
-confirmed success, amber for waiting/attention, and red for errors. Always pair
-status colors with readable text. Use a system font stack and a 4/8px spacing
-rhythm; no decorative image generation is needed for this workflow.
+The user requested official shadcn/ui components and a new theme inspired by the
+[Sea × OpenAI Codex Hackathon Vietnam](https://codexhackathon.sea.com/). Use the
+**Continuity in blue** identity documented in [BRANDING.md](BRANDING.md), replacing
+the earlier teal proposal. The original connected-path mark represents a case
+continuing through conversations and agents; it is not an official event logo.
 
-Define semantic tokens for background, surface, border, text, muted text, primary,
-focus, success, warning and error. Reuse button, badge, input, textarea, tabs,
-sheet/dialog, skeleton and empty-state patterns. Keep critical controls visually
-distinct: approving a reply is separate from approving an operations action.
+- Midnight navy `#101D3A`: Customer brand bar and CS rail.
+- Cobalt `#2457D6`: primary actions, active states and focus.
+- Signal cyan `#67E8F9`: restrained mark/pattern accents on navy.
+- Cool canvas `#F4F7FC`, white task surfaces, ink `#17243E`, muted `#58677E`.
+- Green remains success, amber waiting/attention and red error; always show text.
+- Preserve 16px conversation copy and 40px desktop/44px mobile controls.
+- Use the original path motif only in brand framing, not behind conversation data.
+
+Use the official New York shadcn registry components installed under
+`packages/ui/src/components`, composed by `@seapilot/ui`. All application-level
+interactive controls must use these components: Button, Input, Textarea, Label,
+Select, Tabs, Accordion, Avatar, Badge, Card, Sheet and Alert. Replace custom/native
+select and details widgets, filter buttons, raw inputs and textareas. Preserve
+native semantic landmarks, forms, headings and text; shadcn components themselves
+render native HTML. Do not add meaningless wrappers around document structure.
+
+Map the shared theme into shadcn background/foreground/card/popover/primary/
+secondary/muted/accent/destructive/border/input/ring tokens. Use Radix interaction
+behavior for keyboard navigation, selection, disclosure, focus trapping and
+focus restoration. Keep the upstream license and registry provenance in
+`packages/ui/SHADCN-SOURCES.md`. The required Radix dependencies are part of this
+user-authorized component migration; unrelated libraries remain out of scope.
+
+Deliver a reusable mark, pattern SVG, brand board, updated DESIGN.md and sidecar,
+and browser verification of Select, Tabs, Accordion and Sheet on both sites.
+The original independent-fixture scope and API deferral continue to apply.
 
 | Viewport | Layout behavior |
 | --- | --- |
@@ -192,23 +213,20 @@ announced pending/error outcomes, and reduced-motion support. Test 200% zoom.
 
 ## 5. Component and state boundaries
 
-Proposed organization, to be created only in the implementation phase:
+Implemented organization (future integration is explicitly marked):
 
 | Location | Responsibility |
 | --- | --- |
 | `apps/customer/app/` | Customer site's routes, layout, metadata and loading/error states |
 | `apps/customer/components/` | Customer chat, composer and attachment selection |
 | `apps/customer-service/app/` | CS site's routes, layout, metadata and loading/error states |
-| `apps/customer-service/components/workspace/` | Agent header, inbox, thread and responsive workspace |
-| `apps/customer-service/components/cases/` | Link banner, case summary, timeline, evidence and shipments |
-| `apps/customer-service/components/ai/` | Facts, changes, missing info, draft and approval controls |
-| `apps/customer-service/components/triage/` | Optional routing card and assignment display |
-| `apps/customer-service/components/demo/` | Demo controls, clock and agent simulation |
-| `packages/ui/` | Shared tokens and accessible shadcn/ui primitives; no agent business logic |
+| `apps/customer-service/components/workspace.tsx` | Agent header, inbox, thread, demo controls and responsive workspace |
+| `apps/customer-service/components/case-panel.tsx` | Case context, evidence, facts, changes and approval controls |
+| `packages/ui/` | Official shadcn components, semantic tokens and original brand assets; no agent business logic |
 | `packages/contracts/` | Shared Zod schemas and inferred types; no server credentials |
-| `packages/api-client/` | Validated adapter contracts and shared request/error handling |
-| `packages/demo/` | Deterministic fixtures and a development-only shared mock HTTP service |
-| App/package `tests/` | Vitest tests near each feature; cross-site continuity at the workspace level |
+| `packages/api-client/` (deferred, not created) | Future validated HTTP adapter and request/error handling |
+| `packages/demo/` | Deterministic fixtures and local state transitions; one isolated store per site |
+| App/package `tests/` | Vitest tests near each feature; local continuity transitions |
 | Root workspace configuration | Shared lockfile and scripts to run/check/build both sites |
 
 Keep route wrappers and noninteractive layout server-renderable. Add client
@@ -223,6 +241,9 @@ assignments. UI state includes selection, draft text, open sheets, pending
 operations and inline errors. Store drafts by conversation so switching threads
 does not leak one customer's reply into another conversation.
 
+### Deferred shared-state architecture
+
+The following is a future integration proposal, not implemented scope.
 The two sites run on different origins, so localStorage events or BroadcastChannel
 cannot synchronize their domain data. Use one development-only mock HTTP service
 with deterministic fixtures and a revisioned state store, consumed by both sites
@@ -237,7 +258,10 @@ it. Configure the mock service's two allowed local origins explicitly. Live API
 integration later replaces the service URL/adapter and supplies proper access
 control; neither site stores secrets or real customer records in browser storage.
 
-## 6. Data adapter and integration contracts
+## 6. Deferred data adapter and integration contracts
+
+These are planning references from existing repository documents, not discovered
+or verified endpoints. Do not implement or query them during the frontend phase.
 
 UI components consume validated application data, not raw provider SDK objects.
 Use an adapter backed by the shared mock HTTP service first; the live API later
@@ -277,6 +301,10 @@ the browser invokes an approved server boundary; `?demo=1` only controls visibil
 and must not be treated as authorization for destructive reset operations.
 
 ## 7. Required behavior and UI states
+
+Current success/failure states are driven by local demo transitions. Shared reset,
+network pending/error behavior and cross-site scene acceptance below remain
+integration targets; they are not evidence of a working backend.
 
 | Interaction | Pending state | Success state | Failure / recovery |
 | --- | --- | --- | --- |
@@ -343,29 +371,22 @@ behavior is integrated; do not invent backend capabilities in the UI.
 | `operations` vs `Warehouse Ops` and internal case IDs vs `CS001` | Use separate stable identifiers and display labels |
 | Old prep milestones differ from PRODUCT-BRIEF | Use the current brief: 11:00 empty deploy, 12:45 Scene 1, 14:30 Scene 2/WIP, 15:30 freeze; report missed milestones honestly rather than backdating work |
 
-## 10. Implementation sequence
+## 10. Delivery status and next steps
 
-Estimates below are planning ranges for frontend work, not commitments against
-the event clock. Reassess at each gate. Suggested frontend owner: Minh; coordinate
-contracts with Phong/Hoàng. Owners are proposals based on the existing build plan.
+| Workstream | Status | Delivered or remaining |
+| --- | --- | --- |
+| Two-site foundation | Complete | Independent Next.js apps, shared UI/contracts/demo packages, ports 3000/3001, separate builds |
+| Customer flow | Complete locally | Chat, new conversations, history, seeded attachment selection and preview |
+| CS continuity workspace | Complete locally | Inbox, explicit linking, evidence, changes, editable replies and separate action approvals |
+| Demo controls | Complete locally | Reset, advance day, Scene 2 shortcut and agent switching; isolated site state |
+| shadcn and branding refinement | Complete | Official registry controls, cobalt/navy/cyan tokens, original mark/pattern, brand board and documented design system |
+| Frontend verification | Complete within recorded limits | Typecheck, lint, 36 tests, both builds, four viewport sizes and keyboard interaction review |
+| Shared state and API adapter | Deferred by user | Agree contracts and authorization, then implement synchronization across origins |
+| Deployment | Deferred | Separate projects/URLs after an explicit deployment request |
+| P2/P3 triage and ambiguity | Deferred | Resolve policy/config decisions before implementation |
 
-| Task | Estimate | Depends on | Deliverable and acceptance |
-| --- | --- | --- | --- |
-| FE01 — two-site scaffold | 30–45 min | Plan accepted for implementation | pnpm workspace, two Next.js apps on distinct ports, strict TS and per-app scripts/env templates; each root route builds and renders independently |
-| FE02 — UI foundation | 25–35 min | FE01 | Semantic tokens, common primitives, responsive workspace shell; keyboard navigation and four viewport checks |
-| FE03 — contracts and shared mock service | 40–60 min | FE01 | Shared schemas/client, deterministic fixture HTTP service, explicit operation results, clock/reset and synchronization across two origins |
-| FE04 — CS continuity workspace | 45–60 min | FE02, FE03 | Inbox/thread, link flow, case/evidence panel, changes, one missing question, draft editing and approval states |
-| FE05 — customer flow | 20–30 min | FE02, FE03 | New conversation, text send and seeded attachment choice; visible in CS window |
-| FE06 — demo orchestration | 20–30 min | FE04, FE05 | Scenes 1–3, scene-ready jump, successful/failed approvals and clean reset; rehearse three times |
-| FE07 — two-site verification and handoff | 30–45 min | FE06 | Typecheck/lint/tests/build for both apps; independent startup, cross-origin demo, responsive and keyboard QA; remaining backend contracts documented |
-| FE08 — triage extension | 30–45 min | FE07 + policy/config decisions | P2 Triage card, assignment reasons and Scene 0; stop at cut line if late |
-| FE09 — ambiguity scene | 15–25 min | FE08 | P3 Scene 4 and language/fallback explanation |
-
-FE02 and FE03 can proceed independently if work is split explicitly later. This
-plan does not launch parallel agents or implementation. P0 is approximately
-3.5–5 hours serially; shorten by removing optional polish and P2/P3, preserving
-the continuity behavior. Coordinate rather than duplicating T01's scaffold and
-T02's shared schemas when another teammate is implementing them.
+The next development phase should begin with an explicit integration scope.
+Preserve the current local fixtures as a deterministic frontend demonstration.
 
 ## 11. Verification and definition of done
 
@@ -382,8 +403,8 @@ Root scripts must aggregate both apps without hiding failures in either one. Use
   repeated clicks/retries cannot create duplicates.
 - Stale suggestion results cannot overwrite a different conversation's draft.
 
-Manually verify each app starts independently, then run the two-site flow on
-different origins against the shared mock service. Verify that a customer message
+Current checks verify each app independently. In the future integration phase,
+run the two-site flow on different origins against the shared service. Verify that a customer message
 appears in CS and an approved CS reply appears on the Customer site; reset must
 clear both sites. Also verify keyboard access, sheet focus, long content,
 missing images, slow/error adapter responses, 200% zoom and all planned viewports.
@@ -394,30 +415,23 @@ component/route inventory, a list of backend contracts
 still needed, and honest test results. Update `docs/codex-log.md` and the Codex
 usage evidence. Do not claim a deployment or real AI integration until verified.
 
-## 12. Sites implementation handoff — prepared, not executed
+## 12. Sites implementation handoff — completed locally
 
-Use the following request only when the implementation phase is authorized:
+The authorized implementation followed the Sites local-only workflow using actual
+Next.js App Router, TypeScript, Tailwind and shared shadcn components. Customer
+and Customer Service remain separate apps and origins. No Sites registration,
+hosted deployment, API discovery or integration was performed. Shared HTTP state
+from the original planning handoff was superseded by the user's local-only scope.
 
-> Use the Sites skill's local-only workflow in this repository to implement the
-> P0 frontend foundation described in docs/FRONTEND-IMPLEMENTATION-PLAN.md.
-> Read docs/PRODUCT-BRIEF.md and AGENTS.md first. Use actual Next.js App Router,
-> strict TypeScript, Tailwind CSS and shadcn/ui; preserve the existing repository.
-> Use the installed Impeccable skill for both sites: shape their distinct task
-> flows, establish shared design tokens, follow craft-floor before UI edits, and
-> critique, audit and polish each rendered site. Keep the product brief canonical.
-> Create two independently deployable apps: apps/customer and
-> apps/customer-service, each served at / on a distinct local origin. Share UI
-> primitives, schemas and API contracts through workspace packages. Build the
-> Customer chat and responsive three-pane CS workspace. Use one shared fixture
-> HTTP service for cross-origin Scenes 1–3; do not rely on localStorage sync. Make case linking explicit, retain
-> evidence across conversations, show changed facts and source labels, ask at
-> most one missing question, and require separate reply/action approvals. Show
-> success only after adapter confirmation. Include demo reset, clock advance and
-> the documented Scene 2 shortcut. Keep P2/P3 extensions out of the initial build.
-> Do not substitute Vinext, install additional dependencies without the required
-> approval, connect live services, or publish. Run the required checks and browser
-> QA for both apps, deliver two preview URLs and separate deployment boundaries,
-> document remaining backend contracts, and update task/usage logs.
+Future UI changes should follow Impeccable, the approved [brand guide](BRANDING.md)
+and root DESIGN.md, preserve explicit case linking and separate approvals, and
+repeat the relevant checks for each changed surface.
 
-The current planning task does not submit a Site registration, run this request,
-install dependencies, or generate application code.
+## 13. Branding and shadcn refinement delivery
+
+1. Import official registry sources with their MIT license and provenance.
+2. Migrate both sites to shared components while preserving local demo behavior.
+3. Apply cobalt/navy/cyan tokens and the original connected-path mark/pattern.
+4. Update brand board, DESIGN.md and frontend runbook.
+5. Verify component keyboard behavior, mobile layouts, contrast, typecheck, lint,
+   tests and both production builds. No API discovery/integration or deployment.

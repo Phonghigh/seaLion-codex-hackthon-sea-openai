@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+ <rect width="1200" height="800" fill="#f4f7fc"/>
+ <rect width="1200" height="260" fill="#101d3a"/>
+ <g transform="translate(64 58)"><rect width="64" height="64" rx="16" fill="#2457d6"/><g transform="translate(6 6) scale(1.625)" fill="none"><path d="M7 9h12a6 6 0 0 1 0 12H7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M25 23H13a6 6 0 0 1 0-12h12" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round"/><circle cx="7" cy="9" r="3" fill="#67e8f9"/><circle cx="25" cy="11" r="2.5" fill="#fff"/><circle cx="7" cy="21" r="2.5" fill="#fff"/></g></g>
+ <g font-family="Arial, Helvetica, sans-serif"><text x="148" y="106" font-size="48" font-weight="700" fill="#fff">seaPilot<tspan fill="#67e8f9">.</tspan></text>
+ <text x="64" y="194" font-size="28" fill="#fff">One case. Every conversation.</text><text x="64" y="226" font-size="16" fill="#c2d0ec">Continuity expressed through a connected path.</text>
+ <text x="64" y="324" font-size="24" font-weight="700" fill="#17243e">Color system</text>
+ <g transform="translate(64 350)"><rect width="244" height="104" rx="12" fill="#101d3a"/><text x="20" y="44" fill="#fff" font-size="20">Midnight navy</text><text x="20" y="76" fill="#c2d0ec" font-size="16">#101D3A · Navigation</text></g>
+ <g transform="translate(340 350)"><rect width="244" height="104" rx="12" fill="#2457d6"/><text x="20" y="44" fill="#fff" font-size="20">Cobalt blue</text><text x="20" y="76" fill="#fff" font-size="16">#2457D6 · Primary action</text></g>
+ <g transform="translate(616 350)"><rect width="244" height="104" rx="12" fill="#67e8f9"/><text x="20" y="44" fill="#101d3a" font-size="20">Signal cyan</text><text x="20" y="76" fill="#101d3a" font-size="16">#67E8F9 · Brand accent</text></g>
+ <g transform="translate(892 350)"><rect width="244" height="104" rx="12" fill="#fff" stroke="#dce3ef"/><text x="20" y="44" fill="#17243e" font-size="20">Working white</text><text x="20" y="76" fill="#58677e" font-size="16">#FFFFFF · Task surfaces</text></g>
+ <text x="64" y="522" font-size="24" font-weight="700" fill="#17243e">The continuity pattern</text><text x="64" y="552" font-size="16" fill="#58677e">A message, an agent, a next step — connected without restarting the story.</text>
+ <rect x="64" y="584" width="1072" height="132" rx="12" fill="#101d3a"/>
+ <g fill="none" stroke="#67e8f9" stroke-width="3"><path d="M100 622h330a28 28 0 0 1 0 56H260a28 28 0 0 1 0-56h690"/><path d="M630 650h400" opacity=".45"/></g>
+ <g fill="#67e8f9"><circle cx="260" cy="622" r="7"/><circle cx="430" cy="678" r="7"/><circle cx="950" cy="622" r="7"/></g>
+ <text x="64" y="762" font-size="14" fill="#58677e">Original seaPilot identity · Inspired by the Sea × OpenAI Codex Hackathon visual palette · Not an official event mark</text></g>
+</svg>

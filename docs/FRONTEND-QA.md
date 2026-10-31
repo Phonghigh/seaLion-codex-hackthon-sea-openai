@@ -68,3 +68,26 @@ The context/detector launcher failed with permission denied, so no automated
 Impeccable detector result is claimed. Review used the Operate surface briefs and
 DESIGN.md; no approved image comp, separate quality card or five-block direction
 contract was supplied. Local screenshots are under ignored `.impeccable/review/`.
+
+
+## shadcn and branding refinement
+
+Replaced application controls with official New York shadcn components, retaining
+semantic document structure. Applied the original connected-path identity and
+navy/cobalt/cyan theme described in BRANDING.md. Registry sources and MIT license
+are recorded in `packages/ui/SHADCN-SOURCES.md`.
+
+Repeated typecheck, lint, all 36 tests and both production builds: all passed.
+Reviewed both sites at 375, 768, 1024 and 1440px plus the mobile case sheet; no
+horizontal document overflow or obstructed primary controls was observed.
+Verified Select attachment selection and sending, Accordion history disclosure,
+Tabs arrow-key navigation, and Sheet Escape/focus restoration. Browser review
+caught a block-level Badge inside a paragraph; changed Badge to an inline span
+and verified no new nesting warning after reload.
+
+The independent Impeccable finish reviewer returned **ship**, with no material
+fixes across all nine captures. The surface contracts now include direction and
+quality guidance. No seed, automated detector result or approved image comp was
+generated; the launcher limitation remains. Screenshots are locally available in
+`.impeccable/review/branding/`. The broader release-check limits above still apply.
+No API discovery, integration, cross-site synchronization or deployment was added.
