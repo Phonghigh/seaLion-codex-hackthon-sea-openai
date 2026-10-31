@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:14:12.811Z (UTC).
+Generated: 2026-10-31T05:21:08.163Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:11:16.370Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:17:53.361Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:11:16.370Z.
 | prompts | 0 |
 | tool_invocations | 0 |
 | tool_results | 0 |
-| manual_entries | 13 |
+| manual_entries | 14 |
 
 Models reported by hooks: none.
 
@@ -128,6 +128,22 @@ These entries are not automatic evidence and are excluded from tool counts.
     Self-reported request to deploy Customer and Customer Service using Sites. Static Next.js export preparation and two private Site registrations; deployment outcomes recorded separately. No API integration.
 
     [@Sites](plugin://sites@openai-curated-remote) please deploy 2 sites
+
+- 2026-10-31T05:16:00.000Z — Codex/api-foundation (unverified; e9472ef7abd5)
+
+    Self-reported backend authorization; web app files remain unchanged. Automatic hooks unverified.
+
+    Read AGENTS.md and docs/Architecture.md. The backend is now in scope.
+    1. Update AGENTS.md "Current stack": keep apps/customer (3000) and apps/customer-service
+       (3001); add apps/api = Hono on Node 20, port 4000, Postgres 16 in Docker with Drizzle,
+       CaseStore interface. Remove "backend deferred". Both web apps call the API through
+       NEXT_PUBLIC_API_BASE. Exposed with cloudflared tunnel to 4000.
+    2. Build apps/api: GET /api/health, CORS allowlist from CORS_ORIGINS, /files/* for demo images,
+       docker-compose.yml (postgres:16), Drizzle schema for every table in AGENTS.md data model,
+       first migration, seed from prompts/04-demo-data.md, POST /api/demo/reset|advance-day|jump
+       with x-demo-token. Do not change apps/customer or apps/customer-service.
+    Done when docker compose up -d db, pnpm db:migrate, pnpm db:reset work, tests pass,
+    and curl hits all routes. Commit feat(T01b) and feat(T02) separately.
 
 
 ## Coverage and interpretation

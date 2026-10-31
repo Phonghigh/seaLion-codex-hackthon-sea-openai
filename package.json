@@ -10,7 +10,14 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "eslint apps packages",
     "test": "vitest run && node --test tests/codex-usage.test.mjs",
-    "test:frontend": "vitest run"
+    "test:frontend": "vitest run",
+    "dev:api": "pnpm --filter @seapilot/api dev",
+    "db:generate": "pnpm --filter @seapilot/api db:generate",
+    "db:migrate": "pnpm --filter @seapilot/api db:migrate",
+    "db:reset": "pnpm --filter @seapilot/api db:reset",
+    "test:api": "vitest run apps/api/src",
+    "test:api:integration": "vitest run --config apps/api/vitest.integration.config.ts",
+    "tunnel": "cloudflared tunnel --url http://127.0.0.1:4000"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

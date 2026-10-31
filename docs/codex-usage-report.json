@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T05:14:12.811Z",
+  "generated_at": "2026-10-31T05:21:08.163Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T05:11:16.370Z",
+    "last_recorded_at": "2026-10-31T05:17:53.361Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -25,7 +25,7 @@
     "prompts": 0,
     "tool_invocations": 0,
     "tool_results": 0,
-    "manual_entries": 13
+    "manual_entries": 14
   },
   "models": [],
   "tools": [],
@@ -221,6 +221,21 @@
       },
       "note": {
         "text": "Self-reported request to deploy Customer and Customer Service using Sites. Static Next.js export preparation and two private Site registrations; deployment outcomes recorded separately. No API integration.",
+        "truncated": false
+      }
+    },
+    {
+      "id": "e9472ef7abd5",
+      "recorded_at": "2026-10-31T05:17:53.361Z",
+      "occurred_at": "2026-10-31T05:16:00.000Z",
+      "service_tool": "Codex/api-foundation",
+      "status": "unverified",
+      "prompt": {
+        "text": "Read AGENTS.md and docs/Architecture.md. The backend is now in scope.\n1. Update AGENTS.md \"Current stack\": keep apps/customer (3000) and apps/customer-service\n   (3001); add apps/api = Hono on Node 20, port 4000, Postgres 16 in Docker with Drizzle,\n   CaseStore interface. Remove \"backend deferred\". Both web apps call the API through\n   NEXT_PUBLIC_API_BASE. Exposed with cloudflared tunnel to 4000.\n2. Build apps/api: GET /api/health, CORS allowlist from CORS_ORIGINS, /files/* for demo images,\n   docker-compose.yml (postgres:16), Drizzle schema for every table in AGENTS.md data model,\n   first migration, seed from prompts/04-demo-data.md, POST /api/demo/reset|advance-day|jump\n   with x-demo-token. Do not change apps/customer or apps/customer-service.\nDone when docker compose up -d db, pnpm db:migrate, pnpm db:reset work, tests pass,\nand curl hits all routes. Commit feat(T01b) and feat(T02) separately.",
+        "truncated": false
+      },
+      "note": {
+        "text": "Self-reported backend authorization; web app files remain unchanged. Automatic hooks unverified.",
         "truncated": false
       }
     }
