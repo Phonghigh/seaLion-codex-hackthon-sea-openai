@@ -6,11 +6,11 @@ export const CUSTOMER_MESSAGES = {
 };
 export const FIRST_REPLY = 'I checked order DH001. Your order is arriving in two parcels: the T-shirt has been delivered, and the cap is still in transit. I have saved your photo and request so we can keep following up.';
 export function createDemoState(scene: Scene = 'returning'): DemoState {
-  const state: DemoState = { day: 0, parcelB: 'in_transit', conversations: [], case: null, sequence: 10 };
+  const state: DemoState = { revision: 0, day: 0, parcelB: 'in_transit', conversations: [], case: null, sequence: 10 };
   if (scene === 'start') return state;
   state.conversations.push({ id: 'CONV1', caseId: null, title: 'Missing cap · Order DH001', day: 0, messages: [{ id: 'M1', role: 'customer', text: CUSTOMER_MESSAGES.first, time: '09:12', attachment: 'parcel-a' }] });
   if (scene === 'first') return state;
-  state.case = { id: 'CS001', status: 'open', assignee: 'An', evidence: ['parcel-a'], taskId: null, events: [{ id: 'E1', text: 'An opened this case', time: 'Yesterday, 09:13' }, { id: 'E2', text: 'Parcel A attachment saved', time: 'Yesterday, 09:13' }, { id: 'E3', text: 'An approved and sent a reply', time: 'Yesterday, 09:15' }] };
+  state.case = { id: 'CS001', status: 'open', assignee: 'An', evidence: ['parcel-a'], taskId: null, lastReplyParcelB: 'in_transit', events: [{ id: 'E1', text: 'An opened this case', time: 'Yesterday, 09:13' }, { id: 'E2', text: 'Parcel A attachment saved', time: 'Yesterday, 09:13' }, { id: 'E3', text: 'An approved and sent a reply', time: 'Yesterday, 09:15' }] };
   state.conversations[0].caseId = 'CS001';
   state.conversations[0].messages.push({ id: 'R1', role: 'agent', agent: 'An', text: FIRST_REPLY, time: '09:15' });
   state.day = 1; state.parcelB = 'delivered';
@@ -23,7 +23,9 @@ export function createDemoState(scene: Scene = 'returning'): DemoState {
 }
 export function transition(current: DemoState, input: DemoCommand): DemoState {
   const command = CommandSchema.parse(input);
+  if (command.type === 'approveReply' && command.expectedRevision !== current.revision) throw new Error('Case context changed. Review the draft before approving it.');
   const state = structuredClone(current);
+  state.revision += 1;
   if (command.type === 'link') {
     const conversation = state.conversations.find(c => c.id === command.conversationId);
     if (!conversation || !state.case) throw new Error('Select an existing conversation and case.');
@@ -48,7 +50,7 @@ export function transition(current: DemoState, input: DemoCommand): DemoState {
   if (command.type === 'createCase') {
     if (state.case) throw new Error('An existing case is available. Link it instead.');
     if (!conversation.messages.length) throw new Error('Send a customer message first.');
-    state.case = { id: 'CS001', status: 'open', assignee: state.day ? 'Binh' : 'An', evidence: [], taskId: null, events: [{ id: `E${++state.sequence}`, text: 'Agent created case CS001', time: 'Just now' }] };
+    state.case = { id: 'CS001', status: 'open', assignee: state.day ? 'Binh' : 'An', evidence: [], taskId: null, lastReplyParcelB: null, events: [{ id: `E${++state.sequence}`, text: 'Agent created case CS001', time: 'Just now' }] };
     return transition(state, { type: 'link', conversationId: conversation.id });
   }
   if (command.type === 'send') {
@@ -69,6 +71,7 @@ export function transition(current: DemoState, input: DemoCommand): DemoState {
     return state;
   }
   if (command.type === 'approveReply') {
+    state.case.lastReplyParcelB = state.parcelB;
     const last = conversation.messages.at(-1);
     if (last?.role === 'agent' && last.text === command.text) return state;
     conversation.messages.push({ id: `R${++state.sequence}`, role: 'agent', agent: state.case.assignee, text: command.text, time: 'Just now' });

@@ -86,3 +86,6 @@ Before connecting a backend, agree customer-safe reads, conversation creation,
 message/evidence writes, case matching/linking, versioned suggestions, approval
 and escalation persistence, authorization, and reset/clock semantics. No endpoints
 were probed or inferred in this phase.
+
+See [validation and review results](FRONTEND-QA.md) for completed checks and
+remaining browser/integration verification.

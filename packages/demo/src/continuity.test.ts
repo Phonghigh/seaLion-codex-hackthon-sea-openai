@@ -30,7 +30,7 @@ it('only escalates a linked case with the delivered-parcel evidence and records 
 it('keeps the original agent and evidence when the next agent links a new conversation', () => {
   const state = transition(createDemoState('returning'), { type: 'link', conversationId: 'CONV2' });
   expect(state.conversations[0].messages.at(-1)?.agent).toBe('An');
-  const replied = transition(state, { type: 'approveReply', conversationId: 'CONV2', text: 'Your earlier attachment is on file.' });
+  const replied = transition(state, { type: 'approveReply', conversationId: 'CONV2', text: 'Your earlier attachment is on file.', expectedRevision: state.revision });
   expect(replied.conversations[1].messages.at(-1)?.agent).toBe('Binh');
   expect(replied.case?.events.at(-1)?.text).toContain('approved and sent');
 });
@@ -48,6 +48,14 @@ it('preserves earlier history when creating a conversation and starts fresh afte
 it('rejects blank messages and replies before linking without changing history', () => {
   const state = createDemoState('returning');
   expect(() => transition(state, { type: 'send', conversationId: 'CONV2', text: '   ' })).toThrow();
-  expect(() => transition(state, { type: 'approveReply', conversationId: 'CONV2', text: 'Hello' })).toThrow();
+  expect(() => transition(state, { type: 'approveReply', conversationId: 'CONV2', text: 'Hello', expectedRevision: state.revision })).toThrow();
   expect(state.conversations[1].messages).toHaveLength(1);
+});
+
+it('rejects an outdated reply and updates the shipment baseline only after approval', () => {
+  const linked = transition(createDemoState('returning'), { type: 'link', conversationId: 'CONV2' });
+  const changed = transition(linked, { type: 'send', conversationId: 'CONV2', text: 'It arrived without the cap.', attachment: 'parcel-b' });
+  expect(() => transition(changed, { type: 'approveReply', conversationId: 'CONV2', text: 'Did it arrive?', expectedRevision: linked.revision })).toThrow('changed');
+  const approved = transition(changed, { type: 'approveReply', conversationId: 'CONV2', text: 'Thank you for confirming.', expectedRevision: changed.revision });
+  expect(approved.case?.lastReplyParcelB).toBe('delivered');
 });

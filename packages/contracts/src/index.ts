@@ -15,10 +15,10 @@ export type Conversation = z.infer<typeof ConversationSchema>;
 export const CaseSchema = z.object({
   id: z.literal('CS001'), status: z.enum(['open', 'waiting_ops']), assignee: z.enum(['An', 'Binh']),
   evidence: z.array(EvidenceId), events: z.array(z.object({ id: z.string(), text: z.string(), time: z.string() })),
-  taskId: z.string().nullable(),
+  taskId: z.string().nullable(), lastReplyParcelB: z.enum(['in_transit', 'delivered']).nullable(),
 });
 export const DemoStateSchema = z.object({
-  day: z.number(), parcelB: z.enum(['in_transit', 'delivered']),
+  revision: z.number().int().nonnegative(), day: z.number(), parcelB: z.enum(['in_transit', 'delivered']),
   conversations: z.array(ConversationSchema), case: CaseSchema.nullable(), sequence: z.number(),
 });
 export type DemoState = z.infer<typeof DemoStateSchema>;
@@ -28,7 +28,7 @@ export const CommandSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('createCase'), conversationId: z.string() }),
   z.object({ type: z.literal('newConversation') }),
   z.object({ type: z.literal('send'), conversationId: z.string(), text: z.string().trim().min(1).max(4000), attachment: EvidenceId.optional() }),
-  z.object({ type: z.literal('approveReply'), conversationId: z.string(), text: z.string().trim().min(1).max(4000) }),
+  z.object({ type: z.literal('approveReply'), expectedRevision: z.number().int().nonnegative(), conversationId: z.string(), text: z.string().trim().min(1).max(4000) }),
   z.object({ type: z.literal('escalate'), conversationId: z.string() }),
   z.object({ type: z.literal('advance') }),
 ]);
