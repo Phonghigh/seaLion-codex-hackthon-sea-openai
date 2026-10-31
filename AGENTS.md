@@ -27,7 +27,9 @@ One package, two entry points:
 - OpenAI SDK, Responses API with function tools. Vitest. `tests/codex-usage.test.mjs`
   uses node:test and runs under `pnpm test:tooling`, excluded from Vitest.
 No Next.js, no Supabase, no Vercel, no auth, no shadcn.
-Scope today: Scenes 1, 2, 3 only. Triage (T07b), Scene 0, Scene 4, replay, voice are cut.
+Scope today, in this order: Scenes 1-2-3 first (P0). Then triage + routing (T07b) with
+Scene 0 and Scene 4 (P2) - the AI-or-human decision is part of the product, keep it.
+Replay and voice are optional after the freeze.
 
 ## Commands (run from repo root)
 - install:    pnpm install

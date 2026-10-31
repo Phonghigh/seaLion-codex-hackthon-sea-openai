@@ -19,16 +19,18 @@ do not start the next one before it is met. Start every prompt with "Read AGENTS
 | T05 wired to real API | Hoang | 14:00-14:30 | 14:30 WIP submission: Scene 1 + tunnel link |
 | T07+T08 Link, what changed, approve | Minh | 14:15-15:00 | |
 | T06+T09 Customer screen + demo bar | Hoang | 14:30-15:15 | 15:15 Scenes 2 and 3 run |
-| T10 Continuity test + README | Nhu | 15:00-15:30 | 15:30 feature freeze |
+| T07b Triage + routing, Scenes 0 and 4 | Minh | 15:00-15:45 | 15:45 feature freeze |
+| T10 Continuity test + README | Hoang (Codex) | 15:15-15:45 | |
 | Hooks for everyone, cloudflared + Sites on Minh's Mac, pitch, evidence | Phong | all day | 13:30 Sites gate |
 
-Cut today: T07b triage, Scene 0, Scene 4, T12 replay, T11 voice. Prompts kept below for
-reference only. Demo is Scenes 1-2-3; the pitch says triage is next.
+T07b starts only when Scenes 2 and 3 run end to end. If that is not true by 15:00, the
+demo is Scenes 1-2-3 and the pitch shows the rules in config/ as the next step.
+Optional after the freeze: T12 replay, T11 voice.
 
 ## Cut-line when late
 - Never drop: T01, T02, T03+T04, T07+T08, demo bar.
-- Drop first: image upload in T06 (use seeded images), then the customer screen itself
-  (send M1/M2/M3 with a curl script Nhu prepares), then Scene 3.
+- Drop first: Scene 4 and the Auto-handled tab (keep Scene 0 + the Triage card), then image
+  upload in T06 (use seeded images), then the customer screen itself (curl script), then Scene 3.
 - 14:15 Scene 1 not running: Hoang stops UI work and pairs with Minh on T03+T04.
 
 ## T01 - Scaffold, one package (Minh)
@@ -233,7 +235,7 @@ docs/codex-usage-report.md: tasks, tests, commits), Declarations.
 Done when the test passes and README is complete.
 ```
 
-## T12 - Replay mode (cut)
+## T12 - Replay mode (optional, after the freeze)
 
 ```text
 Read AGENTS.md. In src/api/ai/agent.ts: after every successful real suggestion, save it
@@ -244,7 +246,7 @@ small "replayed" badge. Keep data/replay out of git.
 Done when a run with DEMO_REPLAY=1 after one real run needs no network.
 ```
 
-## T07b - Triage and routing (cut today; reference)
+## T07b - Triage and routing (Minh, only after Scenes 2 and 3 run)
 
 ```text
 Read AGENTS.md, docs/PRODUCT-BRIEF.md section 3, config/routing-policy.json,
