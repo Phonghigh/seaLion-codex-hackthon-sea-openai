@@ -29,6 +29,8 @@ it.skipIf(!process.env.DATABASE_URL)('upload cleanup is unaffected by another ap
     expect(await readdir(other.root)).toEqual([savedPath!.split('/').at(-1)]);
     expect((await otherApp.request(savedPath!)).status).toBe(200);
     expect((await app.request(savedPath!)).status).toBe(404);
+    // Customer evidence now starts a background triage job. Let it finish before disposing its DB.
+    await vi.waitFor(async () => expect((await (await otherApp.request('/api/conversations/CONV1')).json()).data.triage_pending).toBe(false));
   } finally {
     await own.close();
     await other.close();

@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T06:31:43.443Z (UTC).
+Generated: 2026-10-31T07:22:28.856Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:31:26.156Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:15:39.427Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 579 |
-| sessions | 9 |
-| prompts | 9 |
-| tool_invocations | 275 |
-| tool_results | 268 |
+| hook_events | 702 |
+| sessions | 11 |
+| prompts | 11 |
+| tool_invocations | 334 |
+| tool_results | 325 |
 | manual_entries | 15 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -22,17 +22,17 @@ Models reported by hooks: gpt-6-astra, unknown.
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | apply_patch | codex_builtin | 21 | 21 | 21 | 0 | 0 | 21 | 0 |
-| Bash | codex_builtin | 227 | 227 | 226 | 0 | 0 | 226 | 1 |
+| Bash | codex_builtin | 277 | 277 | 276 | 0 | 0 | 276 | 1 |
 | clockcurr_time | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
 | mcp__codex_apps__sites__create_site | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__get_deployment_status | mcp_external | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__get_site | mcp_external | 6 | 6 | 4 | 4 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__get_site | mcp_external | 8 | 8 | 6 | 6 | 0 | 0 | 2 |
 | mcp__codex_apps__sites__get_site_version | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
 | mcp__codex_apps__sites__save_version_and_deploy_private | mcp_external | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
-| mcp__codex_apps__sites__update_site_access | mcp_external | 2 | 2 | 0 | 0 | 0 | 0 | 2 |
-| mcp__cua_repl__js | mcp_external | 3 | 3 | 1 | 1 | 0 | 0 | 2 |
+| mcp__codex_apps__sites__update_site_access | mcp_external | 4 | 4 | 2 | 2 | 0 | 0 | 2 |
+| mcp__cua_repl__js | mcp_external | 6 | 6 | 2 | 2 | 0 | 0 | 4 |
 | view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
-| webrun | unknown | 6 | 6 | 6 | 0 | 0 | 6 | 0 |
+| webrun | unknown | 8 | 8 | 8 | 0 | 0 | 8 | 0 |
 
 ## Prompt trail
 
@@ -49,6 +49,8 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T06:03:25.368Z | c2568ee7b933 | 6defa7d07ad2 | 1ae343f8ee8a |
 | 2026-10-31T06:22:15.269Z | 94682603fc7f | a84cee3a7737 | 8b9936a383f9 |
 | 2026-10-31T06:29:36.371Z | bebb67c1d928 | 2a26cd66de87 | aaabc45e2fce |
+| 2026-10-31T06:33:00.841Z | 7fc3f1b1c496 | a3cb79efd4a1 | 2e0dc349cf19 |
+| 2026-10-31T07:02:20.385Z | 8f332f45a8cf | f1fa547f477f | 1c010e690cdf |
 
 ### Prompt 68507c1e0b3d
 
@@ -352,6 +354,62 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt 2e0dc349cf19
+
+    Use the Sites plugin. Set access to public (anyone with the link) for exactly appgprj_6ae58941057881918fe726f0e4859674 and appgprj_6ae589671c8481918691460557ce4c4e. Do not redeploy.
+
+Truncated during capture: no.
+
+### Prompt 1c010e690cdf
+
+    Task BE05: triage and the human-vs-AI decision, Scenes 0 and 4. Hard deadline: done by 15:10
+    (Asia/Saigon). Keep it small and do not break Scenes 1-3, which work today.
+
+    Read AGENTS.md, docs/PRODUCT-BRIEF.md section 3, config/routing-policy.json, config/teams.json,
+    prompts/04-demo-data.md (customers 2 and 3, triage table), apps/api/src (app, ai, demo/clock,
+    store) and apps/customer-service/components/workspace.tsx, apps/customer/components/customer-chat.tsx.
+    All demo data is now English.
+
+    1. apps/api/src/ai/triage.ts: triage(text, context) -> { category, category_confidence,
+       needs_human, risk, language }. One adapter only: Responses API with a strict JSON schema,
+       model env TRIAGE_MODEL defaulting to OPENAI_MODEL, timeout 15 s. category is one of the
+       categories in routing-policy.json plus "other". If the call fails, return a safe fallback
+       { category: "other", category_confidence: 0, needs_human: 1, risk: 3 } so the rules send it to a human.
+    2. apps/api/src/routing/decide.ts: pure functions, no model calls.
+       decideMode(triage, facts, policy) -> { mode: "ai"|"human", rule, reason } applying
+       rules_in_order, first match wins (facts: open_case_exists, has_attachment,
+       second_message_after_ai_reply, all_facts_from_system).
+       routeHuman(category, language, clock, teams, openCaseOwner, openCounts) -> { team, agent,
+       reason, flag? } following human_routing. On-shift checks use apps/api/src/demo/clock.ts,
+       never the real clock. Unit tests for every rule and routing step with the config files as fixtures.
+    3. config/teams.json: Binh now also speaks "en" (demo is English). Keep the shifts.
+    4. Wire it when a customer message is saved: triage -> decideMode.
+       - ai: run the existing suggest agent with read-only tools, save the reply as a cs message
+         with actor "AI", set conversation.mode = "auto", write case_event or conversation-level
+         record "auto_reply" with the triage and rule. Only for categories in ai_allowed_categories.
+       - human: routeHuman, record the decision ("routed") with team, agent and reason, keep the
+         existing human flow (Suggest, Link, Approve) unchanged.
+       Store the latest triage + decision per conversation so GET /api/conversations/:id returns it.
+       Triage must not block the customer: save the message first, run triage async, the UI polls.
+    5. Customer app: a small customer picker in the header (Lan Nguyen, Minh Tran, Sam Lee),
+       default Lan, persisted in localStorage with try/catch. Reset leaves it alone.
+    6. CS app: a "Triage" card at the top of the right panel showing category + confidence,
+       needs human, risk, language, decision (AI or Human), team/agent and the plain-English reason.
+       Auto-handled conversations get an "Auto" badge and appear under the existing Auto-handled filter.
+       Use the customer's name from the API, not only Lan.
+    Expected (tests with a mocked model):
+    Scene 0 Minh Tran "Where is my order DH002?" -> ai, auto reply from shipment data.
+    Scene 1 Lan M1 + photo -> human, delivery, An.  Scene 2 after Next day -> human, existing case
+    CS001, Binh.  Scene 4 Sam Lee "Hi, something's wrong with my order" -> human, General Support, Carlos.
+
+    Constraints: never print or copy apps/api/.env; do not call the real model in tests. Ports 3000,
+    3001 and 4000 are in use by running servers; do not kill them. Keep the visual design.
+    pnpm 10.28.2. Done when typecheck, lint and tests pass (run DB tests with
+    DATABASE_URL=postgres://REDACTED@127.0.0.1:5432/postgres OPENAI_API_KEY=[REDACTED] and pnpm build
+    passes. Append a BE05 row to docs/codex-log.md. Do not commit or push. End with a short report.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -633,6 +691,65 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T06:30:49.532Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
 | 2026-10-31T06:31:13.455Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
 | 2026-10-31T06:31:19.965Z | bebb67c1d928 | 2a26cd66de87 | Bash | unknown |
+| 2026-10-31T06:33:04.909Z | 7fc3f1b1c496 | a3cb79efd4a1 | Bash | unknown |
+| 2026-10-31T06:33:13.391Z | 7fc3f1b1c496 | a3cb79efd4a1 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:33:13.402Z | 7fc3f1b1c496 | a3cb79efd4a1 | mcp__codex_apps__sites__get_site | success |
+| 2026-10-31T06:33:18.770Z | 7fc3f1b1c496 | a3cb79efd4a1 | mcp__codex_apps__sites__update_site_access | success |
+| 2026-10-31T06:33:36.674Z | 7fc3f1b1c496 | a3cb79efd4a1 | mcp__codex_apps__sites__update_site_access | success |
+| 2026-10-31T07:02:26.401Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:26.674Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:26.962Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:38.387Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:38.396Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:38.416Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:38.426Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:43.277Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:43.564Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:43.840Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:44.078Z | 8f332f45a8cf | f1fa547f477f | webrun | unknown |
+| 2026-10-31T07:02:50.937Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:51.226Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:51.473Z | 8f332f45a8cf | f1fa547f477f | webrun | unknown |
+| 2026-10-31T07:02:59.566Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:02:59.835Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:00.085Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:14.192Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:14.455Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:14.710Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:43.890Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:03:44.221Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:04:19.410Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:04:34.017Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:04:40.904Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:04:41.189Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:05:41.345Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:06:02.913Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:06:14.557Z | 8f332f45a8cf | f1fa547f477f | mcp__cua_repl__js | no result observed |
+| 2026-10-31T07:06:19.693Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:06:19.991Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:06:58.838Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:07:07.555Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:07:07.853Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:08:00.060Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:09:01.323Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:09:08.046Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:09:38.712Z | 8f332f45a8cf | f1fa547f477f | mcp__cua_repl__js | success |
+| 2026-10-31T07:09:47.498Z | 8f332f45a8cf | f1fa547f477f | mcp__cua_repl__js | no result observed |
+| 2026-10-31T07:10:00.886Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:10:02.109Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:10:56.638Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:11:54.017Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:12:47.719Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:12:55.888Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:12:55.904Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:13:00.097Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:13:43.855Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:14:09.940Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:14:09.956Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:14:09.964Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:14:16.257Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:14:43.523Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
+| 2026-10-31T07:15:24.919Z | 8f332f45a8cf | f1fa547f477f | Bash | unknown |
 
 ## Self-reported external activity
 

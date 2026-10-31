@@ -17,6 +17,14 @@ export function testStore(initial = buildSeed('After Demo 1', new DemoClock())) 
       state.case_events.push(row);
       return row;
     }),
+    updateConversation: vi.fn(async (id, patch) => {
+      const row = state.conversations.find(item => item.id === id)!;
+      Object.assign(row, patch); return row;
+    }),
+    addConversationEvent: vi.fn(async input => {
+      const row = { ...input, id: input.id ?? `CVE-test-${state.conversation_events.length}` };
+      state.conversation_events.push(row); return row;
+    }),
     resetTo: async next => { state = structuredClone(next); },
     updateShipment: async (id, patch) => {
       const row = state.shipments.find(item => item.id === id)!;

@@ -11,18 +11,19 @@ export const ConversationRowSchema = z.object({ id, customer_id: id, case_id: id
 export const MessageRowSchema = z.object({ id, conversation_id: id, role: z.enum(['customer', 'cs', 'ai']), text: z.string(), actor: z.string(), created_at: time });
 export const EvidenceRowSchema = z.object({ id, conversation_id: id, case_id: id.nullable(), type: z.string(), path: z.string(), source: z.enum(['customer', 'system', 'unverified']), created_at: time });
 export const CaseEventRowSchema = z.object({ id, case_id: id, type: z.string(), actor: z.string(), payload: z.record(z.string(), z.unknown()), created_at: time });
+export const ConversationEventRowSchema = z.object({ id, conversation_id: id, type: z.string(), actor: z.string(), payload: z.record(z.string(), z.unknown()), created_at: time });
 export const TaskRowSchema = z.object({ id, case_id: id, team: z.string(), status: z.string(), evidence_ids: z.array(id), created_at: time });
 
 export const DbRowSchemas = {
   customers: CustomerRowSchema, orders: OrderRowSchema, order_items: OrderItemRowSchema,
   shipments: ShipmentRowSchema, cases: CaseRowSchema, conversations: ConversationRowSchema,
-  messages: MessageRowSchema, evidence: EvidenceRowSchema, case_events: CaseEventRowSchema, tasks: TaskRowSchema,
+  messages: MessageRowSchema, conversation_events: ConversationEventRowSchema, evidence: EvidenceRowSchema, case_events: CaseEventRowSchema, tasks: TaskRowSchema,
 };
 export type DbRows = { [K in keyof typeof DbRowSchemas]: z.infer<(typeof DbRowSchemas)[K]> };
 export type DbTable = keyof DbRows;
 export const DatabaseStateSchema = z.object({
   customers: z.array(CustomerRowSchema), orders: z.array(OrderRowSchema), order_items: z.array(OrderItemRowSchema),
   shipments: z.array(ShipmentRowSchema), cases: z.array(CaseRowSchema), conversations: z.array(ConversationRowSchema),
-  messages: z.array(MessageRowSchema), evidence: z.array(EvidenceRowSchema), case_events: z.array(CaseEventRowSchema), tasks: z.array(TaskRowSchema),
+  messages: z.array(MessageRowSchema), conversation_events: z.array(ConversationEventRowSchema).default([]), evidence: z.array(EvidenceRowSchema), case_events: z.array(CaseEventRowSchema), tasks: z.array(TaskRowSchema),
 });
 export type DatabaseState = z.infer<typeof DatabaseStateSchema>;

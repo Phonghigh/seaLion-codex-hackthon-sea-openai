@@ -42,6 +42,17 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
       const [result] = await db.insert(tables.conversations).values(value).returning();
       return row('conversations', result);
     },
+    async updateConversation(id, patch) {
+      const value = DbRowSchemas.conversations.pick({ mode: true }).parse(patch);
+      const [result] = await db.update(tables.conversations).set(value).where(eq(tables.conversations.id, id)).returning();
+      if (!result) throw new Error('Conversation not found');
+      return row('conversations', result);
+    },
+    async addConversationEvent(input) {
+      const value = DbRowSchemas.conversation_events.parse({ ...input, id: input.id ?? newId('CVE') });
+      const [result] = await db.insert(tables.conversation_events).values(value).returning();
+      return row('conversation_events', result);
+    },
     async addMessage(input) {
       const value = DbRowSchemas.messages.parse({ ...input, id: input.id ?? newId('M') });
       const [result] = await db.insert(tables.messages).values(value).returning();
@@ -100,13 +111,14 @@ export function createPostgresStore(db: Database | Transaction): CaseStore {
       const state = DatabaseStateSchema.parse(input);
       await db.transaction(async tx => {
         await tx.execute(sql`SELECT pg_advisory_xact_lock(7362741)`);
-        await tx.execute(sql`TRUNCATE TABLE tasks, case_events, evidence, messages, conversations, cases, shipments, order_items, orders, customers RESTART IDENTITY CASCADE`);
+        await tx.execute(sql`TRUNCATE TABLE conversation_events, tasks, case_events, evidence, messages, conversations, cases, shipments, order_items, orders, customers RESTART IDENTITY CASCADE`);
         if (state.customers.length) await tx.insert(tables.customers).values(state.customers);
         if (state.orders.length) await tx.insert(tables.orders).values(state.orders);
         if (state.order_items.length) await tx.insert(tables.order_items).values(state.order_items);
         if (state.shipments.length) await tx.insert(tables.shipments).values(state.shipments);
         if (state.cases.length) await tx.insert(tables.cases).values(state.cases);
         if (state.conversations.length) await tx.insert(tables.conversations).values(state.conversations);
+        if (state.conversation_events.length) await tx.insert(tables.conversation_events).values(state.conversation_events);
         if (state.messages.length) await tx.insert(tables.messages).values(state.messages);
         if (state.evidence.length) await tx.insert(tables.evidence).values(state.evidence);
         if (state.case_events.length) await tx.insert(tables.case_events).values(state.case_events);

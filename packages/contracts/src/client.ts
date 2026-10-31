@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { RoutingRecordSchema } from './triage';
 import { AgentSuggestionEnvelopeSchema, type AgentSuggestion } from './agent';
-import { CaseRowSchema, ConversationRowSchema, MessageRowSchema, EvidenceRowSchema, CaseEventRowSchema, TaskRowSchema, OrderRowSchema, OrderItemRowSchema } from './db';
+import { CustomerRowSchema, CaseRowSchema, ConversationRowSchema, MessageRowSchema, EvidenceRowSchema, CaseEventRowSchema, TaskRowSchema, OrderRowSchema, OrderItemRowSchema } from './db';
 
 export const LabeledEvidenceSchema = EvidenceRowSchema.extend({ label: z.string().min(1) });
-export const ConversationDetailSchema = z.object({ conversation: ConversationRowSchema, messages: z.array(MessageRowSchema), evidence: z.array(LabeledEvidenceSchema), case: CaseRowSchema.nullable() });
+export const ConversationDetailSchema = z.object({ conversation: ConversationRowSchema, customer: CustomerRowSchema.optional(), order_id: z.string().nullable().optional(), routing: RoutingRecordSchema.nullable().optional(), triage_pending: z.boolean().optional(), messages: z.array(MessageRowSchema), evidence: z.array(LabeledEvidenceSchema), case: CaseRowSchema.nullable() });
 export const CaseDetailSchema = z.object({ case: CaseRowSchema, events: z.array(CaseEventRowSchema), evidence: z.array(LabeledEvidenceSchema), tasks: z.array(TaskRowSchema) });
 export const CaseContextSchema = z.object({
   case: CaseRowSchema,

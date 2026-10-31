@@ -186,6 +186,30 @@ describe('suggest agent with mocked OpenAI', () => {
     expect(AgentSuggestionSchema.safeParse({ ...suggestion, missing_info: ['a', 'b'] }).success).toBe(false);
   });
 
+  it.each([
+    { proposed_action: { type: 'escalate_to_ops', reason: 'Needs checking', evidence_ids: [] } },
+    { known_facts: [{ text: 'Customer claim', source: 'customer' }] },
+    { known_facts: [{ text: 'Inference', source: 'unverified' }] },
+    { missing_info: ['Please clarify'] },
+    { draft_reply: '' },
+  ])('automatic mode rejects replies needing human approval %#', async patch => {
+    const client = mockClient();
+    client.responses.create.mockResolvedValueOnce(toolResponse(toolCall('get_order_shipments', { order_id: 'DH001' })))
+      .mockResolvedValueOnce(final({ ...suggestion, suggested_case_id: null, missing_info: [], ...patch }));
+    const store = testStore();
+    expect((await createAgent(store, { client, model: 'mock' }).suggest('CONV1', 'auto')).ok).toBe(false);
+    expect(store.addMessage).not.toHaveBeenCalled(); expect(store.addEvent).not.toHaveBeenCalled();
+  });
+  it('automatic mode scopes reads to this customer and requires a successful order read', async () => {
+    const client = mockClient();
+    client.responses.create.mockResolvedValueOnce(toolResponse(toolCall('get_order_shipments', { order_id: 'DH002' })))
+      .mockResolvedValueOnce(final({ ...suggestion, suggested_case_id: null, missing_info: [] }));
+    const store = testStore();
+    expect((await createAgent(store, { client, model: 'mock' }).suggest('CONV1', 'auto')).ok).toBe(false);
+    expect(JSON.stringify(client.responses.create.mock.calls[1][0].input)).toContain('Tool is unavailable for this automatic reply');
+    expect(store.addMessage).not.toHaveBeenCalled();
+  });
+
   it('try:suggest exits clearly before DB/network access when the key is empty', () => {
     try {
       execFileSync(process.execPath, ['--import', 'tsx', 'scripts/try-suggest.ts'], {

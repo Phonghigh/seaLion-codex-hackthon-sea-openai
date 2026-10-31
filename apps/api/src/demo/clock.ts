@@ -9,6 +9,7 @@ export class DemoClock {
     this.base = Date.parse(`${localDate}T09:00:00+07:00`);
   }
 
+  get dayOffset(): number { return this.day; }
   now(): Date { return new Date(this.base + this.day * DAY); }
   advance(): Date { this.day += 1; return this.now(); }
   reset(today = new Date()): void {

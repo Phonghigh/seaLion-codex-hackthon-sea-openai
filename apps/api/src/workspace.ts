@@ -3,9 +3,10 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import type { Hono } from 'hono';
 import { z } from 'zod';
-import { AgentSuggestionSchema, type DbTable } from '@seapilot/contracts';
+import { AgentSuggestionSchema, RoutingRecordSchema, type DbTable } from '@seapilot/contracts';
 import { compareChronological, labelEvidence } from '@seapilot/contracts/client';
 import type { CaseStore } from './store/CaseStore';
+import type { RoutingService } from './routing/service';
 
 const id = z.string().trim().min(1);
 const actionSchema = AgentSuggestionSchema.shape.proposed_action.unwrap().extend({ evidence_ids: z.array(id).min(1) });
@@ -21,7 +22,7 @@ async function required<K extends DbTable>(store: CaseStore, table: K, key: stri
   if (!row) throw new RequestError(`${table} not found`, 404);
   return row;
 }
-export function registerWorkspace(app: Hono, store: CaseStore, now: () => string, uploadRoot: URL) {
+export function registerWorkspace(app: Hono, store: CaseStore, now: () => string, uploadRoot: URL, routing: RoutingService) {
   app.post('/api/conversations', async c => {
     const body = z.object({ customer_id: id }).strict().parse(await c.req.json());
     await required(store, 'customers', body.customer_id);
@@ -33,16 +34,33 @@ export function registerWorkspace(app: Hono, store: CaseStore, now: () => string
   });
   app.get('/api/conversations/:id', async c => {
     const conversation = await required(store, 'conversations', c.req.param('id'));
-    const [messages, evidence, summary] = await Promise.all([
+    const [messages, evidence, summary, customer, orders, events] = await Promise.all([
       store.list('messages', { conversation_id: conversation.id }), store.list('evidence', { conversation_id: conversation.id }),
       conversation.case_id ? store.get('cases', conversation.case_id) : null,
+      store.get('customers', conversation.customer_id), store.list('orders', { customer_id: conversation.customer_id }),
+      store.list('conversation_events', { conversation_id: conversation.id }),
     ]);
-    return c.json({ ok: true, data: { conversation, messages: messages.sort(compareChronological), evidence: labelEvidence(evidence), case: summary } });
+    const latest = events.sort(compareChronological).at(-1);
+    const record = RoutingRecordSchema.safeParse(latest?.payload);
+    const customerMessage = messages.filter(message => message.role === 'customer').sort(compareChronological).at(-1);
+    const latestEvidence = [...evidence].sort(compareChronological).at(-1);
+    const currentRecord = record.success && record.data.message_id === customerMessage?.id &&
+      (!latestEvidence || (!!latest && compareChronological(latestEvidence, latest) <= 0)) ? record.data : null;
+    return c.json({ ok: true, data: { conversation, customer,
+      order_id: summary?.order_id ?? orders.sort((a, b) => b.placed_at.localeCompare(a.placed_at) || b.id.localeCompare(a.id))[0]?.id ?? null,
+      routing: currentRecord, triage_pending: routing.isPending(conversation.id),
+      messages: messages.sort(compareChronological), evidence: labelEvidence(evidence), case: summary } });
   });
   app.post('/api/conversations/:id/messages', async c => {
     const body = z.object({ role: z.literal('customer'), text: id }).strict().parse(await c.req.json());
     const conversation = await required(store, 'conversations', c.req.param('id'));
-    return c.json({ ok: true, data: await store.addMessage({ ...body, conversation_id: conversation.id, actor: conversation.customer_id, created_at: now() }) }, 201);
+    const message = await store.transaction(async tx => {
+      const saved = await tx.addMessage({ ...body, conversation_id: conversation.id, actor: conversation.customer_id, created_at: now() });
+      await tx.updateConversation(conversation.id, { mode: 'human' });
+      return saved;
+    });
+    routing.schedule(conversation.id);
+    return c.json({ ok: true, data: message }, 201);
   });
   app.post('/api/upload', async c => {
     let path: string;
@@ -68,9 +86,11 @@ export function registerWorkspace(app: Hono, store: CaseStore, now: () => string
       const evidence = await store.transaction(async tx => {
         const conversation = await required(tx, 'conversations', conversation_id);
         const evidence = await tx.addEvidence({ conversation_id, case_id: conversation.case_id, type: 'image', path, source: 'customer', created_at: now() });
+        await tx.updateConversation(conversation.id, { mode: 'human' });
         if (conversation.case_id) await tx.addEvent({ case_id: conversation.case_id, type: 'evidence_added', actor: conversation.customer_id, payload: { evidence_id: evidence.id }, created_at: now() });
         return evidence;
       });
+      routing.schedule(conversation_id);
       return c.json({ ok: true, data: evidence }, 201);
     } catch (error) {
       if (saved) await rm(fileURLToPath(saved), { force: true });

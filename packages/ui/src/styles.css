@@ -286,3 +286,7 @@ time { font-variant-numeric:tabular-nums; }
 .customer-header { background-image:url('./brand-pattern.svg'); background-repeat:no-repeat; background-position:right center; background-size:420px 80px; }
 
 * { border-color:var(--border); }
+
+/* BE05: retain header contrast for the compact customer selector. */
+.customer-picker { width:auto; min-width:142px; background:var(--surface); color:var(--ink); }
+.case-info dd { min-width:0; overflow-wrap:anywhere; }

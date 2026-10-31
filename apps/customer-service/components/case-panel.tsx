@@ -1,19 +1,37 @@
 'use client';
 import Image from 'next/image';
-import type { AgentSuggestion } from '@seapilot/contracts';
+import teams from '../../../config/teams.json';
+import type { AgentSuggestion, RoutingRecord } from '@seapilot/contracts';
 import { api, compareChronological, actorName, formatTime, type CaseDetail, type CaseContext, type OrderShipments } from '../src/lib/api';
 import { Card, Avatar, Badge, Button, SourceBadge, ArrowRight, CheckCircle2, Clock3, Link2, Package, Sparkles, Truck } from '@seapilot/ui';
 
 type Evidence = CaseDetail['evidence'][number];
 interface Props {
+  routing?: RoutingRecord | null; triagePending?: boolean;
   detail: CaseDetail | null; context: CaseContext | null; order: OrderShipments | null;
   suggestion: AgentSuggestion | null; busy: boolean; canApprove: boolean; stale: boolean;
   onEvidence: (evidence: Evidence) => void; onUseDraft: () => void; onEscalate: () => void; onSuggest: () => void;
 }
-export function CasePanel({ detail, context, order, suggestion, busy, canApprove, stale, onEvidence, onUseDraft, onEscalate, onSuggest }: Props) {
+export function CasePanel({ routing, triagePending, detail, context, order, suggestion, busy, canApprove, stale, onEvidence, onUseDraft, onEscalate, onSuggest }: Props) {
   const supportCase = detail?.case;
   const task = detail?.tasks.find(item => item.team === 'operations');
   return <aside className="case-pane" aria-label="Case details">
+    <Card className="case-section" aria-label="Triage">
+      <h3>Triage{routing && !triagePending && <Badge tone={routing.decision.mode === 'ai' ? 'blue' : 'amber'}>{routing.decision.mode === 'ai' ? 'AI' : 'Human'}</Badge>}</h3>
+      {triagePending ? <p role="status">Message saved. Triage is in progress…</p> : routing ? <>
+        <p className="muted small">Model assessment<SourceBadge source="unverified" /></p>
+        <dl className="case-info">
+          <div><dt>Category</dt><dd>{routing.triage.category.replaceAll('_', ' ')} · {Math.round(routing.triage.category_confidence * 100)}%</dd></div>
+          <div><dt>Needs human</dt><dd>{Math.round(routing.triage.needs_human * 100)}%</dd></div>
+          <div><dt>Risk</dt><dd>{routing.triage.risk} / 5</dd></div>
+          <div><dt>Language</dt><dd>{({ en: 'English', vi: 'Vietnamese', other: 'Other' })[routing.triage.language]}</dd></div>
+          {routing.route && <><div><dt>Team</dt><dd>{teams.teams.find(team => team.id === routing.route?.team)?.name ?? routing.route.team}</dd></div><div><dt>Agent</dt><dd>{teams.agents.find(agent => agent.id === routing.route?.agent)?.name ?? routing.route.agent}</dd></div></>}
+        </dl>
+        <p>{routing.decision.reason}</p>{routing.route && <p>{routing.route.reason}</p>}
+        {routing.route?.flag && <Badge tone="amber">No matching agent</Badge>}
+        <p className="muted small">Routing rules<SourceBadge source="system" /></p>
+      </> : <p className="muted">No triage assessment yet. Human review is available.</p>}
+    </Card>
     <div className="case-heading"><h2>Case context</h2>{supportCase && <Badge>{supportCase.id}</Badge>}</div>
     {supportCase ? <Card className="case-section"><div className="row between" style={{ marginBottom: 14 }}><h3 style={{ margin: 0 }}>{supportCase.title}<SourceBadge source="system" /></h3><Badge tone={supportCase.status === 'waiting_ops' ? 'amber' : 'green'}>{supportCase.status.replaceAll('_', ' ')}</Badge></div><dl className="case-info"><div><dt>Assigned to</dt><dd className="row"><Avatar small name={actorName(supportCase.assignee)} />{actorName(supportCase.assignee)}</dd></div><div><dt>Customer</dt><dd>{supportCase.customer_id}</dd></div><div><dt>Order</dt><dd>{supportCase.order_id}</dd></div></dl></Card> : <div className="case-section"><h3><Link2 size={15} />Start with one case</h3><p>Approve the first reply to create a case, or confirm a suggested match to continue an existing case.</p></div>}
     {order && <Card className="case-section"><h3><Package size={15} />Order & parcels<SourceBadge source="system" /></h3>{order.parcels.map(parcel => <div className="parcel-row" key={parcel.parcel_code}><span className="parcel-name"><Package size={16} />{parcel.parcel_code} · {parcel.items.map(item => item.name).join(', ')}</span><Badge tone={parcel.status === 'delivered' ? 'green' : 'amber'}>{parcel.status.replaceAll('_', ' ')}</Badge></div>)}</Card>}

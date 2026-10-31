@@ -31,3 +31,8 @@ export const case_events = pgTable('case_events', {
 export const tasks = pgTable('tasks', {
   id: text('id').primaryKey(), case_id: text('case_id').notNull().references(() => cases.id), team: text('team').notNull(), status: text('status').notNull(), evidence_ids: jsonb('evidence_ids').$type<string[]>().notNull(), created_at: time('created_at'),
 });
+
+export const conversation_events = pgTable('conversation_events', {
+  id: text('id').primaryKey(), conversation_id: text('conversation_id').notNull().references(() => conversations.id),
+  type: text('type').notNull(), actor: text('actor').notNull(), payload: jsonb('payload').$type<Record<string, unknown>>().notNull(), created_at: time('created_at'),
+});

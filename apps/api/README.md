@@ -42,7 +42,7 @@ Demo control requests in one server process are serialized. Database resets use 
 TRUNCATE statement and inserts in a transaction; shipment changes and audit events
 also commit together. Advance-day audits every unresolved DH001 case.
 
-`CaseStore.get(table, id)` and `list(table, partialRowFilter)` support all ten tables;
+`CaseStore.get(table, id)` and `list(table, partialRowFilter)` support all eleven tables;
 reads return ISO timestamp strings. Named writes validate with the separate Zod row
 contracts. `transaction` supports atomic multi-step operations. Linking also attaches
 pending evidence, changes assignee and records both audit events. Future routes must
@@ -153,3 +153,35 @@ clients call the app object for three full Reset → Scene 1 → Next day → Sc
 Scene 3 cycles with the mocked model. It verifies `CS_A`/`CS_B` identity mapping,
 case-created ordering, no-op assignment suppression, multipart and seed uploads,
 error envelopes and the escalation-before-reply gate.
+
+
+## BE05: triage and automatic replies
+
+Customer messages commit before asynchronous triage starts. The single Responses
+adapter uses strict JSON Schema, `TRIAGE_MODEL` (defaults to `OPENAI_MODEL`), and a
+15-second deadline. Failure returns conservative human-review scores. The rules
+in `config/routing-policy.json` run in their configured order; the demo clock and
+`config/teams.json` choose an on-shift, language-matching agent. Schedule day numbers
+are demo days; shift hours use each agent's timezone, including overnight shifts.
+Binh speaks both English and Vietnamese.
+
+Run `pnpm db:migrate` to add `conversation_events` without replacing the original
+migration. This table audits `routed` and `auto_reply`, including measurements,
+matched rule and human assignment. Conversation GET responses include `customer`,
+`order_id`, the latest `routing` record, and `triage_pending`; both sites poll.
+An automatic reply and its mode/audit commit together, with actor `AI` and role `cs`.
+The existing suggest agent exposes only read tools for automatic replies and
+rejects actions, missing information or non-system facts. System facts currently
+support order status/receipt queries; return instructions remain human-handled
+because the demo has no stored return-policy data. Human routing recommends an
+agent; ownership still changes only through the existing approved/link flow.
+
+Jobs run in the API process and are invalidated on demo reset/jump. New messages,
+attachments, human replies and changed shipment data are rechecked before sending.
+An API restart does not resume an interrupted job; its saved message remains in
+the human inbox. The customer picker uses a separate localStorage key and survives
+Reset. Scene tests use mocked models and disposable databases:
+
+```sh
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres OPENAI_API_KEY= pnpm test
+```

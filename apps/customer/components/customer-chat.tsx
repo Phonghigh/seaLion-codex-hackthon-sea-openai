@@ -1,11 +1,17 @@
 'use client';
 import Image from 'next/image';
+import { CUSTOMERS, selectCustomer, useCustomer } from '../src/lib/customer';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { DbRows } from '@seapilot/contracts';
 import { api, actorName, formatTime, type ConversationDetail, type OrderShipments } from '../src/lib/api';
 import { Input, Textarea, Label, Card, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, Accordion, AccordionItem, AccordionTrigger, AccordionContent, Alert, AlertDescription, Avatar, Badge, Brand, Button, Sheet, EmptyState, Package, Paperclip, ArrowUp, Plus, ShieldCheck, CheckCheck, Truck, X, MessageSquare } from '@seapilot/ui';
 
 export function CustomerChat() {
+  const customer = useCustomer();
+  return <CustomerConversation key={customer.id} customer={customer} />;
+}
+
+function CustomerConversation({ customer }: { customer: typeof CUSTOMERS[number] }) {
   const [conversations, setConversations] = useState<DbRows['conversations'][]>([]);
   const [selected, setSelected] = useState('');
   const [thread, setThread] = useState<ConversationDetail | null>(null);
@@ -24,7 +30,7 @@ export function CustomerChat() {
   const draft = drafts[selected] ?? '';
   const refresh = useCallback(async () => {
     const version = ++generation.current;
-    const [list, shipments] = await Promise.all([api.conversations('CUST001'), api.shipments('DH001')]);
+    const [list, shipments] = await Promise.all([api.conversations(customer.id), api.shipments(customer.order)]);
     if (version !== generation.current) return;
     if (!list.ok) { setError(list.error); setLoading(false); return; }
     const sorted = list.data.sort((a, b) => a.opened_at.localeCompare(b.opened_at));
@@ -38,7 +44,7 @@ export function CustomerChat() {
       if (result.ok) setThread(result.data); else { setThread(null); setError(result.error); }
     } else setThread(null);
     setLoading(false);
-  }, [selected]);
+  }, [selected, customer]);
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -49,7 +55,7 @@ export function CustomerChat() {
   async function newConversation() {
     if (pending.current) return;
     pending.current = true; setBusy(true); setError(''); setNotice('');
-    const result = await api.createConversation('CUST001');
+    const result = await api.createConversation(customer.id);
     if (result.ok) { generation.current += 1; setConversations(previous => [...previous, result.data]); setSelected(result.data.id); setThread(null); setAttachment(''); setFile(null); setPickerOpen(false); setNotice('New conversation started. Earlier messages are still available.'); }
     else setError(result.error);
     pending.current = false; setBusy(false);
@@ -58,31 +64,32 @@ export function CustomerChat() {
     if (pending.current || !selected || (!draft.trim() && !attachment && !file)) return;
     pending.current = true; setBusy(true); setError(''); setNotice('');
     try {
-      // Clear only the successfully saved part, so a failed attachment can be retried without duplicating text.
+      // Save evidence first so the hard attachment rule cannot race a fast triage call.
+      // Clear only saved parts; a failed text send can be retried without another upload.
+      if (file || attachment) {
+        const result = file ? await api.upload(selected, file) : await api.seedImage(selected, attachment as 'parcel_a' | 'parcel_b_open');
+        if (!result.ok) { setError(`${result.error} Your message has not been sent. Retry the attachment or choose a sample.`); return; }
+        setAttachment(''); setFile(null); setPickerOpen(false);
+      }
       if (draft.trim()) {
         const result = await api.sendMessage(selected, draft);
         if (!result.ok) { setError(result.error); return; }
         setDrafts(previous => ({ ...previous, [selected]: '' }));
       }
-      if (file || attachment) {
-        const result = file ? await api.upload(selected, file) : await api.seedImage(selected, attachment as 'parcel_a' | 'parcel_b_open');
-        if (!result.ok) { setError(`${result.error} Your text may already be saved. Retry the attachment or choose a sample.`); return; }
-        setAttachment(''); setFile(null); setPickerOpen(false);
-      }
       setNotice('Sent');
     } finally { await refresh(); pending.current = false; setBusy(false); }
   }
   return <>
-    <header className="customer-header"><Brand /><div className="row"><span className="header-help">A little help, without starting over.</span><Badge tone="green">Connected demo</Badge><Avatar name="Lan Nguyen" /></div></header>
+    <header className="customer-header"><Brand /><div className="row"><span className="header-help">A little help, without starting over.</span><Label htmlFor="customer-picker" className="sr-only">Customer</Label><Select value={customer.id} onValueChange={selectCustomer} disabled={busy}><SelectTrigger id="customer-picker" className="customer-picker"><SelectValue /></SelectTrigger><SelectContent>{CUSTOMERS.map(item => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}</SelectContent></Select><Avatar name={customer.name} /></div></header>
     <main id="main" className="customer-main">
-      <div className="customer-intro"><div><h1>We’re here to help, Lan.</h1><p>One conversation closer to getting things sorted.</p></div><Button variant="outline" onClick={() => void newConversation()} disabled={busy || loading}><Plus />New conversation</Button></div>
+      <div className="customer-intro"><div><h1>We’re here to help, {customer.name.split(' ')[0]}.</h1><p>One conversation closer to getting things sorted.</p></div><Button variant="outline" onClick={() => void newConversation()} disabled={busy || loading}><Plus />New conversation</Button></div>
       <div className="customer-grid">
         <Card className="customer-chat" role="region" aria-label="Support conversation">
           <div className="chat-header"><div className="row"><span className="brand-symbol"><MessageSquare size={18} /></span><div><h2>Your support team</h2><p className="muted small">We’ll keep the context, so you don’t have to.</p></div></div><Badge>{order?.order.id ?? 'Order'}</Badge></div>
           <div className="customer-messages" role="log" aria-label="Messages" aria-live="polite">
             <div className="day-divider">{thread ? `${formatTime(thread.conversation.opened_at)} · ${thread.conversation.id}` : loading ? 'Loading conversations…' : 'New conversation'}</div>
             {!thread?.messages.length && <EmptyState title="What can we help with?">{selected ? 'Tell us what happened with your order.' : 'Start a new conversation to contact support.'} Your earlier conversations stay on file.</EmptyState>}
-            {thread?.messages.map(message => <article key={message.id} className={`message ${message.role === 'customer' ? 'own' : ''}`}><Avatar small name={message.role === 'customer' ? 'Lan Nguyen' : actorName(message.actor)} /><div className="message-body"><div className="message-meta"><strong>{message.role === 'customer' ? 'You' : `${actorName(message.actor)} · Support`}</strong><time>{formatTime(message.created_at)}</time><CheckCheck size={12} aria-label="Saved" /></div><div className="bubble">{message.text}</div></div></article>)}
+            {thread?.messages.map(message => <article key={message.id} className={`message ${message.role === 'customer' ? 'own' : ''}`}><Avatar small name={message.role === 'customer' ? customer.name : actorName(message.actor)} /><div className="message-body"><div className="message-meta"><strong>{message.role === 'customer' ? 'You' : `${actorName(message.actor)} · Support`}</strong><time>{formatTime(message.created_at)}</time><CheckCheck size={12} aria-label="Saved" /></div><div className="bubble">{message.text}</div></div></article>)}
             <div className="evidence-grid">{thread?.evidence.map(item => <Button variant="outline" key={item.id} onClick={() => setEvidence(item)}><Paperclip />{item.id} · {item.path.includes('/demo/') ? 'Sample image' : 'Image'}</Button>)}</div>
           </div>
           <form className="composer" onSubmit={event => { event.preventDefault(); void send(); }}>
@@ -91,7 +98,7 @@ export function CustomerChat() {
               {pickerOpen && <div className="attachment-picker"><Label htmlFor="customer-file">Upload an image</Label><Input key={file?.name ?? 'empty'} id="customer-file" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { setFile(event.target.files?.[0] ?? null); setAttachment(''); }} /><Label htmlFor="customer-attachment" className="small">Or use a demo image</Label><Select value={attachment || 'none'} onValueChange={value => { setAttachment(value === 'none' ? '' : value as 'parcel_a' | 'parcel_b_open'); setFile(null); }} disabled={busy}><SelectTrigger id="customer-attachment"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="none">Choose a sample</SelectItem><SelectItem value="parcel_a">Parcel A · shipping label</SelectItem><SelectItem value="parcel_b_open">Parcel B · opened parcel</SelectItem></SelectContent></Select>{(attachment || file) && <Button variant="ghost" size="icon" aria-label="Remove attachment" onClick={() => { setAttachment(''); setFile(null); }}><X /></Button>}<p className="muted small">JPEG, PNG or WebP, up to 10 MiB. Sample images are labeled illustrations.</p></div>}
             </div>
             <div className="composer-footnote"><ShieldCheck size={13} />Your messages stay with this conversation.</div>
-            <p className="status-note" role="status">{notice}</p>{error && <Alert variant="destructive" className="error-note"><AlertDescription>{error}</AlertDescription></Alert>}
+            <p className="status-note" role="status">{thread?.triage_pending ? 'Message saved. Finding the right support…' : notice}</p>{error && <Alert variant="destructive" className="error-note"><AlertDescription>{error}</AlertDescription></Alert>}
           </form>
         </Card>
         <aside className="customer-aside" aria-label="Order context"><Card className="order-aside"><div className="row between"><h2>Your order</h2><Package size={18} className="muted" /></div><p className="order-meta">{order?.order.id ?? 'Loading order…'} · {order?.parcels.length ?? 0} parcels</p>{order?.parcels.map(parcel => <div className="product-row" key={parcel.parcel_code}><div className="product-mark"><Package size={24} strokeWidth={1.3} /></div><div><p className="product-name">{parcel.items.map(item => item.name).join(', ')}</p><p className="product-detail">Parcel {parcel.parcel_code}</p><Badge tone={parcel.status === 'delivered' ? 'green' : 'amber'}>{parcel.status.replaceAll('_', ' ')}</Badge></div></div>)}<p className="order-note"><Truck size={15} style={{ display: 'inline', marginRight: 6 }} />Your items travel separately. We can help if something is missing from a delivered parcel.</p></Card>

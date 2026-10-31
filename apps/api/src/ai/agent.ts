@@ -16,7 +16,7 @@ class SuggestionError extends Error {}
 const timeoutMessage = 'Suggestion timed out after 30 seconds';
 
 export function createAgent(store: CaseStore, options: AgentOptions = {}) {
-  return { async suggest(conversation_id: string): Promise<AgentSuggestionEnvelope> {
+  return { async suggest(conversation_id: string, mode: 'human' | 'auto' = 'human'): Promise<AgentSuggestionEnvelope> {
     const controller = new AbortController();
     const deadline = new Promise<never>((_, reject) => {
       controller.signal.addEventListener('abort', () => reject(new SuggestionError(timeoutMessage)), { once: true });
@@ -48,11 +48,14 @@ export function createAgent(store: CaseStore, options: AgentOptions = {}) {
         evidence: labelEvidence(evidence),
         order_id: orders.sort((a, b) => b.placed_at.localeCompare(a.placed_at) || b.id.localeCompare(a.id))[0]?.id ?? null,
       }) }];
+      let readOrder = false;
+      const allowedTools = mode === 'auto' ? responseTools.filter(tool => tool.name !== 'find_cases') : responseTools;
+      const autoInstructions = '\nFor this request only, the API has approved automatic handling of a low-risk question with no open case. Skip case matching. Read the supplied order using get_order_shipments. Use only system facts, no missing_info, no suggested_case_id, and proposed_action must be null. Draft a direct customer reply using the same output shape. If system data cannot answer, leave draft_reply empty for human review.';
       let calls = 0;
       let retried = false;
       while (true) {
         const response = await withinDeadline(client.responses.create({
-          model, instructions, tools: responseTools, input: [...input], store: false,
+          model, instructions: instructions + (mode === 'auto' ? autoInstructions : ''), tools: allowedTools, input: [...input], store: false,
           include: ['reasoning.encrypted_content'],
         }, { signal: controller.signal, maxRetries: 0 }));
         if (response.status !== 'completed') throw new SuggestionError('Model response did not complete');
@@ -64,7 +67,14 @@ export function createAgent(store: CaseStore, options: AgentOptions = {}) {
             calls++;
             let output: unknown;
             try {
-              output = await withinDeadline(executeTool(store, call.name, JSON.parse(call.arguments)));
+              const args = JSON.parse(call.arguments);
+              if (mode === 'auto' && (!allowedTools.some(tool => tool.name === call.name) ||
+                (call.name === 'get_order_shipments' && !orders.some(order => order.id === args.order_id)) ||
+                (call.name === 'get_case_context' && args.case_id !== conversation.case_id))) {
+                throw new ToolNotFoundError('Tool is unavailable for this automatic reply');
+              }
+              output = await withinDeadline(executeTool(store, call.name, args));
+              if (call.name === 'get_order_shipments') readOrder = true;
             } catch (error) {
               if (error instanceof SuggestionError) throw error;
               output = { ok: false, error: error instanceof z.ZodError ? error.message
@@ -85,7 +95,12 @@ export function createAgent(store: CaseStore, options: AgentOptions = {}) {
           input.push({ role: 'user', content: `Validation error: ${details}\nReturn corrected JSON matching the AgentSuggestion shape in the instructions.` });
           continue;
         }
-        if (conversation.case_id) {
+        if (mode === 'auto' && (!readOrder || suggestion.proposed_action || suggestion.suggested_case_id ||
+          suggestion.missing_info.length || !suggestion.draft_reply.trim() || !suggestion.known_facts.length ||
+          suggestion.known_facts.some(fact => fact.source !== 'system'))) {
+          throw new SuggestionError('Automatic reply requires verified system facts and no action');
+        }
+        if (conversation.case_id && mode !== 'auto') {
           await withinDeadline(store.addEvent({
             case_id: conversation.case_id, type: 'ai_suggestion', actor: 'system',
             payload: { conversation_id, suggestion }, created_at: (options.now?.() ?? new Date()).toISOString(),

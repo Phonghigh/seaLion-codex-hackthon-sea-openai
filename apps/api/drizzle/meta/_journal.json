@@ -8,6 +8,13 @@
       "when": 1793424173905,
       "tag": "0000_messy_shotgun",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793430276246,
+      "tag": "0001_nebulous_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

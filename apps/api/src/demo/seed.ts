@@ -24,7 +24,7 @@ export function buildSeed(state: SeedState, clock: DemoClock): DatabaseState {
       { id: 'SHIP3', order_id: 'DH002', parcel_code: 'A', carrier: 'DemoShip', tracking: 'DS-1002', status: 'in_transit', updated_at: at(-1, 8) },
       { id: 'SHIP4', order_id: 'DH003', parcel_code: 'A', carrier: 'DemoShip', tracking: 'DS-1003', status: 'delivered', updated_at: at(-1, 10) },
     ],
-    cases: [], conversations: [], messages: [], evidence: [], case_events: [], tasks: [],
+    cases: [], conversations: [], messages: [], conversation_events: [], evidence: [], case_events: [], tasks: [],
   };
   if (state === 'After Demo 1') {
     seed.cases.push({ id: 'CS001', order_id: 'DH001', customer_id: 'CUST001', title: 'Cap not received', status: 'open', assignee: 'CS_A', created_at: at(-1, 9, 2) });

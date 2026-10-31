@@ -7,7 +7,7 @@
   ],
   "agents": [
     { "id": "an",     "name": "An",     "team": "delivery", "languages": ["vi", "en"], "timezone": "Asia/Ho_Chi_Minh", "shifts": [{ "day": 0, "start": "08:00", "end": "17:00" }] },
-    { "id": "binh",   "name": "Binh",   "team": "delivery", "languages": ["vi"],       "timezone": "Asia/Ho_Chi_Minh", "shifts": [{ "day": 1, "start": "08:00", "end": "17:00" }] },
+    { "id": "binh",   "name": "Binh",   "team": "delivery", "languages": ["vi", "en"],       "timezone": "Asia/Ho_Chi_Minh", "shifts": [{ "day": 1, "start": "08:00", "end": "17:00" }] },
     { "id": "carlos", "name": "Carlos", "team": "general",  "languages": ["en"],       "timezone": "America/New_York", "shifts": [{ "day": 0, "start": "20:00", "end": "05:00" }, { "day": 1, "start": "20:00", "end": "05:00" }] }
   ]
 }

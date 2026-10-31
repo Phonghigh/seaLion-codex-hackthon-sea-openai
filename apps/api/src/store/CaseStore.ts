@@ -6,6 +6,8 @@ export interface CaseStore {
   get<K extends DbTable>(table: K, id: string): Promise<DbRows[K] | undefined>;
   list<K extends DbTable>(table: K, filter?: Partial<DbRows[K]>): Promise<DbRows[K][]>;
   createConversation(row: NewRow<'conversations'>): Promise<DbRows['conversations']>;
+  updateConversation(id: string, patch: Pick<DbRows['conversations'], 'mode'>): Promise<DbRows['conversations']>;
+  addConversationEvent(row: NewRow<'conversation_events'>): Promise<DbRows['conversation_events']>;
   addMessage(row: NewRow<'messages'>): Promise<DbRows['messages']>;
   addEvidence(row: NewRow<'evidence'>): Promise<DbRows['evidence']>;
   createCase(row: NewRow<'cases'>): Promise<DbRows['cases']>;
