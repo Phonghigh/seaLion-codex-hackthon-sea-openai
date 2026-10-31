@@ -6,8 +6,8 @@ export function buildSeed(state: SeedState, clock: DemoClock): DatabaseState {
   const at = (day: number, hour = 9, minute = 0) => clock.at(day, hour, minute);
   const seed: DatabaseState = {
     customers: [
-      { id: 'CUST001', name: 'Lan Nguyen', email: 'lan.demo@example.com', language: 'vi' },
-      { id: 'CUST002', name: 'Minh Tran', email: 'minh.demo@example.com', language: 'vi' },
+      { id: 'CUST001', name: 'Lan Nguyen', email: 'lan.demo@example.com', language: 'en' },
+      { id: 'CUST002', name: 'Minh Tran', email: 'minh.demo@example.com', language: 'en' },
       { id: 'CUST003', name: 'Sam Lee', email: 'sam.demo@example.com', language: 'en' },
     ],
     orders: [1, 2, 3].map(i => ({ id: `DH00${i}`, customer_id: `CUST00${i}`, placed_at: at(-3), status: 'paid' })),
@@ -30,8 +30,8 @@ export function buildSeed(state: SeedState, clock: DemoClock): DatabaseState {
     seed.cases.push({ id: 'CS001', order_id: 'DH001', customer_id: 'CUST001', title: 'Cap not received', status: 'open', assignee: 'CS_A', created_at: at(-1, 9, 2) });
     seed.conversations.push({ id: 'CONV1', customer_id: 'CUST001', case_id: 'CS001', channel: 'chat', mode: 'human', opened_at: at(-1) });
     seed.messages.push(
-      { id: 'M1', conversation_id: 'CONV1', role: 'customer', actor: 'CUST001', text: 'Tôi đặt áo với mũ mà nhận được mỗi áo. Đây là ảnh kiện hàng, shop kiểm tra giúp tôi.', created_at: at(-1) },
-      { id: 'R1', conversation_id: 'CONV1', role: 'cs', actor: 'CS_A', text: 'Em đã kiểm tra đơn DH001. Đơn được chia thành hai kiện: áo thuộc kiện đã giao, còn mũ thuộc kiện thứ hai đang vận chuyển. Em đã ghi nhận yêu cầu và ảnh anh/chị gửi để tiếp tục theo dõi.', created_at: at(-1, 9, 4) },
+      { id: 'M1', conversation_id: 'CONV1', role: 'customer', actor: 'CUST001', text: 'I ordered a T-shirt and a cap but only got the T-shirt. Here is a photo of the parcel, please check.', created_at: at(-1) },
+      { id: 'R1', conversation_id: 'CONV1', role: 'cs', actor: 'CS_A', text: 'I checked order DH001. It was shipped in two parcels: the T-shirt was in the parcel that has been delivered, and the cap is in a second parcel that is still in transit. I have saved your request and your photo so we can keep following up.', created_at: at(-1, 9, 4) },
     );
     seed.evidence.push({ id: 'EV1', conversation_id: 'CONV1', case_id: 'CS001', type: 'image', path: '/files/demo/parcel_a.jpg', source: 'customer', created_at: at(-1, 9, 1) });
     seed.case_events.push(

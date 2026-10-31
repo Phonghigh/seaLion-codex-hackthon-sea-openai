@@ -19,7 +19,7 @@ async function main() {
     // Scene 2 needs only the returning conversation and its customer message.
     const conversation = await store.createConversation({ customer_id: 'CUST001', case_id: null, channel: 'chat', mode: 'human', opened_at: at });
     await store.addMessage({ conversation_id: conversation.id, role: 'customer', actor: 'CUST001', created_at: at,
-      text: 'Vụ thiếu mũ hôm qua vẫn chưa giải quyết. Tôi gửi ảnh rồi, giờ lại phải trình bày từ đầu à?',
+      text: 'The missing cap from yesterday is still not solved. I already sent a photo, do I have to explain everything again?',
     });
     const result = await createAgent(store, { now: () => demo.clock.now() }).suggest(conversation.id);
     console.log(JSON.stringify(result, null, 2));

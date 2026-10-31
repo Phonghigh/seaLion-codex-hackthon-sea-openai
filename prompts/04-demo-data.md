@@ -38,41 +38,38 @@ Start, plus:
 - case_events: case_created, evidence_added, ai_suggestion, reply_sent (CS_A)
 
 ## Customer messages
+All demo data is in English (switched 31 Oct 13:45, Asia/Saigon). Type these texts as written.
+
 M1 (Demo 1, conversation 1)
-  VI: Tôi đặt áo với mũ mà nhận được mỗi áo. Đây là ảnh kiện hàng,
-      shop kiểm tra giúp tôi.
-  EN: I ordered a T-shirt and a cap but only got the T-shirt. Here is a
-      photo of the parcel, please check.
+  I ordered a T-shirt and a cap but only got the T-shirt. Here is a photo of
+  the parcel, please check.
   attachment: parcel_a.jpg
 
 M2 (Demo 2, NEW conversation, after "Next day")
-  VI: Vụ thiếu mũ hôm qua vẫn chưa giải quyết. Tôi gửi ảnh rồi, giờ lại
-      phải trình bày từ đầu à?
-  EN: The missing cap from yesterday is still not solved. I already sent a
-      photo, do I have to explain everything again?
+  The missing cap from yesterday is still not solved. I already sent a photo,
+  do I have to explain everything again?
 
 M3 (Demo 3, same conversation as M2)
-  VI: Tôi nhận kiện thứ hai rồi nhưng bên trong không có mũ. Tôi gửi thêm
-      ảnh kiện thứ hai ở đây.
-  EN: I got the second parcel, but there was no cap inside. Here is a
-      photo of the second parcel.
+  I got the second parcel, but there was no cap inside. Here is a photo of
+  the second parcel.
   attachment: parcel_b_open.jpg
 
 ## Expected replies (reference for tests and review, not fixed text)
 R1 (Demo 1, CS A approves)
-  VI: Em đã kiểm tra đơn DH001. Đơn được chia thành hai kiện: áo thuộc kiện
-      đã giao, còn mũ thuộc kiện thứ hai đang vận chuyển. Em đã ghi nhận yêu
-      cầu và ảnh anh/chị gửi để tiếp tục theo dõi.
+  I checked order DH001. It was shipped in two parcels: the T-shirt was in the
+  parcel that has been delivered, and the cap is in a second parcel that is
+  still in transit. I have saved your request and your photo so we can keep
+  following up.
 R2 (Demo 2, CS B approves after linking CONV2 to CS001)
-  VI: Em xin lỗi vì anh/chị phải liên hệ lại. Em đã xem yêu cầu và ảnh kiện
-      đầu anh/chị gửi hôm qua, anh/chị không cần gửi lại. Hệ thống vừa ghi
-      nhận kiện thứ hai đã giao. Anh/chị chưa nhận được kiện thứ hai, hay đã
-      nhận kiện nhưng bên trong không có mũ?
+  Sorry you had to contact us again. I can see your request and the photo of
+  the first parcel from yesterday, so there is no need to send it again. Our
+  system has just recorded the second parcel as delivered. Have you not
+  received the second parcel, or did it arrive without the cap inside?
 R3 (Demo 3, sent only after the escalation succeeds)
-  VI: Em đã ghi nhận anh/chị nhận được kiện thứ hai nhưng bên trong không có
-      mũ, cùng ảnh mới anh/chị gửi. Em đã chuyển thông tin và các bằng chứng
-      sang bộ phận vận hành để xác minh. Anh/chị không cần tạo yêu cầu mới
-      hoặc gửi lại những ảnh đã cung cấp.
+  I have noted that the second parcel arrived without the cap, together with
+  your new photo. I have forwarded the details and all photos to our operations
+  team for checking. You do not need to open a new request or send the photos
+  again.
 
 ## Expected end state after Demo 3
 - exactly 1 case (CS001), status "waiting_ops", assignee CS_B
@@ -88,8 +85,7 @@ R3 (Demo 3, sent only after the escalation succeeds)
 ### Customer 2 (Scene 0, AI-handled)
 - Minh Tran, customer_id CUST002, order DH002, 1 item (water bottle), 1 parcel,
   status in_transit, tracking DS-1002, expected delivery day 0.
-- M0 VI: Đơn DH002 của tôi đến đâu rồi?
-     EN: Where is my order DH002?
+- M0 EN: Where is my order DH002?
 - Expected: triage category order_status (high), needs_human low, risk 1 -> mode "ai".
   AI reply from shipment data, sent at once, case_event "auto_reply", badge "Auto".
 

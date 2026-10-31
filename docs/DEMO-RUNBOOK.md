@@ -21,7 +21,7 @@ Phong (architecture + Codex, 4:50-6:00). Two browser tabs side by side:
 | # | Operator does | Screen shows | API does |
 |---|---|---|---|
 | Open | Click Reset on the demo bar | Empty `/cs`, empty `/customer` | Reload seed: Lan, DH001, parcel A delivered, parcel B in_transit |
-| 0 | `/customer`, pick Minh Tran, send "Don DH002 cua toi den dau roi?" | `/cs` Auto-handled: auto reply, badge Auto, Triage card "order_status, ai, rule 8" | triage -> decideMode ai -> agent read-only -> reply sent, event auto_reply |
+| 0 | `/customer`, pick Minh Tran, send "Where is my order DH002?" | `/cs` Auto-handled: auto reply, badge Auto, Triage card "order_status, ai, rule 8" | triage -> decideMode ai -> agent read-only -> reply sent, event auto_reply |
 | 1 | `/customer`, Lan sends M1 + parcel_a.jpg | `/cs`: new conversation, triage "missing_item -> Delivery, An". AI card: facts with sources, draft R1. Click Approve and send | triage -> human -> An. Approve with no case -> create CS001, link conv, attach EV1, reply_sent with shipment_snapshot |
 | Next day | Click Next day. Switch "Signed in as" to Binh | CS001 timeline: shipment_updated B delivered | parcel B -> delivered, demo clock +1 day, An off shift |
 | 2 (core) | `/customer`, Lan clicks New conversation, sends M2 | Banner "Link to CS001?" with reason. Click Link -> history + old photo appear. AI card: "What changed: B in_transit -> delivered", exactly one question, draft R2. Approve | find_cases -> CS001. Link sets assignee Binh, event conversation_linked + assignee_changed. changes = last snapshot vs now |
