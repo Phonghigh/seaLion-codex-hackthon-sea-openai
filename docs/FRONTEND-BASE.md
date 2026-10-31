@@ -100,3 +100,12 @@ are preserved; no dependency, deployment, commit or push is part of this task.
   `packages/demo` is not consulted by API-backed components.
 - Evidence bytes are served from the API; seeded JPEGs are labeled illustrations.
   The Customer site keeps the existing Lan scenario; CS lists all conversations.
+
+## Existing Sites deployments
+
+[Sites deployment records](SITES-DEPLOYMENT.md) retain both project IDs and the
+earlier fixture-only releases. Static export is supported with
+`SITES_STATIC_EXPORT=1`; CS resolves its query string in a client Suspense boundary
+and retains `NEXT_PUBLIC_USE_FIXTURES`. A future API-mode publication needs a
+reachable `NEXT_PUBLIC_API_BASE` and matching API CORS origins. This merge does
+not publish or change the hosted versions.

@@ -22,7 +22,8 @@ Customer uses port 3000, Customer Service 3001, and API 4000. See the
 [frontend runbook](docs/FRONTEND-BASE.md) and [API setup](apps/api/README.md).
 Set `NEXT_PUBLIC_USE_FIXTURES=1` for the original offline previews. Three complete
 client-driven demo cycles pass with a mocked model and disposable PostgreSQL;
-visual browser checks, live-model behavior and deployment remain unverified.
+live-model behavior remains unverified. The earlier [private Sites deployments](docs/SITES-DEPLOYMENT.md)
+serve fixture builds; this merge has not republished API-connected builds.
 The incoming one-package/Vite scaffold does not replace these Next.js apps.
 
 ## Problem
