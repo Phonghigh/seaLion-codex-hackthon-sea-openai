@@ -9,7 +9,7 @@ Customers contact support about a missing item. CS agents continue the same case
 ## Canonical context
 See [PRODUCT-BRIEF.md](docs/PRODUCT-BRIEF.md) for product truth and [frontend plan](docs/FRONTEND-IMPLEMENTATION-PLAN.md) for the approved two-site architecture.
 ## Current scope
-The user authorized the frontend base with no API discovery or integration. Use independent in-memory fixtures on each site. No model, uploads, backend, authentication or cross-site synchronization is implied.
+Both sites integrate with the Hono API through NEXT_PUBLIC_API_BASE. The API uses PostgreSQL and Drizzle through CaseStore, with server-side OpenAI Responses API suggestions. Independent in-memory fixtures remain a UI-development fallback. AGENTS.md and docs/Architecture.md define the current backend and demo scope. Human approval is required before every reply or action.
 ## Principles
 Retain case context, label fact sources, ask only the missing fact, and require distinct human approvals for replies and actions. Evidence fixtures are illustrative, not verified customer photos.
 ## Accessibility
