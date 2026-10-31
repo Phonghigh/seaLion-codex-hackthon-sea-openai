@@ -26,7 +26,7 @@ API and database bind to loopback. The API defaults to `http://127.0.0.1:4000`.
 | `GET /files/<name>` | Public | File in `public/`, otherwise `data/uploads/` |
 | `POST /api/demo/reset` | `x-demo-token` | Start fixtures, clock day 0 |
 | `POST /api/demo/jump?to=demo2` | `x-demo-token` | After Demo 1 fixtures, clock day 0 |
-| `POST /api/demo/advance-day` | `x-demo-token` | B delivered and audited at current time, then clock +1 day |
+| `POST /api/demo/advance-day` | `x-demo-token` | Clock +1 day first; B delivered and audited at the new time |
 | `GET /api/cases/:id/context` | Public demo API | Case, recent messages/events, evidence, open tasks and shipment changes |
 | `GET /api/orders/:id/shipments` | Public demo API | Order and parcels with their items and current statuses |
 | `POST /api/agent/suggest` | Public demo API | Body `{ conversation_id }`; envelope `{ ok, suggestion, error? }` |
@@ -56,14 +56,16 @@ added to the exact ERD. Both parcel images are labeled illustrations, not real p
 
 `pnpm typecheck`, `pnpm lint`, and `pnpm test` run from the root. Tests intentionally
 do not auto-load `.env`: integration tests print a clear skip when `DATABASE_URL`
-is unset, and otherwise truncate all ten tables in the selected database. Use only
-a disposable demo/test database. After migrating it, run the complete suite with:
+is unset. Each database test file creates, migrates and drops its own disposable
+database; the configured role needs permission to create databases. Upload tests
+also use separate temporary directories, so concurrent files and the running API
+cannot interfere with cleanup assertions. Run the complete suite with:
 
 ```sh
-node --env-file=apps/api/.env -e 'const {spawnSync}=require("node:child_process"); process.exit(spawnSync("pnpm",["test"],{stdio:"inherit",env:process.env}).status??1)'
+pnpm --filter @seapilot/api exec tsx scripts/test-isolated.ts
 ```
 
-Then `pnpm db:reset` restores Start. Migration changes are generated with
+Tests leave the demo database unchanged. Migration changes are generated with
 `pnpm --filter @seapilot/api db:generate`; commit the SQL and Drizzle metadata together.
 Both frontend apps now use the typed API client by default; set
 `NEXT_PUBLIC_USE_FIXTURES=1` for offline UI work. See [the frontend runbook](../../docs/FRONTEND-BASE.md).

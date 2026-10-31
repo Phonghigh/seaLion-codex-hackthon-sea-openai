@@ -4,6 +4,7 @@ import { createApiClient as customerClient } from '../../customer/src/lib/api';
 import { createApiClient as csClient, CS_IDENTITIES, type ApiResult } from '../../customer-service/src/lib/api';
 import { createApp } from '../src/app';
 import { isolatedDatabase } from './database';
+import { isolatedUploads } from './uploads';
 import { mockModel, M1, M2, M3 } from './mock-model';
 
 function data<T>(result: ApiResult<T>): T {
@@ -45,15 +46,16 @@ const url = process.env.DATABASE_URL;
 if (!url) console.warn('SKIP web client story: DATABASE_URL unset. Run apps/api/scripts/test-isolated.ts for three real PostgreSQL resets.');
 describe.skipIf(!url)('both web api.ts clients against the app with PostgreSQL and mocked Responses', () => {
   let database: Awaited<ReturnType<typeof isolatedDatabase>>;
+  let uploads: Awaited<ReturnType<typeof isolatedUploads>>;
   let customer: ReturnType<typeof customerClient>;
   let cs: ReturnType<typeof csClient>;
   beforeAll(async () => {
-    database = await isolatedDatabase(url!);
-    const app = createApp(database.store, { token: 'web-test-only', agent: { client: mockModel(), model: 'mock-only' } });
+    database = await isolatedDatabase(url!); uploads = await isolatedUploads();
+    const app = createApp(database.store, { uploadsRoot: uploads.root, token: 'web-test-only', agent: { client: mockModel(), model: 'mock-only' } });
     const transport: typeof fetch = async (input, init) => app.request(input instanceof Request ? input : String(input), init);
     customer = customerClient({ fetch: transport }); cs = csClient({ fetch: transport });
   });
-  afterAll(async () => { if (database) await database.close(); });
+  afterAll(async () => { if (database) await database.close(); await uploads?.close(); });
 
   it('runs Scene 1 → Next day → Scene 2 → Scene 3 three times after Reset', async () => {
     for (let iteration = 0; iteration < 3; iteration += 1) {
@@ -83,7 +85,8 @@ describe.skipIf(!url)('both web api.ts clients against the app with PostgreSQL a
       const changed = handover.events.find(event => event.type === 'assignee_changed')!;
       expect(changed.payload).toEqual({ before: 'CS_A', after: 'CS_B' });
       expect(Date.parse(created.created_at)).toBeLessThan(Date.parse(changed.created_at));
-      data(await cs.approveReply(second, scene2.draft_reply, CS_IDENTITIES.Binh));
+      const linkedDraft = data(await cs.suggest(second));
+      data(await cs.approveReply(second, linkedDraft.draft_reply, CS_IDENTITIES.Binh));
       data(await customer.sendMessage(second, M3));
       const ev2 = data(await customer.seedImage(second, 'parcel_b_open')).id;
       const scene3 = data(await cs.suggest(second));
@@ -95,7 +98,10 @@ describe.skipIf(!url)('both web api.ts clients against the app with PostgreSQL a
       expect(data(await cs.caseDetail('CS001')).tasks).toEqual([]);
       const action = data(await cs.approveAction(second, scene3.proposed_action!, CS_IDENTITIES.Binh));
       expect(data(await cs.approveAction(second, scene3.proposed_action!, CS_IDENTITIES.Binh)).task.id).toBe(action.task.id);
-      data(await cs.approveReply(second, scene3.draft_reply, CS_IDENTITIES.Binh));
+      const updated = data(await cs.suggest(second));
+      expect(updated.proposed_action).toBeNull();
+      expect(updated.draft_reply).toContain('has been forwarded');
+      data(await cs.approveReply(second, updated.draft_reply, CS_IDENTITIES.Binh));
       const detail = data(await cs.caseDetail('CS001'));
       expect(await database.store.list('cases')).toHaveLength(1);
       expect(data(await cs.conversations())).toEqual(expect.arrayContaining([expect.objectContaining({ id: first, case_id: 'CS001' }), expect.objectContaining({ id: second, case_id: 'CS001' })]));
@@ -128,6 +134,6 @@ describe.skipIf(!url)('both web api.ts clients against the app with PostgreSQL a
       expect(after.events.filter(event => event.type === 'assignee_changed')).toEqual(before.events.filter(event => event.type === 'assignee_changed'));
       expect(after.evidence.find(item => item.id === evidence.id)?.case_id).toBe('CS001');
       expect(customer.fileUrl(evidence.path)).toBe(`http://127.0.0.1:4000${evidence.path}`);
-    } finally { await rm(new URL(`../data/uploads/${evidence.path.split('/').at(-1)}`, import.meta.url), { force: true }); }
+    } finally { await rm(new URL(evidence.path.split('/').at(-1)!, uploads.root), { force: true }); }
   });
 });

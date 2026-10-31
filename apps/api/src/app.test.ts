@@ -1,11 +1,15 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createApp, DEFAULT_ORIGINS } from './app';
+import { isolatedUploads } from '../tests/uploads';
 import type { CaseStore } from './store/CaseStore';
 
 // Only health/reset are exercised without a database; persistence is tested separately.
 const stubStore = () => ({ health: vi.fn(async () => true), resetTo: vi.fn(async () => undefined) }) as unknown as CaseStore;
+let uploads: Awaited<ReturnType<typeof isolatedUploads>>;
+beforeAll(async () => { uploads = await isolatedUploads(); });
+afterAll(async () => { await uploads?.close(); });
 const origin = 'http://localhost:3001';
 afterEach(() => vi.restoreAllMocks());
 describe('HTTP boundary (no database required)', () => {
@@ -57,7 +61,7 @@ describe('HTTP boundary (no database required)', () => {
     expect((await createApp(store).request('/api/demo/reset', { method: 'POST' })).status).toBe(401);
   });
   it('serves both demo JPEGs and uploaded files publicly; does not expose the env file', async () => {
-    const app = createApp(stubStore());
+    const app = createApp(stubStore(), { uploadsRoot: uploads.root });
     for (const name of ['parcel_a.jpg', 'parcel_b_open.jpg']) {
       const response = await app.request(`/files/demo/${name}`);
       expect(response.status).toBe(200);
@@ -65,7 +69,7 @@ describe('HTTP boundary (no database required)', () => {
       const bytes = new Uint8Array(await response.arrayBuffer());
       expect([...bytes.slice(0, 2)]).toEqual([255, 216]);
     }
-    const directory = fileURLToPath(new URL('../data/uploads/', import.meta.url));
+    const directory = fileURLToPath(uploads.root);
     const filename = `test-${process.pid}.txt`;
     await mkdir(directory, { recursive: true });
     await writeFile(`${directory}${filename}`, 'upload fixture');

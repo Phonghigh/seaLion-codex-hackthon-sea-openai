@@ -62,6 +62,19 @@ describe('read-only case tools', () => {
     expect((await get_case_context(testStore(seed), { case_id: 'CS001' })).changes_since_last_contact).toEqual([]);
   });
 
+  it('labels seed photos and numbers uploads chronologically with an id tie-break', async () => {
+    const seed = buildSeed('After Demo 1', new DemoClock());
+    const photo = seed.evidence[0];
+    seed.evidence.push({ ...photo, id: 'EV4', path: '/files/upload-four.jpg' },
+      { ...photo, id: 'EV2', path: '/files/demo/parcel_b_open.jpg' },
+      { ...photo, id: 'EV3', path: '/files/upload-three.jpg' });
+    const context = await get_case_context(testStore(seed), { case_id: 'CS001' });
+    expect(context.evidence.map(({ id, label }) => ({ id, label }))).toEqual([
+      { id: 'EV1', label: 'photo of parcel A' }, { id: 'EV2', label: 'photo of the opened parcel B' },
+      { id: 'EV3', label: 'customer photo 1' }, { id: 'EV4', label: 'customer photo 2' },
+    ]);
+  });
+
   it('groups items by parcel, validates args/results, and exports Responses function schemas', async () => {
     const store = testStore();
     const result = await get_order_shipments(store, { order_id: 'DH001' });

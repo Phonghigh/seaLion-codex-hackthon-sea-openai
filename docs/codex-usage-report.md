@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:54:18.416Z (UTC).
+Generated: 2026-10-31T06:12:45.639Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:51:07.046Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T06:12:19.481Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 320 |
-| sessions | 6 |
-| prompts | 6 |
-| tool_invocations | 149 |
-| tool_results | 147 |
+| hook_events | 419 |
+| sessions | 7 |
+| prompts | 7 |
+| tool_invocations | 197 |
+| tool_results | 194 |
 | manual_entries | 12 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -21,9 +21,9 @@ Models reported by hooks: gpt-6-astra, unknown.
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| apply_patch | codex_builtin | 11 | 11 | 11 | 0 | 0 | 11 | 0 |
-| Bash | codex_builtin | 130 | 130 | 129 | 0 | 0 | 129 | 1 |
-| mcp__cua_repl__js | mcp_external | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
+| apply_patch | codex_builtin | 20 | 20 | 20 | 0 | 0 | 20 | 0 |
+| Bash | codex_builtin | 168 | 168 | 167 | 0 | 0 | 167 | 1 |
+| mcp__cua_repl__js | mcp_external | 2 | 2 | 0 | 0 | 0 | 0 | 2 |
 | view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
 | webrun | unknown | 6 | 6 | 6 | 0 | 0 | 6 | 0 |
 
@@ -39,6 +39,7 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | 2026-10-31T05:28:26.241Z | 6287045ff306 | ec370cbbbad9 | cd9c29830a44 |
 | 2026-10-31T05:35:32.062Z | dbc7154b19a9 | 8c2990faaa54 | dbecd8665862 |
 | 2026-10-31T05:42:11.969Z | b51ab2502b2d | 380a257edb4f | 34ebe701e005 |
+| 2026-10-31T06:03:25.368Z | c2568ee7b933 | 6defa7d07ad2 | 1ae343f8ee8a |
 
 ### Prompt 68507c1e0b3d
 
@@ -245,6 +246,56 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt 1ae343f8ee8a
+
+    Read AGENTS.md, prompts/03-runtime-prompt.md, apps/api/src and apps/customer-service.
+    Task FIX01: fix six issues found in a live run of Scenes 1-3 with the real model.
+
+    1. Scene 3 reply tense. After an approved escalate_to_ops succeeds, the draft in the
+       reply box was written before the escalation, so it says the case "will be" sent to
+       operations. Fix: when the action approval returns ok, the CS UI automatically calls
+       suggest again for the same conversation and replaces the draft with the new one
+       (show "Updating draft after escalation..."). In the runtime prompt, add a rule: if
+       the case has an action_executed event for escalate_to_ops, propose no action and
+       draft a reply that states the case has been forwarded to the operations team for
+       checking, with no promise of refund, replacement or date. Keep the existing rule that
+       a reply is blocked while an escalation is pending approval.
+
+    2. Scene 2 waits twice. After Link succeeds, the CS UI automatically runs suggest again
+       (same "Updating draft..." state) instead of asking the agent to click Suggest.
+
+    3. "Signed in as" resets to An on reload. Persist the selection in localStorage (wrap
+       reads and writes in try/catch, default An). Reset on the demo bar sets it back to An;
+       "Start from Demo 2" sets it to Binh.
+
+    4. Facts show raw ISO timestamps and evidence ids. Two parts:
+       a) runtime prompt: known_facts and draft_reply must not contain raw ids or ISO
+          timestamps; describe evidence by what it shows ("the photo of parcel A",
+          "the photo of the opened parcel B") and times in plain words;
+       b) get_case_context returns for each evidence a human label (seed images:
+          "photo of parcel A" / "photo of the opened parcel B"; uploads: "customer photo N")
+          so the model has words to use. The UI evidence cards show that label above the id.
+
+    5. shipment_updated event has the previous day's timestamp, so the timeline puts it
+       before case_created. Fix advance-day so the clock moves forward first and the event
+       and shipment updated_at use the new demo time. Timeline sorts by created_at then id.
+       Add a test asserting shipment_updated is after the last reply_sent.
+
+    6. A flaky test: 1 failure in 5 runs of pnpm test. Run vitest at least 8 times, find the
+       flaky test, fix the root cause (shared database state between files is the likely
+       cause: tests and the running API share the seapilot database). Isolate test data, for
+       example a separate database or schema per test file, or run DB test files serially.
+       Do not just add retries.
+
+    Constraints: do not call the real OpenAI model (use mocks; OPENAI_API_KEY in apps/api/.env
+    must not be printed or copied anywhere). An API may be listening on 4000 and web apps on
+    3000/3001; do not kill them. Keep the visual design. pnpm 10.28.2 is active.
+    Done when pnpm typecheck, lint, test pass 5 runs in a row, and pnpm build passes.
+    Append a FIX01 row to docs/codex-log.md. Do not commit or push; end with a short report
+    listing each of the six items and how it was fixed.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -400,6 +451,54 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T05:49:59.804Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
 | 2026-10-31T05:50:53.442Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
 | 2026-10-31T05:50:53.987Z | b51ab2502b2d | 380a257edb4f | Bash | unknown |
+| 2026-10-31T06:03:30.992Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:31.267Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:38.492Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:38.513Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:38.522Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:43.705Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:43.998Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:44.248Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:48.464Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:03:48.756Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:04.396Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:04.700Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:04.945Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:16.198Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:04:16.390Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:17.634Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:23.693Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:04:32.741Z | c2568ee7b933 | 6defa7d07ad2 | mcp__cua_repl__js | no result observed |
+| 2026-10-31T06:04:45.167Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:05:44.708Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:05:44.883Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:06:13.906Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:06:54.576Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:06:54.891Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:07:19.805Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:07:20.138Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:07:20.334Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:08:13.360Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:08:13.636Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:08:46.377Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:08:47.607Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:08:48.824Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:08:59.453Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:09:33.308Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:09:33.704Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:09:55.279Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:09:55.566Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:09:55.804Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:10:12.980Z | c2568ee7b933 | 6defa7d07ad2 | apply_patch | unknown |
+| 2026-10-31T06:10:13.131Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:10:39.721Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:10:56.421Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:11:02.314Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:11:10.407Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:11:11.615Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:11:37.483Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:12:06.237Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
+| 2026-10-31T06:12:06.702Z | c2568ee7b933 | 6defa7d07ad2 | Bash | unknown |
 
 ## Self-reported external activity
 

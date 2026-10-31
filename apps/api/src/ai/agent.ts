@@ -4,6 +4,7 @@ import { toResponseInputItems } from 'openai/lib/responses/ResponseInputItems';
 import type { Response, ResponseCreateParamsNonStreaming, ResponseInputItem } from 'openai/resources/responses/responses';
 import { z } from 'zod';
 import { AgentSuggestionSchema, type AgentSuggestionEnvelope } from '@seapilot/contracts';
+import { labelEvidence } from '@seapilot/contracts/client';
 import type { CaseStore } from '../store/CaseStore';
 import { chronological, executeTool, responseTools, ToolNotFoundError } from './tools';
 
@@ -44,7 +45,7 @@ export function createAgent(store: CaseStore, options: AgentOptions = {}) {
       ]));
       const input: ResponseInputItem[] = [{ role: 'user', content: JSON.stringify({
         conversation_id, customer_id: conversation.customer_id, messages: chronological(messages),
-        evidence: chronological(evidence),
+        evidence: labelEvidence(evidence),
         order_id: orders.sort((a, b) => b.placed_at.localeCompare(a.placed_at) || b.id.localeCompare(a.id))[0]?.id ?? null,
       }) }];
       let calls = 0;

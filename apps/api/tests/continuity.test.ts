@@ -3,15 +3,17 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { sql } from 'drizzle-orm';
 import { createApp } from '../src/app';
 import { isolatedDatabase } from './database';
+import { isolatedUploads } from './uploads';
 import { mockModel, M1, M2, M3 } from './mock-model';
 
 const url = process.env.DATABASE_URL;
 if (!url) console.warn('SKIP continuity integration: DATABASE_URL is unset; tests use a disposable database when configured.');
 describe.skipIf(!url)('case continuity through the app with PostgreSQL and a mocked model', () => {
   let database: Awaited<ReturnType<typeof isolatedDatabase>>;
+  let uploads: Awaited<ReturnType<typeof isolatedUploads>>;
   let app: ReturnType<typeof createApp>;
-  beforeAll(async () => { database = await isolatedDatabase(url!); });
-  afterAll(async () => { if (database) await database.close(); });
+  beforeAll(async () => { database = await isolatedDatabase(url!); uploads = await isolatedUploads(); });
+  afterAll(async () => { if (database) await database.close(); await uploads?.close(); });
   const post = (path: string, body: unknown = {}) => app.request(path, { method: 'POST', headers: { 'content-type': 'application/json', 'x-demo-token': 'test-only' }, body: JSON.stringify(body) });
   const success = async (path: string, body: unknown = {}) => {
     const response = await post(path, body);
@@ -25,7 +27,7 @@ describe.skipIf(!url)('case continuity through the app with PostgreSQL and a moc
   const attach = async (id: string, seed = 'parcel_a') => (await success('/api/upload', { conversation_id: id, seed })).data;
   const reply = (id: string, text: string, actor = 'an') => success('/api/approve', { conversation_id: id, kind: 'reply', title: 'Cap not received', text, actor });
   beforeEach(async () => {
-    app = createApp(database.store, { token: 'test-only', agent: { client: mockModel(), model: 'mock-only' } });
+    app = createApp(database.store, { uploadsRoot: uploads.root, token: 'test-only', agent: { client: mockModel(), model: 'mock-only' } });
     await success('/api/demo/reset');
   });
 
@@ -38,6 +40,8 @@ describe.skipIf(!url)('case continuity through the app with PostgreSQL and a moc
     expect((await reply(first, scene1.draft_reply)).data.case_id).toBe('CS001');
     expect((await database.store.get('evidence', ev1.id))?.case_id).toBe('CS001');
     await success('/api/demo/advance-day');
+    const timeline = (await (await app.request('/api/cases/CS001')).json()).data.events;
+    expect(Date.parse(timeline.find((event: { type: string }) => event.type === 'shipment_updated').created_at)).toBeGreaterThan(Date.parse(timeline.find((event: { type: string }) => event.type === 'reply_sent').created_at));
     const second = await conversation();
     await message(second, M2);
     const scene2 = (await success('/api/agent/suggest', { conversation_id: second })).suggestion;
@@ -57,7 +61,10 @@ describe.skipIf(!url)('case continuity through the app with PostgreSQL and a moc
     const action = { conversation_id: second, kind: 'action', action: scene3.proposed_action, actor: 'binh' };
     const approvals = await Promise.all([success('/api/approve', action), success('/api/approve', action)]);
     expect(approvals[0].data.task.id).toBe(approvals[1].data.task.id);
-    await reply(second, scene3.draft_reply, 'binh');
+    const updated = (await success('/api/agent/suggest', { conversation_id: second })).suggestion;
+    expect(updated.proposed_action).toBeNull();
+    expect(updated.draft_reply).toContain('has been forwarded');
+    await reply(second, updated.draft_reply, 'binh');
     expect(await database.store.list('cases')).toEqual([expect.objectContaining({ id: 'CS001', assignee: 'binh', status: 'waiting_ops' })]);
     expect(await database.store.list('conversations', { case_id: 'CS001' })).toHaveLength(2);
     expect(await database.store.list('evidence')).toEqual(expect.arrayContaining([expect.objectContaining({ id: ev1.id, case_id: 'CS001', source: 'customer' }), expect.objectContaining({ id: ev2.id, case_id: 'CS001', source: 'customer' })]));
@@ -116,7 +123,7 @@ describe.skipIf(!url)('case continuity through the app with PostgreSQL and a moc
       expect(Buffer.from(await (await app.request(data.path)).arrayBuffer())).toEqual(bytes);
       await success('/api/cases/CS001/link-conversation', { conversation_id: second, actor: 'binh' });
       expect((await database.store.get('evidence', data.id))?.case_id).toBe('CS001');
-    } finally { await rm(new URL(`../data/uploads/${data.path.split('/').at(-1)}`, import.meta.url), { force: true }); }
+    } finally { await rm(new URL(data.path.split('/').at(-1)!, uploads.root), { force: true }); }
   });
 
   it('validates every body and rejects missing records, cross-customer links and foreign evidence without a demo token', async () => {
@@ -150,7 +157,7 @@ describe.skipIf(!url)('case continuity through the app with PostgreSQL and a moc
   it('cleans up an uploaded file if evidence persistence fails', async () => {
     const id = await conversation();
     const { readdir } = await import('node:fs/promises');
-    const directory = new URL('../data/uploads/', import.meta.url);
+    const directory = uploads.root;
     const before = await readdir(directory);
     const transaction = vi.spyOn(database.store, 'transaction').mockRejectedValueOnce(new Error('database unavailable'));
     const form = new FormData(); form.set('conversation_id', id); form.set('file', new File(['image'], 'test.jpg', { type: 'image/jpeg' }));

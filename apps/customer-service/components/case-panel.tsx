@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import type { AgentSuggestion } from '@seapilot/contracts';
-import { api, actorName, formatTime, type CaseDetail, type CaseContext, type OrderShipments } from '../src/lib/api';
+import { api, compareChronological, actorName, formatTime, type CaseDetail, type CaseContext, type OrderShipments } from '../src/lib/api';
 import { Card, Avatar, Badge, Button, SourceBadge, ArrowRight, CheckCircle2, Clock3, Link2, Package, Sparkles, Truck } from '@seapilot/ui';
 
 type Evidence = CaseDetail['evidence'][number];
@@ -25,8 +25,8 @@ export function CasePanel({ detail, context, order, suggestion, busy, canApprove
       </> : <p className="muted">Select Suggest to review the stored case data and prepare a reply.</p>}
       {task && <div className="action-box"><div className="row"><CheckCircle2 size={17} /><strong>Escalated<SourceBadge source="system" /></strong></div><p>{task.id} · Warehouse Ops<br />Evidence: {task.evidence_ids.join(', ')}</p><p>Review and approve the reply to let the customer know.</p></div>}
     </Card>
-    {detail && <><Card className="case-section"><div className="row between"><h3 style={{ margin: 0 }}>Evidence on file</h3><span className="small muted">{detail.evidence.length} attached</span></div><div className="evidence-grid">{detail.evidence.map(item => <Button variant="outline" key={item.id} style={{ height: 'auto', display: 'block' }} onClick={() => onEvidence(item)}><Image unoptimized width={640} height={480} src={api.fileUrl(item.path)} alt={`Evidence ${item.id}`} style={{ width: '100%', maxHeight: 100, objectFit: 'cover' }} /><span>{item.id}</span><SourceBadge source={item.source} /></Button>)}</div></Card>
-      <Card className="case-section"><h3><Clock3 size={15} />Case timeline<SourceBadge source="system" /></h3><div className="timeline">{detail.events.slice().sort((a, b) => b.created_at.localeCompare(a.created_at)).map(event => <div className="timeline-item" key={event.id}><span className="timeline-dot" /><div>{event.type.replaceAll('_', ' ')} · {actorName(event.actor)}{event.type === 'assignee_changed' && <span> · {String(event.payload.before)} → {String(event.payload.after)}</span>}<time>{formatTime(event.created_at)}</time></div></div>)}</div></Card></>}
+    {detail && <><Card className="case-section"><div className="row between"><h3 style={{ margin: 0 }}>Evidence on file</h3><span className="small muted">{detail.evidence.length} attached</span></div><div className="evidence-grid">{detail.evidence.map(item => <Button variant="outline" key={item.id} style={{ height: 'auto', display: 'block' }} onClick={() => onEvidence(item)}><Image unoptimized width={640} height={480} src={api.fileUrl(item.path)} alt={item.label} style={{ width: '100%', maxHeight: 100, objectFit: 'cover' }} /><span className="block whitespace-normal">{item.label}</span><span className="block small muted">{item.id}</span><SourceBadge source={item.source} /></Button>)}</div></Card>
+      <Card className="case-section"><h3><Clock3 size={15} />Case timeline<SourceBadge source="system" /></h3><div className="timeline">{detail.events.slice().sort((a, b) => compareChronological(b, a)).map(event => <div className="timeline-item" key={event.id}><span className="timeline-dot" /><div>{event.type.replaceAll('_', ' ')} · {actorName(event.actor)}{event.type === 'assignee_changed' && <span> · {String(event.payload.before)} → {String(event.payload.after)}</span>}<time>{formatTime(event.created_at)}</time></div></div>)}</div></Card></>}
     <div className="case-section"><p className="muted small"><Truck size={13} style={{ display: 'inline', marginRight: 6 }} />Delivered describes the parcel, not its contents.</p></div>
   </aside>;
 }

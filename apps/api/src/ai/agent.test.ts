@@ -1,3 +1,4 @@
+import { labelEvidence } from '@seapilot/contracts/client';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -39,8 +40,10 @@ describe('suggest agent with mocked OpenAI', () => {
     for (const request of requests) expect(request.include).toEqual(['reasoning.encrypted_content']);
     expect(requests[0]).toMatchObject({ model: 'configured-test-model', store: false });
     expect(requests[0].instructions).toContain('You are seaPilot');
+    expect(requests[0].instructions).toContain('action_executed event for escalate_to_ops');
+    expect(requests[0].instructions).toContain('never include raw ids or ISO timestamps');
     expect(requests[0].instructions).toContain('Never ask for information or evidence that is already in the case');
-    expect(requests[0].input).toEqual([{ role: 'user', content: JSON.stringify({ conversation_id: 'CONV1', customer_id: 'CUST001', messages: await store.list('messages', { conversation_id: 'CONV1' }), evidence: await store.list('evidence', { conversation_id: 'CONV1' }), order_id: 'DH001' }) }]);
+    expect(requests[0].input).toEqual([{ role: 'user', content: JSON.stringify({ conversation_id: 'CONV1', customer_id: 'CUST001', messages: await store.list('messages', { conversation_id: 'CONV1' }), evidence: labelEvidence(await store.list('evidence', { conversation_id: 'CONV1' })), order_id: 'DH001' }) }]);
     expect(requests.every(body => !('temperature' in body) && !('top_p' in body))).toBe(true);
     expect(requests[2].input).toEqual(expect.arrayContaining([
       expect.objectContaining({ type: 'reasoning', id: 'reasoning-1', encrypted_content: 'encrypted-state' }),

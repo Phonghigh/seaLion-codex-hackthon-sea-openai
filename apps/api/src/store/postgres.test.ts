@@ -1,24 +1,24 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { DbRowSchemas, type DbTable } from '@seapilot/contracts';
-import { connectDatabase } from '../db/client';
+import { isolatedDatabase } from '../../tests/database';
 import { createPostgresStore } from './postgres';
 import { createDemoService } from '../demo/service';
 import { buildSeed } from '../demo/seed';
 import { createApp } from '../app';
 import { find_cases } from '../ai/tools';
 
-// Deliberately do not load .env: integration tests truncate the explicitly selected DB.
+// DATABASE_URL only locates the server. Every file owns a disposable database.
 const url = process.env.DATABASE_URL;
-if (!url) console.warn('SKIP PostgreSQL integration tests: DATABASE_URL is unset. Start Docker, migrate, then run tests with DATABASE_URL set.');
-describe.skipIf(!url)('PostgreSQL integration (real database; resets all demo tables)', () => {
-  let connection: ReturnType<typeof connectDatabase>;
+if (!url) console.warn('SKIP PostgreSQL integration tests: DATABASE_URL is unset. Set it to a PostgreSQL server where the test user can create disposable databases.');
+describe.skipIf(!url)('PostgreSQL integration (disposable database)', () => {
+  let connection: Awaited<ReturnType<typeof isolatedDatabase>>;
   let store: ReturnType<typeof createPostgresStore>;
   let demo: ReturnType<typeof createDemoService>;
   beforeAll(async () => {
-    connection = connectDatabase(url!);
-    store = createPostgresStore(connection.db);
+    connection = await isolatedDatabase(url!);
+    store = connection.store;
     demo = createDemoService(store);
-    expect(await store.health(), 'DATABASE_URL must point to a running migrated PostgreSQL database').toBe(true);
+    expect(await store.health(), 'The disposable PostgreSQL database must be reachable').toBe(true);
   });
   beforeEach(async () => { await demo.reset(); });
   afterAll(async () => { if (connection) await connection.close(); });
@@ -43,7 +43,7 @@ describe.skipIf(!url)('PostgreSQL integration (real database; resets all demo ta
     expect(await store.list('case_events')).toHaveLength(4);
     expect((await store.get('case_events', 'CE4'))?.payload.shipment_snapshot).toEqual({ A: 'delivered', B: 'in_transit' });
   });
-  it('advance updates B at the old clock time, audits every unresolved DH001 case, then advances', async () => {
+  it('advance updates B and audits unresolved DH001 cases at the new time after the last reply', async () => {
     await demo.reset('After Demo 1');
     const existing = (await store.get('cases', 'CS001'))!;
     await store.createCase({ ...existing, id: 'CS002', status: 'waiting_customer' });
@@ -52,10 +52,13 @@ describe.skipIf(!url)('PostgreSQL integration (real database; resets all demo ta
     const before = demo.clock.now().toISOString();
     const app = createApp(store, { token: 'test-only', demo });
     expect((await app.request('/api/demo/advance-day', { method: 'POST', headers: { 'x-demo-token': 'test-only' } })).status).toBe(200);
-    expect((await store.list('shipments', { order_id: 'DH001', parcel_code: 'B' }))[0]).toMatchObject({ status: 'delivered', updated_at: before });
+    const after = demo.clock.now().toISOString();
+    expect((await store.list('shipments', { order_id: 'DH001', parcel_code: 'B' }))[0]).toMatchObject({ status: 'delivered', updated_at: after });
     const events = await store.list('case_events', { type: 'shipment_updated' });
     expect(events.map(row => row.case_id).sort()).toEqual(['CS001', 'CS002']);
-    expect(events.every(row => row.created_at === before)).toBe(true);
+    expect(events.every(row => row.created_at === after)).toBe(true);
+    const lastReply = (await store.list('case_events', { type: 'reply_sent' })).at(-1)!;
+    expect(Date.parse(events[0].created_at)).toBeGreaterThan(Date.parse(lastReply.created_at));
     expect(demo.clock.now().getTime()).toBe(Date.parse(before) + 86_400_000);
   });
   it('rolls back truncate and inserts when a seed violates a foreign key', async () => {

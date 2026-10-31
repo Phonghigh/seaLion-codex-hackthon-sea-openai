@@ -12,7 +12,7 @@ import { createAgent, type AgentOptions } from './ai/agent';
 import { get_case_context, get_order_shipments, ToolNotFoundError } from './ai/tools';
 
 export const DEFAULT_ORIGINS = 'http://127.0.0.1:3000,http://127.0.0.1:3001,http://localhost:3000,http://localhost:3001';
-export function createApp(store: CaseStore, options: { token?: string; origins?: string; demo?: ReturnType<typeof createDemoService>; agent?: AgentOptions } = {}) {
+export function createApp(store: CaseStore, options: { token?: string; origins?: string; demo?: ReturnType<typeof createDemoService>; agent?: AgentOptions; uploadsRoot?: URL } = {}) {
   const app = new Hono();
   const demo = options.demo ?? createDemoService(store);
   let lastWrite = 0;
@@ -28,7 +28,8 @@ export function createApp(store: CaseStore, options: { token?: string; origins?:
     if (error instanceof z.ZodError || error instanceof SyntaxError) return c.json({ ok: false, error: 'Invalid request body' }, 400);
     return c.json({ ok: false, error: error instanceof ToolNotFoundError ? error.message : 'Request failed' }, error instanceof ToolNotFoundError ? 404 : 500);
   });
-  registerWorkspace(app, store, () => now().toISOString());
+  const uploadsRoot = options.uploadsRoot ?? new URL('../data/uploads/', import.meta.url);
+  registerWorkspace(app, store, () => now().toISOString(), uploadsRoot);
   app.get('/api/cases/:id/context', async c => c.json(await get_case_context(store, { case_id: c.req.param('id') })));
   app.get('/api/orders/:id/shipments', async c => c.json(await get_order_shipments(store, { order_id: c.req.param('id') })));
   app.post('/api/agent/suggest', async c => {
@@ -37,9 +38,9 @@ export function createApp(store: CaseStore, options: { token?: string; origins?:
     return c.json(await agent.suggest(parsed.data.conversation_id));
   });
   app.get('/api/health', async c => c.json({ ok: true, time: demo.clock.now().toISOString(), db: await store.health() ? 'up' : 'down' }));
-  for (const directory of ['../public/', '../data/uploads/']) {
-    const root = fileURLToPath(new URL(directory, import.meta.url));
-    if (directory.includes('uploads')) mkdirSync(root, { recursive: true });
+  mkdirSync(uploadsRoot, { recursive: true });
+  for (const directory of [new URL('../public/', import.meta.url), uploadsRoot]) {
+    const root = fileURLToPath(directory);
     app.get('/files/*', serveStatic({ root, rewriteRequestPath: path => path.replace(/^\/files\//, '') }));
   }
   app.use('/api/demo/*', async (c, next) => {

@@ -2,13 +2,14 @@ import { z } from 'zod';
 import { AgentSuggestionEnvelopeSchema, type AgentSuggestion } from './agent';
 import { CaseRowSchema, ConversationRowSchema, MessageRowSchema, EvidenceRowSchema, CaseEventRowSchema, TaskRowSchema, OrderRowSchema, OrderItemRowSchema } from './db';
 
-export const ConversationDetailSchema = z.object({ conversation: ConversationRowSchema, messages: z.array(MessageRowSchema), evidence: z.array(EvidenceRowSchema), case: CaseRowSchema.nullable() });
-export const CaseDetailSchema = z.object({ case: CaseRowSchema, events: z.array(CaseEventRowSchema), evidence: z.array(EvidenceRowSchema), tasks: z.array(TaskRowSchema) });
+export const LabeledEvidenceSchema = EvidenceRowSchema.extend({ label: z.string().min(1) });
+export const ConversationDetailSchema = z.object({ conversation: ConversationRowSchema, messages: z.array(MessageRowSchema), evidence: z.array(LabeledEvidenceSchema), case: CaseRowSchema.nullable() });
+export const CaseDetailSchema = z.object({ case: CaseRowSchema, events: z.array(CaseEventRowSchema), evidence: z.array(LabeledEvidenceSchema), tasks: z.array(TaskRowSchema) });
 export const CaseContextSchema = z.object({
   case: CaseRowSchema,
   conversations: z.array(ConversationRowSchema.pick({ id: true, channel: true, opened_at: true }).extend({ summary: z.string() })),
   messages: z.array(MessageRowSchema).max(20),
-  evidence: z.array(EvidenceRowSchema.pick({ id: true, type: true, path: true, source: true, created_at: true })),
+  evidence: z.array(LabeledEvidenceSchema.pick({ id: true, type: true, path: true, source: true, created_at: true, label: true })),
   events: z.array(CaseEventRowSchema).max(20), open_tasks: z.array(TaskRowSchema),
   changes_since_last_contact: z.array(z.object({ parcel_code: z.string(), before: z.string(), after: z.string() })),
 });
@@ -22,6 +23,19 @@ export type DemoControl = 'reset' | 'advance-day' | 'demo2';
 export const CS_IDENTITIES = { An: 'CS_A', Binh: 'CS_B' } as const;
 export const actorName = (actor: string) => actor === 'CS_A' ? 'An' : actor === 'CS_B' ? 'Binh' : actor;
 export const formatTime = (value: string) => new Date(value).toLocaleString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+export const compareChronological = (a: { id: string; created_at: string }, b: { id: string; created_at: string }) =>
+  Date.parse(a.created_at) - Date.parse(b.created_at) || a.id.localeCompare(b.id);
+
+/** Labels describe the supplied image, without inferring or validating its contents. */
+export function labelEvidence<T extends { id: string; path: string; created_at: string }>(evidence: T[]) {
+  let upload = 0;
+  return [...evidence].sort(compareChronological).map(item => ({ ...item,
+    label: item.path === '/files/demo/parcel_a.jpg' ? 'photo of parcel A'
+      : item.path === '/files/demo/parcel_b_open.jpg' ? 'photo of the opened parcel B'
+      : `customer photo ${++upload}`,
+  }));
+}
 
 /** Browser-safe transport. Only demo controls receive a token, supplied at runtime. */
 export function createApiClient({ baseUrl = 'http://127.0.0.1:4000', fetch: transport = globalThis.fetch }: { baseUrl?: string; fetch?: typeof globalThis.fetch } = {}) {

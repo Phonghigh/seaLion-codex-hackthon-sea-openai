@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import type { Hono } from 'hono';
 import { z } from 'zod';
 import { AgentSuggestionSchema, type DbTable } from '@seapilot/contracts';
+import { compareChronological, labelEvidence } from '@seapilot/contracts/client';
 import type { CaseStore } from './store/CaseStore';
 
 const id = z.string().trim().min(1);
@@ -20,9 +21,7 @@ async function required<K extends DbTable>(store: CaseStore, table: K, key: stri
   if (!row) throw new RequestError(`${table} not found`, 404);
   return row;
 }
-const uploadRoot = new URL('../data/uploads/', import.meta.url);
-
-export function registerWorkspace(app: Hono, store: CaseStore, now: () => string) {
+export function registerWorkspace(app: Hono, store: CaseStore, now: () => string, uploadRoot: URL) {
   app.post('/api/conversations', async c => {
     const body = z.object({ customer_id: id }).strict().parse(await c.req.json());
     await required(store, 'customers', body.customer_id);
@@ -38,7 +37,7 @@ export function registerWorkspace(app: Hono, store: CaseStore, now: () => string
       store.list('messages', { conversation_id: conversation.id }), store.list('evidence', { conversation_id: conversation.id }),
       conversation.case_id ? store.get('cases', conversation.case_id) : null,
     ]);
-    return c.json({ ok: true, data: { conversation, messages: messages.sort((a, b) => a.created_at.localeCompare(b.created_at)), evidence, case: summary } });
+    return c.json({ ok: true, data: { conversation, messages: messages.sort(compareChronological), evidence: labelEvidence(evidence), case: summary } });
   });
   app.post('/api/conversations/:id/messages', async c => {
     const body = z.object({ role: z.literal('customer'), text: id }).strict().parse(await c.req.json());
@@ -93,7 +92,7 @@ export function registerWorkspace(app: Hono, store: CaseStore, now: () => string
     const current = await required(store, 'cases', c.req.param('id'));
     const filter = { case_id: current.id };
     const [events, evidence, tasks] = await Promise.all([store.list('case_events', filter), store.list('evidence', filter), store.list('tasks', filter)]);
-    return c.json({ ok: true, data: { case: current, events, evidence, tasks } });
+    return c.json({ ok: true, data: { case: current, events: events.sort(compareChronological), evidence: labelEvidence(evidence), tasks } });
   });
   app.post('/api/approve', async c => {
     const body = approveSchema.parse(await c.req.json());

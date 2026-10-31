@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { FunctionTool } from 'openai/resources/responses/responses';
 import { CaseRowSchema } from '@seapilot/contracts';
+import { compareChronological, labelEvidence } from '@seapilot/contracts/client';
 import type { CaseStore } from '../store/CaseStore';
 
 // Only these two store capabilities are available to model tools.
@@ -18,7 +19,7 @@ export const GetOrderShipmentsArgsSchema = z.object({ order_id: id }).strict();
 
 export class ToolNotFoundError extends Error {}
 export const chronological = <T extends { id: string; created_at: string }>(rows: T[]): T[] =>
-  [...rows].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at) || a.id.localeCompare(b.id));
+  [...rows].sort(compareChronological);
 
 async function caseHistory(store: ReadStore, caseId: string) {
   const conversations = (await store.list('conversations', { case_id: caseId }))
@@ -76,7 +77,7 @@ export async function get_case_context(store: ReadStore, input: z.input<typeof G
       summary: history.messages.filter(message => message.conversation_id === conversation.id).slice(-3)
         .map(message => `${message.role}: ${message.text}`).join('\n'),
     })),
-    messages: history.messages.slice(-20), evidence: chronological(evidence), events: events.slice(-20),
+    messages: history.messages.slice(-20), evidence: labelEvidence(evidence), events: events.slice(-20),
     open_tasks: chronological(tasks.filter(task => task.status === 'open')),
     changes_since_last_contact: shipments.filter(parcel => Object.hasOwn(baseline, parcel.parcel_code) && baseline[parcel.parcel_code] !== parcel.status)
       .map(parcel => ({ parcel_code: parcel.parcel_code, before: baseline[parcel.parcel_code], after: parcel.status })),

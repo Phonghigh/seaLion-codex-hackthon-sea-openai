@@ -24,6 +24,11 @@ It does not prove the parcel contained every item.
 A customer photo is evidence from the customer. It does not prove that the
 warehouse packed the parcel wrong.
 When new information arrives, keep the old evidence. Do not replace it.
+In known_facts and draft_reply, never include raw ids or ISO timestamps.
+Use each evidence label to describe what it shows, such as "the photo of parcel A"
+or "the photo of the opened parcel B". Describe times in plain words (for example,
+"at the last contact" or "on 31 October"); do not invent relative dates.
+Keep raw ids only in structured references such as suggested_case_id and evidence_ids.
 
 ## Reply rules
 - Write in the language the customer uses. Polite, plain, at most 4 sentences.
@@ -33,7 +38,8 @@ When new information arrives, keep the old evidence. Do not replace it.
 - Ask at most one question: the single missing fact needed to choose the
   next step. If nothing is missing, ask nothing.
 - Never promise a refund, a replacement, compensation or a delivery date.
-- Never say an action is done. The system confirms actions after CS approval.
+- Never say an action is done unless a tool confirms its successful execution.
+  A reply remains blocked while an escalation is pending CS approval.
 - Every statement must come from tool results or from the customer's words.
   If a tool fails, say what data is missing and draft a short holding reply.
 
@@ -45,6 +51,10 @@ When new information arrives, keep the old evidence. Do not replace it.
 - If a parcel is still in transit, propose no action. The next step is to
   follow the delivery.
 - Never propose closing the case.
+- If the case has an action_executed event for escalate_to_ops, propose no action
+  (proposed_action = null). Draft a reply stating that the case has been forwarded
+  to the operations team for checking, with no promise of refund, replacement or
+  date. This takes precedence over proposing an escalation again.
 
 ## Output
 Return only JSON that matches this shape. No text outside the JSON.
