@@ -1,0 +1,103 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" SessionStart",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" UserPromptSubmit",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" PreToolUse",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" PostToolUse",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" SubagentStart",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" SubagentStop",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" Stop",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Interrupt": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" Interrupt",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const e=process.argv[1],fail=()=>{process.stderr.write('Team prompt recorder failed; fix the recorder before retrying.\\n');process.exitCode=e==='UserPromptSubmit'?2:1};try{let p=require('node:path'),f=require('node:fs'),r=process.cwd(),s;while(f.existsSync(s=p.join(r,'scripts/codex-usage/cli.mjs'))===false){let u=p.dirname(r);if(u===r)throw Error('Usage recorder missing');r=u}process.argv=[process.execPath,s,'hook',e];import(require('node:url').pathToFileURL(s).href).catch(fail)}catch{fail()}\" SessionEnd",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

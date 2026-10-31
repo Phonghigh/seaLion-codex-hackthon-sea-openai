@@ -1,0 +1,14 @@
+# Local credentials and generated application files
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+coverage/
+
+# Redacted prompt/tool events, reports and .codex/hooks.json are PUBLIC team evidence.
+# Only raw staging files, original config backups and incomplete writes stay local.
+.codex-usage/local/
+.codex-usage/hooks-backup-*.json
+.codex-usage/**/*.tmp
+.codex/hooks-*.tmp
