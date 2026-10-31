@@ -1,0 +1,9 @@
+# Codex task log
+
+Times use Asia/Ho_Chi_Minh (UTC+07:00). Entries record observed work; this log
+does not reconstruct earlier tasks or certify event eligibility.
+
+| Task ID | Start | End | Work built | Files changed | Tests added / validation | Problems found |
+| --- | --- | --- | --- | --- | --- | --- |
+| DOC01 | 2026-10-31 09:56 | 2026-10-31 09:59 | Reviewed seaPilot prep and imported its overview plus tabs 01–07, with source provenance, navigation, review findings and readiness checklist. | `docs/README.md`, `docs/prep-2026-10-31/*.md`, `docs/codex-log.md` | No application tests added for docs-only work. Verified all eight snapshots against source text after whitespace normalization; checked local Markdown links and whitespace. Attempted `pnpm typecheck`, `pnpm lint`, `pnpm test`: Corepack could not reach npm; offline attempts also stopped before running scripts. No `package.json` or app scaffold exists yet. | Missing first-case flow, shipment baseline and persisted reassignment; fallback/ID/evidence contracts; demo shortcut and team-name inconsistencies; declaration claims and imported tooling require confirmation. See `prep-2026-10-31/review.md`. |
+| DOC02 | 2026-10-31 09:59 | 2026-10-31 10:08 | Translated the prep pack into English, including instructions, demo replies, source labels, pitch and Q&A. Updated provenance to identify translated snapshots and retained the English customer-message variants. | `docs/prep-2026-10-31/*.md`, `docs/codex-log.md` | Checked for untranslated Vietnamese prose (excluding proper names), local links, whitespace, task coverage, and demo identifiers. No application tests added; no application scaffold or package scripts exist to run typecheck, lint or tests. | No new implementation changes. Root `AGENTS.md` and bilingual execution prompts remain unchanged. |
