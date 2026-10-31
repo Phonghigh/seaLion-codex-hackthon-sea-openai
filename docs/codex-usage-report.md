@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T07:42:07.863Z (UTC).
+Generated: 2026-10-31T08:12:21.108Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:39:09.128Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T08:11:30.269Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T07:39:09.128Z.
 | prompts | 14 |
 | tool_invocations | 419 |
 | tool_results | 408 |
-| manual_entries | 20 |
+| manual_entries | 24 |
 
 Models reported by hooks: gpt-6-astra, unknown.
 
@@ -1015,6 +1015,30 @@ These entries are not automatic evidence and are excluded from tool counts.
 - 2026-10-31T07:39:09.119Z — codex-desktop/manual (unverified; d4cb6df3ffa8)
 
     Resolving current Git conflicts while preserving merged backend and local Sea UI work. Automatic hook coverage unverified; manual evidence.
+
+    Resolve conflicts
+
+- 2026-10-31T07:48:40.463Z — codex-desktop/manual (unverified; e533bc8b9cd9)
+
+    Refining both API and fixture CS UI. Manual evidence; automatic coverage unverified.
+
+    Remove Customer service caption; make sheets expandable/collapsible; make conversation list more colorful using CRM patterns.
+
+- 2026-10-31T07:58:12.596Z — codex-desktop/manual (unverified; 36372bca01f2)
+
+    Inspected rendered reference inbox. Adapting compact inbox density, counted queue filters, sorting and pane hierarchy; preserving case workflows.
+
+    Use https://buddy-bound-base.lovable.app/TND4K2PZ1/inbox as reference and update current UI; include only relevant components.
+
+- 2026-10-31T08:06:05.767Z — codex-desktop/manual (unverified; d36b90ab3343)
+
+    Updating both CS modes while preserving drafts and approval controls; manual evidence, automatic coverage unverified.
+
+    Apply screenshot feedback: remove left rail, move case toggle to conversation header as icon, change case summary layout, add composer expand/collapse.
+
+- 2026-10-31T08:11:30.260Z — codex-desktop/manual (unverified; 34c8b7424510)
+
+    Inspecting and resolving current merge conflicts, preserving recent UI and backend changes. Manual evidence; automatic hook coverage unverified.
 
     Resolve conflicts
 

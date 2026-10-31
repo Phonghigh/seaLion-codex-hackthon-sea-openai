@@ -478,3 +478,25 @@ Package A draft/recovery behavior, and separate reply/action approvals. No new
 dependencies or backend changes. Fixture-mode visual checks cover desktop and
 375px responsive frames. Production builds use the default API-mode configuration.
 Screen-reader, mobile-keyboard and full zoom testing remain pending. No redeploy.
+
+## 16. CS workspace refinements
+
+Removed the sidebar Customer service caption in both modes. Case sections now use
+keyboard-accessible shadcn accordions; desktop agents can hide/show the entire
+case panel. Inbox rows expose labeled Needs reply/Replied/Auto-handled colors and
+a separate cobalt selection state. Existing approval controls and data flows remain.
+
+## 17. Reference inbox adaptation
+
+Applied the relevant patterns documented in [INBOX-REFERENCE.md](INBOX-REFERENCE.md):
+compact flat queue rows, live filter counts, visible search-result count, start-time
+sorting, wider desktop queue and compact composer. Both CS modes preserve case
+linking, source labels, draft protection and separate approval controls. No unrelated
+CRM navigation, unsupported actions, fabricated counts or customer-site changes.
+
+## 18. Screenshot feedback implementation
+
+Removed the CS rail and moved branding/help to the top header. The desktop case-panel
+toggle is now an accessible icon beside conversation status. Case summary fields
+use aligned rows. Both composers expand/collapse without clearing drafts; choosing
+a suggested reply opens the composer. Approval handlers and warning visibility remain.
