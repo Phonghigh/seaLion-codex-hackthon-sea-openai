@@ -1,33 +1,44 @@
-# seaLion-codex-hackthon-sea-openai
+# seaPilot - team seaLion (Sea x OpenAI Codex Hackathon, 31 Oct 2026)
 
-The current seaPilot architecture is planned as a local PostgreSQL/filesystem
-backend exposed with Cloudflare Quick Tunnel and a static FE hosted on ChatGPT
-Sites. See the [implementation plan](plans/261031-1037-local-api-sites/plan.md)
-and [CLI deployment runbook](plans/261031-1037-local-api-sites/phase-02-local-deploy-quick-tunnel.md).
-The two-site Next.js frontend base is implemented with independent local fixtures.
-See the [frontend runbook](docs/FRONTEND-BASE.md) and run `pnpm dev` for Customer
-on port 3000 and Customer Service on port 3001. Backend integration and deployment
-remain future work.
+"Customers change conversations. Agents change shifts. The case keeps going."
 
-## Codex usage evidence
+seaPilot is a case workspace for e-commerce customer service. The case, not the
+conversation, is the unit of work: a returning customer is linked to their existing
+case, the agent sees what changed since the last reply, the AI asks only the one
+missing fact, and every reply and action is approved by a human.
 
-Every developer must enable the project hook before development so prompts and
-observed tool calls become part of the public hackathon evidence. The shared
-configuration is [.codex/hooks.json](.codex/hooks.json); redacted events are kept
-in [.codex-usage/](.codex-usage/README.md); commit and push them with the work to
-share the evidence. Node.js 20+
-is required; no additional dependency is needed.
+Build direction: 02, AI-Native Products & Operations.
 
-For each clone, run `node scripts/codex-usage/cli.mjs install`, start Codex from
-the repository root, and review/trust the project and its hooks through `/hooks`.
-Then open a new session and check real events with
-`node scripts/codex-usage/cli.mjs status`.
+## Read in this order
+1. [docs/PRODUCT-BRIEF.md](docs/PRODUCT-BRIEF.md) - what we build, triage rules, 5 scenes, cut-line.
+2. [AGENTS.md](AGENTS.md) - rules Codex follows, stack, data model, locked decisions.
+3. [docs/Architecture.md](docs/Architecture.md) - topology: static web on ChatGPT Sites,
+   planned Hono API on the demo laptop behind a Cloudflare tunnel, PostgreSQL.
+4. [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) - the 6-minute demo and fallbacks.
+5. [prompts/02-build-tasks.md](prompts/02-build-tasks.md) - Codex prompts, owners, schedule.
 
-Run `node scripts/codex-usage/cli.mjs report` before committing the work. It writes
-Markdown and JSON reports including redacted prompts. Review the event
-files and reports before publishing; redaction is best effort. No automatic
-commit or push occurs.
+Status: the two-site Next.js/shadcn frontend is implemented with independent local
+fixtures. Run `pnpm install` and `pnpm dev`: Customer uses port 3000 and Customer
+Service port 3001. See the [frontend runbook](docs/FRONTEND-BASE.md),
+[implementation plan](docs/FRONTEND-IMPLEMENTATION-PLAN.md) and
+[brand guide](docs/BRANDING.md). API integration and deployment remain deferred.
+The incoming backend/demo documents describe future work; their Vite scaffold
+and port choices must be reconciled with the existing frontend before execution.
 
-See [setup and report commands](docs/codex-usage.md) and the
-[current usage report](docs/codex-usage-report.md). Recording depends on active,
-trusted hooks; it does not observe ChatGPT activity outside this Codex runtime.
+## Problem
+## Solution
+## Architecture
+## Run locally
+## Demo link
+## How we used Codex
+
+Every developer records every Codex prompt with the shared hooks. Redacted events
+live in [.codex-usage/](.codex-usage/README.md) and the report in
+[docs/codex-usage-report.md](docs/codex-usage-report.md). Setup:
+`node scripts/codex-usage/cli.mjs install`, then trust the hooks via `/hooks` in Codex.
+Task log: [docs/codex-log.md](docs/codex-log.md). Details: [docs/codex-usage.md](docs/codex-usage.md).
+
+## Declarations
+Development tooling vendored in `.agents/` (Matt Pocock skills, MIT; Impeccable, Apache-2.0)
+and the Codex usage recorder in `scripts/codex-usage/` are tooling, not product code.
+Commits before 10:00 on 31 Oct contain planning documents and that tooling only.

@@ -2,7 +2,7 @@
 
 > Source (English translation): [07 — Six-minute pitch and Q&A](https://docs.google.com/document/d/1iIN2QEa0cxI_5_xbRE3vugApgIfFUR_lxfgfxBI2qkg/edit?tab=t.ojt7hyfrjivt)
 > Retrieved: 2026-10-31 (Asia/Ho_Chi_Minh). Draft; statements below are source material, not verified implementation or event rules.
-> Review findings and proposed corrections: [review.md](review.md). Existing repository prompts remain the execution copies.
+> The earlier prep review was retired during documentation consolidation. Check current implementation evidence in [FRONTEND-QA.md](../FRONTEND-QA.md) and [codex-log.md](../codex-log.md) before using these draft claims.
 
 Usage: the draft specifies six minutes for the demo/pitch and two minutes for
 Q&A in both rounds. Cover the problem, solution, and use of Codex. Judges assess

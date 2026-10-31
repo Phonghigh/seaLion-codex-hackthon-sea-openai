@@ -1,21 +1,16 @@
 # seaPilot documentation
 
-Read [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md) for the current product scope and
-priorities. The [frontend implementation plan](FRONTEND-IMPLEMENTATION-PLAN.md)
-defines two independently deployable Next.js sites (Customer and Customer
-Service), their shared contracts, P0 demo flow, integration boundaries,
-verification gates, and Sites implementation handoff. It is a plan only.
+- [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md) — product scope, triage rules and scenes.
+- [FRONTEND-BASE.md](FRONTEND-BASE.md) — implemented two-site frontend and local run instructions.
+- [FRONTEND-IMPLEMENTATION-PLAN.md](FRONTEND-IMPLEMENTATION-PLAN.md) — delivery status and deferred integration.
+- [BRANDING.md](BRANDING.md) — branding assets and shadcn component contract.
+- [FRONTEND-QA.md](FRONTEND-QA.md) — checks performed and remaining limits.
+- [Architecture.md](Architecture.md) — planned backend and tunnel topology; integration caveats at the top.
+- [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md) — planned integrated demo and fallbacks.
+- [submission/](submission/) — write-up, declarations and pitch drafts.
+- [codex-log.md](codex-log.md) — task history from both branches.
+- [codex-usage.md](codex-usage.md) and [codex-usage-report.md](codex-usage-report.md) — prompt evidence.
 
-The [31 October preparation pack](prep-2026-10-31/README.md) contains the product
-brief, engineering plan, runtime rules, demo data and runbook, submission drafts,
-pitch, and a review of unresolved implementation and submission details.
-
-Consult the [prep review](prep-2026-10-31/review.md) for earlier unresolved details;
-the current product brief takes precedence over the older prep scope and schedule.
-Use root `AGENTS.md` and `prompts/` as the execution copies.
-
-[Codex task log](codex-log.md) records work performed in this repository.
-
-- [Frontend base: run, build, scenario walkthrough and limitations](FRONTEND-BASE.md)
-
-- [seaPilot branding and shadcn component contract](BRANDING.md)
+Execution rules: root `AGENTS.md`. The prompts in `prompts/` retain the incoming
+backend plan; their old frontend scaffold instructions are superseded by the
+implemented Next.js/shadcn sites. No backend integration is included in this merge.

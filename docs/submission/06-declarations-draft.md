@@ -2,7 +2,7 @@
 
 > Source (English translation): [06 – Declarations (draft)](https://docs.google.com/document/d/1iIN2QEa0cxI_5_xbRE3vugApgIfFUR_lxfgfxBI2qkg/edit?tab=t.52msdt7qsq0q)
 > Retrieved: 2026-10-31 (Asia/Ho_Chi_Minh). Draft; statements below are source material, not verified implementation or event rules.
-> Review findings and proposed corrections: [review.md](review.md). Existing repository prompts remain the execution copies.
+> The earlier prep review was retired during documentation consolidation. Check current implementation evidence in [FRONTEND-QA.md](../FRONTEND-QA.md) and [codex-log.md](../codex-log.md) before using these draft claims.
 
 Usage: submit this document as a PDF through the Google Form. The briefing asks teams to identify any existing projects used and the work completed on event day. Hoàng approves it; Như exports the PDF on event day.
 ## Decisions to confirm

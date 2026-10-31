@@ -1,10 +1,10 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T04:59:37.539Z (UTC).
+Generated: 2026-10-31T05:06:47.112Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:46:45.703Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:05:19.040Z.
 
 | Metric | Count |
 | --- | ---: |
@@ -13,7 +13,7 @@ Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T04:46:45.703Z.
 | prompts | 0 |
 | tool_invocations | 0 |
 | tool_results | 0 |
-| manual_entries | 8 |
+| manual_entries | 12 |
 
 Models reported by hooks: none.
 
@@ -66,11 +66,32 @@ These entries are not automatic evidence and are excluded from tool counts.
 
     commit, push lên
 
+- 2026-10-31T03:50:10.000Z — CodexDesktop/architecture_clarification (unverified; 9783efbd5605)
+
+    Self-reported audience answer observed during this planning turn, approximate observation time; not automatic hook evidence.
+
+    Frontend trên ChatGPT Sites: Public để chia sẻ demo.
+
+- 2026-10-31T03:58:22.000Z — CodexDesktop/delegated_plan_review (unverified; e43d5f1d68ca)
+
+    Self-reported orchestration summary for this task, not captured tool events or exact forked context. Used a read-only scout for old-plan conflicts, a researcher for Sites/CORS, a planner owning four plan files, and three read-only review scopes covering consistency/security/failure modes. Parent wrote CLI runbook, updated active docs and integrated findings. No application implementation, installation or deployment occurred.
+
+
+
 - 2026-10-31T03:59:07.000Z — Codex/planning (unverified; 566f0acf6804)
 
     Self-reported planning task in Codex desktop. Read PRODUCT-BRIEF.md, AGENTS.md, routing configuration and Sites skill/tool capabilities. Automatic hook coverage is unverified; status showed zero observed hook events. User requested a frontend implementation plan only, with Next.js and Sites; no application implementation or deployment is performed in this phase.
 
     Based on `docs/PRODUCT-BRIEF.md`, firstly, please create implementation plan to develop front-end base. Request [@Sites](plugin://sites@openai-curated-remote) to create NextJS for FE. Don't implement code in this phase
+
+- 2026-10-31T04:00:13.000Z — CodexDesktop/architecture_scope_correction (unverified; 6bf4a11b8f6e)
+
+    Self-reported user request observed in this conversation; not automatic hook evidence.
+
+    Tôi không nhờ bạn build toàn bộ project.
+    tạo 1 file Architecture mới trong docs,
+    plan để deploy API local thông quan cloudeflare quicktunnel,
+    Không build plan detail để build toàn bộ project
 
 - 2026-10-31T04:06:30.000Z — Codex/planning (unverified; 49beb40bce54)
 
@@ -95,6 +116,12 @@ These entries are not automatic evidence and are excluded from tool counts.
     Self-reported request for official shadcn component migration, hackathon-inspired branding and frontend plan updates. Automatic hooks remain unverified. Event website inspected through browser; no application APIs requested or connected.
 
     Please using Shadcn component, do not use base HTML element. Generate branding design pattern, I'm playing Sea Hackathon https://codexhackathon.sea.com/ Please choose other theme color to match with. Update FE implementation plan also
+
+- 2026-10-31T05:02:00.000Z — Codex/merge-resolution (unverified; 61f4bd36c24e)
+
+    Self-reported merge resolution request. Reviewing the in-progress merge and retaining both branches documentation and event history; automatic hook coverage remains unverified.
+
+    I have merged origin/main, please review and resolve conflicts
 
 
 ## Coverage and interpretation

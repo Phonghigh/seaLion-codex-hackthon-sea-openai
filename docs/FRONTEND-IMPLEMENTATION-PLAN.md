@@ -19,8 +19,9 @@ Priority follows [PRODUCT-BRIEF.md](PRODUCT-BRIEF.md), especially sections 2, 4â
 [AGENTS.md](../AGENTS.md) governs implementation rules and the stack.
 [Build prompts](../prompts/02-build-tasks.md) and
 [demo data](../prompts/04-demo-data.md) provide existing contracts and fixtures.
-The older [prep review](prep-2026-10-31/review.md) supplies unresolved details;
-its original three-scene scope and schedule do not override the newer brief.
+The incoming [architecture](Architecture.md) and [demo runbook](DEMO-RUNBOOK.md)
+preserve backend integration targets. Their Vite/static scaffold and API port
+assumptions must be adapted to the existing two-site Next.js/shadcn workspace.
 
 Current checkout includes both Next.js applications, shared UI/contracts/demo
 packages, workspace scripts, a pinned lockfile and the Codex usage recorder.

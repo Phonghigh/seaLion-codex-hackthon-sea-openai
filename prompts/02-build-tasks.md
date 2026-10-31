@@ -1,238 +1,291 @@
-# 02 – Prompt task (build)
+# 02 - Build tasks (Codex prompts)
 
-Cách dùng: mỗi task là một prompt dán vào Codex, theo đúng thứ tự. Một người có thể chạy 2 task song song nếu task không đụng cùng file. Mỗi task có "Done when"; chưa đạt thì chưa sang task sau.
+Merge scope: these are the incoming backend/integration task proposals. The
+existing `apps/customer` and `apps/customer-service` Next.js/shadcn sites supersede
+T01's Vite/no-component-library frontend scaffold. Do not replace the workspace.
+API discovery/integration and deployment remain deferred by the user; adapt paths,
+commands and the API port (3001 is used by CS) before executing these tasks.
+Read `docs/FRONTEND-BASE.md` and root AGENTS.md for current runnable scope.
 
-## Phân công và khung giờ
+Revised 31 Oct 12:30 (Asia/Saigon): one package, `src/web` static on ChatGPT Sites,
+`src/api` Hono + Docker Postgres on Minh's Mac behind a Cloudflare tunnel. See AGENTS.md.
 
-- T01 Scaffold + deploy: Phong, 10:00–10:45.
-- T02 Database, seed, nút demo: Phong, 10:45–11:45.
-- T03 Tool functions: Hoàng, 10:45–11:45.
-- T04 AI agent loop: Hoàng, 11:45–12:30. Mốc 12:30: Demo 1 chạy với model thật.
-- T05 Màn hình CS: Minh, 10:45–12:30.
-- T06 Màn hình khách: Minh, 13:00–13:45.
-- T07 Nối case + phát hiện thay đổi: Hoàng, 13:00–14:15. Mốc 14:30: Demo 2 chạy, nộp WIP.
-- T08 Duyệt + chuyển vận hành: Phong, 14:00–15:00.
-- T09 Thanh điều khiển demo: Phong, 14:30–15:00.
-- T10 Test continuity + README: Như (chạy Codex), 15:00–16:00. Mốc 15:30: chốt tính năng.
+How to use: each task is one prompt pasted into Codex, in order. One person may run two
+tasks in parallel if they do not touch the same package. Every task has "Done when";
+do not start the next one before it is met. Start every prompt with "Read AGENTS.md".
 
-## Cắt bớt khi trễ giờ
+## Owners and schedule (revised 12:30: Minh and Hoang code, Phong and Nhu support)
 
-- Không được bỏ: T02 (reset), T03, T04, T07, T09.
-- Bỏ trước: upload ảnh thật ở T06 (dùng ảnh seed), rồi phần tạo task thật ở T08 (chỉ ghi event).
-- 12:30 Demo 1 chưa chạy: bỏ T06. 14:30 Demo 2 chưa chạy: cả team dồn vào T07.
+| Task | Owner | Time | Milestone |
+|---|---|---|---|
+| T01 Scaffold (one package) | Minh | 12:30-13:00 | push, Hoang pulls |
+| Seed JSON by hand from 04-demo-data | Nhu | 12:30-13:00 | hand to Minh |
+| T02 Store, seed, demo routes | Minh | 13:00-13:30 | |
+| T05 CS screen with mock data | Hoang | 13:00-14:00 | |
+| T03+T04 Tools + agent loop | Minh | 13:30-14:15 | 14:15 Scene 1 with real model |
+| T05 wired to real API | Hoang | 14:00-14:30 | 14:30 WIP submission: Scene 1 + tunnel link |
+| T07+T08 Link, what changed, approve | Minh | 14:15-15:00 | |
+| T06+T09 Customer screen + demo bar | Hoang | 14:30-15:15 | 15:15 Scenes 2 and 3 run |
+| T07b Triage + routing, Scenes 0 and 4 | Minh | 15:00-15:45 | 15:45 feature freeze |
+| T10 Continuity test + README | Hoang (Codex) | 15:15-15:45 | |
+| Hooks for everyone, cloudflared + Sites on Minh's Mac, pitch, evidence | Phong | all day | 13:30 Sites gate |
 
-## T01 – Scaffold + deploy
+T07b starts only when Scenes 2 and 3 run end to end. If that is not true by 15:00, the
+demo is Scenes 1-2-3 and the pitch shows the rules in config/ as the next step.
+Optional after the freeze: T12 replay, T11 voice.
+
+## Cut-line when late
+- Never drop: T01, T02, T03+T04, T07+T08, demo bar.
+- Drop first: Scene 4 and the Auto-handled tab (keep Scene 0 + the Triage card), then image
+  upload in T06 (use seeded images), then the customer screen itself (curl script), then Scene 3.
+- 14:15 Scene 1 not running: Hoang stops UI work and pairs with Minh on T03+T04.
+
+## T01 - Scaffold, one package (Minh)
 
 ```text
 Read AGENTS.md first.
-Create a Next.js App Router project with TypeScript strict, Tailwind,
-shadcn/ui, ESLint and Vitest. Add the pnpm scripts listed in AGENTS.md.
-Add .gitignore that ignores .env*, and .env.example with these names only:
-OPENAI_API_KEY, OPENAI_MODEL, NEXT_PUBLIC_SUPABASE_URL,
-NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, DEMO_RESET_TOKEN.
-Create placeholder pages /customer and /cs and a home page that links to both.
-Create README.md with these sections (empty for now): Problem, Solution,
-Build direction, How we used Codex, Architecture, Run locally, Declarations.
-Create docs/codex-log.md with a table header.
-Done when: pnpm typecheck, lint and test pass, and pnpm dev shows the 3 pages.
+Create ONE pnpm package at the repo root with two entry points:
+- src/web: React 18 + Vite + TypeScript strict + Tailwind + react-router. Routes
+  /customer and /cs, home links to both. src/web/lib/api.ts: typed fetch client using
+  import.meta.env.VITE_API_BASE (default "http://127.0.0.1:3001"). vite build outputs
+  to dist/web.
+- src/api: Hono on Node 20, run with tsx. GET /api/health -> { ok: true, time }.
+  CORS middleware: exact-origin allowlist from env CORS_ORIGINS (comma separated),
+  Vary: Origin, OPTIONS answered before auth, CORS headers on error responses.
+  Serve dist/web at / when it exists. Serve public/ and data/uploads/ under /files/*.
+  Listen on 127.0.0.1:3001.
+- src/shared: Zod schemas folder (empty index for now).
+Scripts: dev (api + web with concurrently), build, typecheck, lint, test (vitest,
+exclude tests/codex-usage.test.mjs), test:tooling (node --test tests/codex-usage.test.mjs),
+db:reset and db:migrate (placeholders until T02), tunnel (cloudflared tunnel --url
+http://127.0.0.1:3001). .env.example with OPENAI_API_KEY, OPENAI_MODEL,
+DEMO_RESET_TOKEN, CORS_ORIGINS, VITE_API_BASE, DATABASE_URL, POSTGRES_PASSWORD.
+.gitignore: .env, data/uploads, node_modules, dist. Keep data/.gitkeep and public/demo/ with
+parcel_a.jpg and parcel_b_open.jpg (simple generated placeholder JPEGs with the label
+text if real photos are missing). Append a T01 row to docs/codex-log.md.
+Done when: pnpm typecheck, lint, test, test:tooling pass; pnpm dev serves the 3 pages
+and GET http://127.0.0.1:3001/api/health answers. Commit as feat(T01): scaffold.
 ```
 
-Sau T01 (người làm, không phải Codex): push lên GitHub, nối Vercel, nhập biến môi trường, kiểm tra link chạy.
-
-## T02 – Database, seed và nút demo
+## T02 - Database, store, seed, demo routes (Minh)
 
 ```text
-Read AGENTS.md (data model) and prompts/04-demo-data.md.
-1. Write a Supabase migration for all tables in the data model.
-2. Write a seed that loads the "Start" state from 04-demo-data.md.
-3. Add Zod schemas for every table in lib/schemas.
-4. Add server routes, all protected by header x-demo-token = DEMO_RESET_TOKEN:
-   - POST /api/demo/reset: delete all rows, load the "Start" state.
-   - POST /api/demo/advance-day: set shipment of parcel B to "delivered"
-     with updated_at = now, write a case_event "shipment_updated" if a case exists.
-   - POST /api/demo/jump?to=demo2: load the "After Demo 1" state.
-5. Add pnpm db:reset that calls the same reset function.
-Tests: reset twice in a row gives identical rows; jump to demo2 gives
-exactly one case CS001 with one conversation and one evidence row.
-Done when tests pass and the 3 routes work locally.
+Read AGENTS.md (data model, decisions) and prompts/04-demo-data.md.
+0. docker-compose.yml with postgres:16, a named volume, POSTGRES_PASSWORD from .env
+   (dev default allowed), port 5432. DATABASE_URL in .env.example.
+   src/api/db/schema.ts: Drizzle schema for every table in AGENTS.md, text ids,
+   jsonb for payload and evidence_ids, timestamptz. drizzle.config.ts; pnpm db:migrate
+   runs drizzle-kit migrate; generate the first migration into drizzle/.
+1. src/shared/schemas.ts: Zod schemas for every table row (drizzle-zod where it fits)
+   and for AgentSuggestion and the API envelope { ok, data?, error? }.
+2. src/api/store/CaseStore.ts: interface with the reads and writes routes and tools
+   need: get/list for every table, createConversation, addMessage, addEvidence,
+   createCase, linkConversation, addEvent, createTask, updateShipment, updateCase.
+   src/api/store/postgres.ts implements it with Drizzle. Reset truncates all tables in
+   one statement (TRUNCATE ... CASCADE) then inserts the seed in one transaction.
+3. data/seed.json holds the "Start" and "After Demo 1" states (customers, order DH001,
+   items, shipments, case CS001, CONV1, M1, R1, EV1, events). If Nhu already committed
+   it, validate it with the Zod schemas instead of rewriting. Timestamps are offsets in
+   days/hours from the demo clock; src/api/demo/clock.ts starts at day 0 09:00
+   Asia/Ho_Chi_Minh and advance() adds one day. seed.ts turns offsets into ISO strings.
+4. Routes requiring header x-demo-token = DEMO_RESET_TOKEN:
+   POST /api/demo/reset (load Start, clock -> day 0),
+   POST /api/demo/advance-day (parcel B -> delivered, updated_at = clock now, clock +1,
+   case_event shipment_updated if a case exists),
+   POST /api/demo/jump?to=demo2 (load After Demo 1).
+   Make pnpm db:reset call the same reset function.
+Tests (against the Docker database, skip with a clear message if DATABASE_URL is
+unset): reset twice gives identical rows (ignore timestamps); jump demo2 gives exactly
+one case CS001, one conversation, one evidence row; advance-day after jump writes
+shipment_updated. Done when docker compose up -d db, pnpm db:migrate, pnpm db:reset
+work from a clean clone, tests pass and the 3 routes answer with curl.
+Commit as feat(T02): postgres, store, seed, demo routes.
 ```
 
-## T03 – Tool functions
+## T03 - Tool functions (Minh, run together with T04 in one Codex session)
 
 ```text
-Read AGENTS.md and lib/schemas.
-In lib/ai/tools.ts implement 3 server functions. Each has a Zod schema
-for its arguments and its result, and a JSON schema export for the
-Responses API tool definition.
+Read AGENTS.md and src/shared.
+In src/api/ai/tools.ts implement 3 server functions against CaseStore. Each has a Zod
+schema for arguments and result, and a JSON schema export for the Responses API tool.
 1. find_cases({ customer_id?, order_id?, text? })
-   -> [{ case_id, code, status, last_activity_at, score 0..1, reason }]
+   -> [{ case_id, status, last_activity_at, score 0..1, reason }]
    Match on customer and order first, then on words in text.
 2. get_case_context({ case_id })
-   -> { case, conversations[{id, channel, opened_at, summary}],
-        messages (last 20), evidence[{id, type, url, source, created_at}],
-        events (last 20), open_tasks }
+   -> { case, conversations[{id, channel, opened_at, summary}], messages (last 20),
+        evidence[{id, type, path, source, created_at}], events (last 20), open_tasks,
+        changes_since_last_contact: [{ parcel_code, before, after }] }
+   changes = shipment_snapshot in the latest reply_sent event vs current shipments.
 3. get_order_shipments({ order_id })
    -> { order, parcels[{ parcel_code, items[], status, updated_at }] }
-Also expose GET /api/cases/:id/context and GET /api/orders/:id/shipments
-for the UI, using the same functions.
-Tests with seeded data for each function.
+Expose GET /api/cases/:id/context and GET /api/orders/:id/shipments using the same
+functions. Tests with seeded data for each function, including changes after advance-day.
 Done when tests pass.
 ```
 
-## T04 – AI agent loop
+## T04 - Agent loop (Minh)
 
 ```text
 Read AGENTS.md and prompts/03-runtime-prompt.md.
-In lib/ai/agent.ts implement suggest(conversation_id):
+In src/api/ai/agent.ts implement suggest(conversation_id):
 - Build the input from the conversation messages and the customer id.
-- Call the Responses API with the 3 tools from lib/ai/tools.ts and the
-  runtime prompt as instructions. Run tool calls in a loop, max 6 calls,
-  total timeout 30 s.
-- The final answer must parse with the Zod schema AgentSuggestion:
+- Call the Responses API with the 3 tools and the runtime prompt as instructions.
+  Run tool calls in a loop, max 6 calls, total timeout 30 s.
+- Parse the final answer with shared AgentSuggestion:
   { suggested_case_id: string|null, link_confidence: 0..1, link_reason,
-    known_facts: [{ text, source: "customer"|"system"|"unverified" }],
-    changes: [{ text, before, after }],
-    missing_info: string[] (max 1 item),
-    draft_reply: string,
+    known_facts: [{ text, source }], changes: [{ text, before, after }],
+    missing_info: string[] (max 1), draft_reply: string,
     proposed_action: null | { type: "escalate_to_ops", reason, evidence_ids } }
-- If parsing fails, retry once with the validation error. If it still
-  fails, return a safe fallback with draft_reply = "" and an error flag.
-- Save each suggestion as a case_event "ai_suggestion" when a case exists.
-Add POST /api/agent/suggest { conversation_id }.
-Test with a mocked OpenAI client: tool loop, schema retry, fallback.
-Done when tests pass and one real call works locally with the seeded data.
+- On parse failure retry once with the validation error. If it still fails return
+  { ok: false, error, suggestion: null }.
+- Save each suggestion as case_event ai_suggestion when a case exists.
+POST /api/agent/suggest { conversation_id } -> { ok, suggestion, error? }.
+If env DEMO_REPLAY=1, return the saved suggestion from data/replay/<conversation
+fingerprint>.json when present (T12 writes these files).
+Tests with a mocked OpenAI client: tool loop, schema retry, failure envelope.
+Done when tests pass and one real call works on the seeded "After Demo 1" data.
 ```
 
-## T05 – Màn hình CS
+## T05 - CS screen (Hoang)
 
 ```text
-Read AGENTS.md and lib/schemas.
-Build /cs as a 3-column workspace:
-- Left: list of conversations (newest first) with case code or "No case".
+Read AGENTS.md and src/shared.
+Build /cs in src/web as a 3-column workspace:
+- Left: conversations (newest first) with case id or "No case", plus a tab
+  "Auto-handled" for conversations with mode "auto".
 - Center: chat thread for the selected conversation and a composer.
-- Right: Case panel: code, status, assignee, timeline of case_events,
-  evidence thumbnails with a source badge and time.
-  Below it an "AI suggestion" card that renders AgentSuggestion:
-  facts grouped by source with badges (customer / system / unverified),
-  a "What changed" block, a "Still missing" block, an editable draft reply,
-  and buttons "Approve and send", "Reject".
-  If proposed_action exists, show it with its own "Approve action" button.
-Header: a switcher "Signed in as: CS A / CS B" (no auth, stored in state).
-Use typed mock data until the APIs exist, then call the real routes.
-Done when the page renders the "After Demo 1" state from the API.
+- Right: Case panel: id, status, assignee, timeline of case_events, evidence thumbnails
+  (src = VITE_API_BASE + path) with a source badge and time.
+  Below: "AI suggestion" card rendering AgentSuggestion: facts grouped by source with
+  badges, "What changed", "Still missing", editable draft reply, buttons
+  "Approve and send" and "Reject". If proposed_action exists, show it with its own
+  "Approve action" button. Buttons disabled while ok is false.
+  A "Suggest" button calls POST /api/agent/suggest.
+Header: switcher "Signed in as: An / Binh" stored in state only.
+Use typed mock data until the APIs exist, then call the real routes through
+src/lib/api.ts. Done when the page renders the "After Demo 1" state from the API.
 ```
 
-## T06 – Màn hình khách
+## T06 - Customer screen (Hoang)
 
 ```text
-Build /customer: the customer sees one chat. Buttons: "New conversation",
-send text, attach an image. Images upload to Supabase Storage and are
-saved as evidence with source "customer". If upload fails, let the user
-pick one of the seeded images instead.
+Build /customer in src/web: pick a customer (Lan, Minh Tran, Sam Lee), one chat, buttons
+"New conversation", send text, attach an image. POST /api/conversations creates one,
+POST /api/conversations/:id/messages sends text, POST /api/upload (multipart) stores
+the file in data/uploads and creates an evidence row with source "customer"
+linked to the conversation (case_id null until linked). If upload fails, let the user
+pick one of the seeded images instead. Add those routes in src/api if T02 did not.
 Done when a message and an image sent here appear in /cs.
 ```
 
-## T07 – Nối case và phát hiện thay đổi
+## T07 - Link case and what changed (Minh, with T08)
 
 ```text
-Read AGENTS.md and lib/ai.
-1. When a new conversation has no case, /cs shows a banner
-   "Link to CS001?" with link_reason from the agent, and buttons
-   "Link" and "Not this case".
-   POST /api/cases/:id/link-conversation { conversation_id, actor }
-   sets conversation.case_id and writes case_event "conversation_linked".
-2. Change detection: in get_case_context add "changes_since_last_contact":
-   compare each shipment status at the time of the last CS reply with the
-   current status, and list the differences.
-3. The agent must use this list for AgentSuggestion.changes.
-Test: reset -> jump demo2 -> advance-day -> new conversation with the
-Demo 2 customer message -> suggest. Expect suggested_case_id = CS001,
-a change for parcel B (in_transit -> delivered), exactly 1 missing_info,
-and a draft reply that does not ask for the parcel A photo again.
-Done when the test passes.
+Read AGENTS.md decisions and src/api/ai.
+1. When a conversation has no case and the suggestion has suggested_case_id, /cs shows
+   a banner "Link to <id>?" with link_reason and buttons "Link" and "Not this case".
+   POST /api/cases/:id/link-conversation { conversation_id, actor } sets
+   conversation.case_id, moves that conversation's evidence to the case, sets
+   case.assignee = actor, writes conversation_linked and assignee_changed.
+2. The agent must fill AgentSuggestion.changes from changes_since_last_contact.
+3. The runtime prompt already forbids asking for known evidence; verify with the test.
+Test: reset -> jump demo2 -> advance-day -> new conversation with M2 -> suggest (mocked
+model that follows the tool results). Expect suggested_case_id = CS001, one change for
+parcel B in_transit -> delivered, exactly 1 missing_info, draft reply that does not
+ask for the parcel A photo. Then link -> case.assignee = CS_B.
+Done when the test passes and Scene 2 runs on the real model.
 ```
 
-## T08 – Duyệt và chuyển vận hành
+## T08 - Approve and escalate (Minh)
 
 ```text
-Read AGENTS.md rules 4 to 6.
-POST /api/cases/:id/approve { kind: "reply"|"action", payload, actor }
-- reply: save the edited text as a CS message in the conversation,
-  write case_event "reply_sent" with the approver.
-- action escalate_to_ops: create a tasks row (team "operations",
-  status "open", evidence_ids), set case status "waiting_ops",
-  write case_event "action_executed" with the result.
-  Only after the insert succeeds, return success. On error return the error
-  and write case_event "action_failed".
-The UI shows "Sent" or "Escalated" only after a success response.
-Tests for both kinds and for the failure path.
+Read AGENTS.md rules 4 to 6 and the decisions section.
+POST /api/cases/approve { conversation_id, kind: "reply"|"action", payload, actor }
+- reply: if the conversation has no case, create one (id CS001 if none exists, title from
+  the suggestion, order from the customer's open order), link the conversation, attach
+  its evidence, write case_created. Then save the edited text as a CS message, write
+  reply_sent with { actor, shipment_snapshot: { parcel_code: status } }.
+- action escalate_to_ops: create a tasks row (team "operations", status "open",
+  evidence_ids), set case status waiting_ops, write action_executed. Only after the
+  insert succeeds return ok: true. On error return ok: false and write action_failed.
+  Approving the same action twice must not create a second task.
+The UI shows "Sent" or "Escalated" only after ok: true.
+Tests for both kinds, the first-case path, the failure path and the double approve.
 Done when tests pass.
 ```
 
-## T09 – Thanh điều khiển demo
+## T09 - Demo bar (Hoang); Sites publish (Phong)
 
 ```text
-Add a small demo bar on /cs, shown only when the URL has ?demo=1.
-Buttons: "Reset", "Next day", "Start from Demo 2". Each calls the
-matching /api/demo route with the token from a server action
-(the token must never reach the browser).
-After each click, reload the data on the page.
-Done when Reset -> Demo 1 -> Next day -> Demo 2 -> Demo 3 works 3 times
-in a row with the same result.
+Add a demo bar on /cs shown only when the URL has ?demo=1. Buttons: Reset, Next day,
+Start from Demo 2. On first use ask for the demo token once and keep it in
+sessionStorage; send it as x-demo-token. After each click reload the page data.
+Then: pnpm build, publish web/dist on ChatGPT Sites with VITE_API_BASE = tunnel URL,
+add the Sites origin to CORS_ORIGINS, verify from a phone.
+Done when Reset -> Scene 1 -> Next day -> Scene 2 -> Scene 3 works 3 times in a row
+with the same result, on the Sites URL.
 ```
 
-## T10 – Test continuity và README
+## T10 - Continuity test and README (Nhu)
 
 ```text
-Write tests/continuity.test.ts that runs the full story with a mocked
-model that returns realistic AgentSuggestion objects:
-reset -> Demo 1 messages -> advance-day -> new conversation ->
-suggest -> link -> approve reply -> customer says parcel B arrived
-without the cap + photo -> suggest -> approve escalation.
-Assert: exactly one case; 2 conversations on CS001; 2 evidence rows with
-source "customer"; no reply asks again for the parcel A photo;
-final case status "waiting_ops"; a tasks row exists.
-Then fill README.md: Architecture (short diagram in text), Run locally,
-and "How we used Codex" built from docs/codex-log.md (number of tasks,
-tests, commits).
+Write tests/continuity.test.ts that runs the full story with a mocked model
+returning realistic AgentSuggestion objects: reset -> Scene 1 messages -> approve
+reply (creates CS001) -> advance-day -> new conversation -> suggest -> link ->
+approve reply -> M3 + photo -> suggest -> approve action -> approve reply.
+Assert: exactly one case; 2 conversations on CS001; 2 evidence rows with source
+"customer"; no reply asks again for the parcel A photo; final status waiting_ops;
+assignee CS_B; one task with EV1 and EV2.
+Then fill README.md: Problem, Solution, Build direction, Architecture (text diagram),
+Run locally, Demo link, How we used Codex (from docs/codex-log.md and
+docs/codex-usage-report.md: tasks, tests, commits), Declarations.
 Done when the test passes and README is complete.
 ```
 
-## T07b – Triage and routing (P2, start only after Scene 2 runs)
+## T12 - Replay mode (optional, after the freeze)
+
+```text
+Read AGENTS.md. In src/api/ai/agent.ts: after every successful real suggestion, save it
+to data/replay/<fingerprint>.json where fingerprint = sha256 of customer_id +
+ordered message texts of the conversation. When env DEMO_REPLAY=1 and a file matches,
+return it without calling OpenAI and set suggestion.meta.replayed = true. The UI shows a
+small "replayed" badge. Keep data/replay out of git.
+Done when a run with DEMO_REPLAY=1 after one real run needs no network.
+```
+
+## T07b - Triage and routing (Minh, only after Scenes 2 and 3 run)
 
 ```text
 Read AGENTS.md, docs/PRODUCT-BRIEF.md section 3, config/routing-policy.json,
 config/teams.json and prompts/04-demo-data.md (customers 2 and 3, agents, demo clock).
-1. lib/ai/triage.ts: triage(message, context) -> { category, category_confidence,
-   needs_human, risk, language }. Two adapters behind one interface, chosen by env
-   TRIAGE_PROVIDER: "decisions" (POST /v1/decisions, model from env DECISIONS_MODEL,
-   questions: category choice, needs_human predicate, risk score 1-5, language choice)
-   and "responses" (Responses API with a strict JSON schema, confidence = 1.0 for choice).
-   If the decisions call fails, fall back to "responses" and log it.
-2. lib/routing/decide.ts: pure functions, no model calls.
-   decideMode(triage, caseFacts, policy) -> { mode: "ai"|"human", rule: string, reason }
-   applies the rules in config/routing-policy.json in order, first match wins.
-   routeHuman(category, customerLanguage, clock, teams, openCaseOwner, openCounts)
+1. src/api/ai/triage.ts: triage(message, context) -> { category, category_confidence,
+   needs_human, risk, language }. Two adapters behind one interface chosen by env
+   TRIAGE_PROVIDER: "decisions" (POST /v1/decisions, model DECISIONS_MODEL, questions:
+   category choice, needs_human predicate, risk score 1-5, language choice) and
+   "responses" (Responses API with a strict JSON schema, confidence = 1.0 for choice).
+   If decisions fails, fall back to responses and log it.
+2. src/api/routing/decide.ts: pure functions, no model calls.
+   decideMode(triage, caseFacts, policy) -> { mode, rule, reason } applying
+   routing-policy.json rules in order, first match wins.
+   routeHuman(category, language, clock, teams, openCaseOwner, openCounts)
    -> { team, agent, reason, flag? } following human_routing order.
-   Unit tests for every rule and every routing step, using config files as fixtures.
-3. Demo clock: lib/demo/clock.ts holds the current demo time; "Next day" advances it
-   one day. On-shift checks use it, never the real clock.
-4. Wire it: when a customer message arrives, run triage -> decideMode -> if ai: run the
-   agent with read-only tools, send the reply, write case_event "auto_reply", mark the
-   conversation "auto"; if human: routeHuman, set assignee, write case_event "routed".
-5. UI: a Triage card above the AI suggestion on /cs showing category + confidence,
-   needs_human, risk, language, mode, team/agent and the reason. An "Auto-handled"
-   tab lists auto conversations.
+   Unit tests for every rule and routing step using the config files as fixtures.
+3. On-shift checks use src/api/demo/clock.ts, never the real clock.
+4. Wire: on each customer message run triage -> decideMode -> ai: run the agent with
+   read-only tools, send the reply, write auto_reply, set conversation.mode = "auto";
+   human: routeHuman, set assignee, write routed.
+5. web: Triage card above the AI suggestion showing category + confidence, needs_human,
+   risk, language, mode, team/agent and reason.
 Tests: Scene 0 -> ai; Scene 1 -> human/delivery/an; after Next day Scene 2 -> human,
 existing case CS001, binh; Scene 4 -> human, carlos.
 Done when tests pass and Scenes 0, 1, 2 show the card with the expected decisions.
 ```
 
-## T11 – Voice for the customer (optional, after 15:30 and after the backup video)
+## T11 - Voice (optional, after 15:30 and after the backup video)
 
 ```text
-Add a mic button on /customer: record, transcribe with the OpenAI audio API,
-put the text into the existing message input, then send through the normal flow.
-No voice for CS. If anything fails, the text input must keep working.
+Add a mic button on /customer: record, send audio to POST /api/transcribe (OpenAI audio
+API, server side), put the text into the message input, then send through the normal
+flow. No voice for CS. If anything fails the text input must keep working.
 Done when one spoken message reaches /cs as text.
 ```
