@@ -1,7 +1,7 @@
 {
   "clock_note": "The demo clock starts at day 0 09:00 Asia/Ho_Chi_Minh. 'Next day' moves it to day 1 09:00.",
   "teams": [
-    { "id": "delivery", "name": "Delivery & Logistics", "categories": ["order_status", "missing_item", "damaged"], "lead": "an" },
+    { "id": "delivery", "name": "Delivery & Logistics", "categories": ["order_status", "order_contents", "missing_item", "damaged"], "lead": "an" },
     { "id": "payments", "name": "Payments & Refunds", "categories": ["refund_request"], "lead": "binh" },
     { "id": "general", "name": "General Support", "categories": ["return_howto", "confirm_receipt", "complaint", "other"], "lead": "carlos" }
   ],
