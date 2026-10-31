@@ -38,3 +38,5 @@ export interface Suggestion {
   draft: string; question: string | null; action: boolean;
   facts: { text: string; source: 'customer' | 'system' | 'unverified' }[];
 }
+
+export * from './db';

@@ -1,18 +1,18 @@
 # seaPilot — Codex usage evidence
 
-Generated: 2026-10-31T05:20:31.258Z (UTC).
+Generated: 2026-10-31T05:28:08.486Z (UTC).
 
 Public team evidence for the hackathon write-up; secrets are redacted before recording.
 
-Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:20:17.311Z.
+Observed window: 2026-10-31T03:40:15.883Z → 2026-10-31T05:27:20.453Z.
 
 | Metric | Count |
 | --- | ---: |
-| hook_events | 30 |
-| sessions | 2 |
-| prompts | 2 |
-| tool_invocations | 11 |
-| tool_results | 11 |
+| hook_events | 102 |
+| sessions | 3 |
+| prompts | 3 |
+| tool_invocations | 46 |
+| tool_results | 44 |
 | manual_entries | 12 |
 
 Models reported by hooks: gpt-6-astra, unknown.
@@ -21,8 +21,11 @@ Models reported by hooks: gpt-6-astra, unknown.
 
 | Tool | Category | Invocations | Starts | Results | Success signals | Error signals | Unknown results | No result |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| apply_patch | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
-| Bash | codex_builtin | 10 | 10 | 10 | 0 | 0 | 10 | 0 |
+| apply_patch | codex_builtin | 3 | 3 | 3 | 0 | 0 | 3 | 0 |
+| Bash | codex_builtin | 39 | 39 | 38 | 0 | 0 | 38 | 1 |
+| mcp__cua_repl__js | mcp_external | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
+| view_image | codex_builtin | 1 | 1 | 1 | 0 | 0 | 1 | 0 |
+| webrun | unknown | 2 | 2 | 2 | 0 | 0 | 2 | 0 |
 
 ## Prompt trail
 
@@ -32,6 +35,7 @@ Redacted prompts follow. Redaction is best effort; review content before committ
 | --- | --- | --- | --- |
 | 2026-10-31T05:18:37.224Z | 759ea8cb07d0 | 8c352424834e | 68507c1e0b3d |
 | 2026-10-31T05:18:55.971Z | 964fb863149d | cdcd9c2b0ec8 | a633d76f12ed |
+| 2026-10-31T05:20:49.996Z | 5d76cdaab94a | ec04ebeace48 | b944f8530d16 |
 
 ### Prompt 68507c1e0b3d
 
@@ -59,6 +63,63 @@ Truncated during capture: no.
 
 Truncated during capture: no.
 
+### Prompt b944f8530d16
+
+    Read AGENTS.md (stack, data model, decisions), prompts/04-demo-data.md and
+    docs/Architecture.md (ERD).
+    Create apps/api as a workspace package "@seapilot/api":
+    1. Hono server on 127.0.0.1:4000 (env PORT). GET /api/health -> { ok: true, time, db: "up"|"down" }.
+       CORS middleware: exact-origin allowlist from env CORS_ORIGINS (comma separated,
+       default "[REDACTED URL]"),
+       Vary: Origin, OPTIONS answered before auth, CORS headers also on error responses.
+       GET /files/* serves apps/api/public and apps/api/data/uploads without auth.
+    2. docker-compose.yml at the repo root: service "db", image postgres:16, port 5432,
+       named volume, POSTGRES_PASSWORD from env with a dev-only default, db name seapilot.
+    3. apps/api/src/db/schema.ts: Drizzle tables exactly as the ERD in docs/Architecture.md:
+       customers, orders, order_items, shipments, cases, conversations, messages, evidence,
+       case_events, tasks. Text primary keys. jsonb for case_events.payload and
+       tasks.evidence_ids. timestamptz for times. conversations.case_id and evidence.case_id
+       nullable. conversations.mode text default "human". Generate the first migration
+       into apps/api/drizzle with drizzle-kit.
+    4. Zod row schemas in packages/contracts/src/db.ts (hand written, Zod 4, exported from
+       the package index). Do not change the existing frontend schemas in that package.
+    5. apps/api/src/store/CaseStore.ts: interface with what routes and tools need
+       (get/list per table, createConversation, addMessage, addEvidence, createCase,
+       linkConversation, addEvent, createTask, updateShipment, updateCase, resetTo(state)).
+       apps/api/src/store/postgres.ts implements it with Drizzle.
+    6. apps/api/src/demo/clock.ts: demo clock, day 0 09:00 Asia/Ho_Chi_Minh, advance() +1 day,
+       now() returns the demo time. Persist the current day in a one-row table or in memory.
+    7. apps/api/src/demo/seed.ts: builds the "Start" and "After Demo 1" states from
+       prompts/04-demo-data.md, including customers CUST001-003, orders DH001-003, items,
+       shipments, and for After Demo 1: CS001, CONV1, M1, R1, EV1 and the four events.
+       Timestamps are computed from the demo clock. reply_sent payload includes
+       shipment_snapshot { "A": "delivered", "B": "in_transit" }.
+       Copy the two demo images to apps/api/public/demo/ (generate simple placeholder JPEGs
+       with the label text if no real photos exist).
+    8. Routes requiring header x-demo-token = [REDACTED]
+       POST /api/demo/reset (truncate all tables in one statement, load Start, clock day 0),
+       POST /api/demo/advance-day (parcel B -> delivered at clock now, clock +1, case_event
+       shipment_updated on every open case of DH001),
+       POST /api/demo/jump?to=demo2 (load After Demo 1).
+    9. Root package.json scripts: "dev:api", "db:up" (docker compose up -d db),
+       "db:migrate", "db:reset" (calls the same reset function), "tunnel"
+       (cloudflared tunnel --url [REDACTED URL] Add apps/api to "dev" and "typecheck".
+       Add "apps/api/**/*.test.ts" to vitest include. apps/api/.env.example with names only:
+       PORT, DATABASE_URL, POSTGRES_PASSWORD, DEMO_RESET_TOKEN, CORS_ORIGINS,
+       OPENAI_API_KEY, OPENAI_MODEL. .gitignore: apps/api/.env, apps/api/data/uploads.
+    Tests (vitest, real Docker database; skip with a clear message when DATABASE_URL is unset):
+    reset twice gives identical business rows ignoring timestamps; jump demo2 gives exactly
+    one case CS001, one conversation, one evidence row; advance-day after jump sets B
+    delivered and writes shipment_updated; /api/health answers; OPTIONS from an allowed
+    origin returns 204 with CORS headers, from another origin returns no allow header.
+    Append a row to docs/codex-log.md.
+    Done when: pnpm db:up, pnpm db:migrate, pnpm db:reset work from a clean clone;
+    pnpm typecheck, lint and test pass; curl hits all routes. Do not commit or push; leave changes in the working tree and end with a short report of what passed and what did not.
+
+    Environment notes: use pnpm 10.28.2 (already active). Create apps/api/.env (git-ignored) with DATABASE_URL=postgres://REDACTED@127.0.0.1:5432/seapilot, POSTGRES_PASSWORD=[REDACTED], DEMO_RESET_TOKEN=[REDACTED], PORT=4000. Leave OPENAI_API_KEY empty. If docker commands are blocked by the sandbox, say so in the report instead of working around it.
+
+Truncated during capture: no.
+
 ## Tool call trail
 
 Session and turn identifiers connect each invocation to the prompt trail above.
@@ -76,6 +137,41 @@ Session and turn identifiers connect each invocation to the prompt trail above.
 | 2026-10-31T05:19:47.422Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
 | 2026-10-31T05:20:11.054Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
 | 2026-10-31T05:20:14.279Z | 964fb863149d | cdcd9c2b0ec8 | Bash | unknown |
+| 2026-10-31T05:20:54.980Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:20:55.248Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:20:55.513Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:21:04.263Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:21:04.280Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:21:04.290Z | 5d76cdaab94a | ec04ebeace48 | webrun | unknown |
+| 2026-10-31T05:21:13.219Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:21:13.542Z | 5d76cdaab94a | ec04ebeace48 | webrun | unknown |
+| 2026-10-31T05:21:41.785Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:22:08.202Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:22:52.821Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:23:21.031Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:24.675Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:34.891Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:45.120Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:50.867Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:57.754Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:57.782Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:24:57.829Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:25:06.478Z | 5d76cdaab94a | ec04ebeace48 | apply_patch | unknown |
+| 2026-10-31T05:25:06.652Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:25:20.371Z | 5d76cdaab94a | ec04ebeace48 | apply_patch | unknown |
+| 2026-10-31T05:25:20.605Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:25:21.824Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:25:29.629Z | 5d76cdaab94a | ec04ebeace48 | mcp__cua_repl__js | no result observed |
+| 2026-10-31T05:26:07.891Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:14.254Z | 5d76cdaab94a | ec04ebeace48 | Bash | no result observed |
+| 2026-10-31T05:26:15.485Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:15.490Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:24.532Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:35.058Z | 5d76cdaab94a | ec04ebeace48 | view_image | unknown |
+| 2026-10-31T05:26:35.193Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:54.160Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:26:55.405Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
+| 2026-10-31T05:27:13.833Z | 5d76cdaab94a | ec04ebeace48 | Bash | unknown |
 
 ## Self-reported external activity
 

@@ -19,3 +19,7 @@ coverage/
 
 # Local pnpm store created by sandboxed installs
 .pnpm-store/
+
+# API credentials and uploaded evidence
+apps/api/.env
+apps/api/data/uploads/

@@ -3,14 +3,19 @@
   "private": true,
   "packageManager": "pnpm@10.28.2",
   "scripts": {
-    "dev": "pnpm --parallel --filter @seapilot/customer --filter @seapilot/customer-service dev",
+    "dev": "pnpm --parallel --filter @seapilot/customer --filter @seapilot/customer-service --filter @seapilot/api dev",
     "dev:customer": "pnpm --filter @seapilot/customer dev",
     "dev:cs": "pnpm --filter @seapilot/customer-service dev",
     "build": "pnpm --filter @seapilot/customer build && pnpm --filter @seapilot/customer-service build",
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "eslint apps packages",
     "test": "vitest run && node --test tests/codex-usage.test.mjs",
-    "test:frontend": "vitest run"
+    "test:frontend": "vitest run",
+    "dev:api": "pnpm --filter @seapilot/api dev",
+    "db:up": "docker compose --env-file apps/api/.env up -d db",
+    "db:migrate": "pnpm --filter @seapilot/api db:migrate",
+    "db:reset": "pnpm --filter @seapilot/api db:reset",
+    "tunnel": "cloudflared tunnel --url http://127.0.0.1:4000"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
