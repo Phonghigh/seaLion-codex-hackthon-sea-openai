@@ -35,6 +35,7 @@ export function Workspace({ demoEnabled }: { demoEnabled: boolean }) {
   const setTitle = (value: string) => setTitles(previous => ({ ...previous, [selected]: value }));
   const [replacement, setReplacement] = useState<string | null>(null);
   const [reviewReplacement, setReviewReplacement] = useState(false);
+  const offered = useRef('');
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [suggestion, setSuggestion] = useState<{ data: AgentSuggestion; fingerprint: string } | null>(null);
   const [dismissedMatch, setDismissedMatch] = useState(false);
@@ -118,8 +119,10 @@ export function Workspace({ demoEnabled }: { demoEnabled: boolean }) {
     void run(() => api.suggest(selected), 'Suggestion ready for review.', data => { setSuggestion({ data, fingerprint: key }); offerDraft(data.draft_reply); setBlocked(false); });
   }
   function offerDraft(value: string) {
-    if (draft.trim() && draft !== value) { setReplacement(value); setReviewReplacement(true); setDetails(false); }
-    else setDraft(value);
+    // Ask only when the agent has edited the draft; an untouched AI draft is simply refreshed.
+    const edited = draft.trim() && draft !== value && draft !== offered.current;
+    if (edited) { setReplacement(value); setReviewReplacement(true); setDetails(false); }
+    else { setDraft(value); offered.current = value; }
   }
   function approveReply() {
     if (!canApprove || actionPending || !draft.trim() || (!linked && (!title.trim() || (!!match && !dismissedMatch)))) return;
