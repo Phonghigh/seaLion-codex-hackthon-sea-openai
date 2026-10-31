@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "title": "seaPilot — Codex usage evidence",
-  "generated_at": "2026-10-31T09:26:16.065Z",
+  "generated_at": "2026-10-31T09:32:58.586Z",
   "content_included": true,
   "coverage": {
     "first_recorded_at": "2026-10-31T03:40:15.883Z",
-    "last_recorded_at": "2026-10-31T09:26:15.594Z",
+    "last_recorded_at": "2026-10-31T09:26:27.838Z",
     "invalid_files_skipped": 0,
     "limitations": [
       "Only events received by this recorder are counted; no retroactive reconstruction.",
@@ -20,11 +20,11 @@
     ]
   },
   "totals": {
-    "hook_events": 1115,
+    "hook_events": 1120,
     "sessions": 17,
     "prompts": 18,
-    "tool_invocations": 532,
-    "tool_results": 517,
+    "tool_invocations": 533,
+    "tool_results": 519,
     "manual_entries": 28
   },
   "models": [
@@ -46,13 +46,13 @@
     {
       "tool": "Bash",
       "category": "codex_builtin",
-      "invocations": 419,
-      "starts_observed": 419,
-      "results_observed": 414,
+      "invocations": 420,
+      "starts_observed": 420,
+      "results_observed": 416,
       "success_signals": 0,
       "error_signals": 0,
-      "unknown_results": 414,
-      "no_result_observed": 5
+      "unknown_results": 416,
+      "no_result_observed": 4
     },
     {
       "tool": "clockcurr_time",
@@ -6800,10 +6800,22 @@
       "tool": "Bash",
       "category": "codex_builtin",
       "started": true,
-      "result_observed": false,
+      "result_observed": true,
       "status": "unknown",
       "started_at": "2026-10-31T09:26:15.594Z",
-      "result_at": null
+      "result_at": "2026-10-31T09:26:16.216Z"
+    },
+    {
+      "id": "7018244d8f4f",
+      "session": "5205086b0fe7",
+      "turn": "425923fb4418",
+      "tool": "Bash",
+      "category": "codex_builtin",
+      "started": true,
+      "result_observed": true,
+      "status": "unknown",
+      "started_at": "2026-10-31T09:26:23.045Z",
+      "result_at": "2026-10-31T09:26:23.341Z"
     }
   ],
   "manual_entries": [
