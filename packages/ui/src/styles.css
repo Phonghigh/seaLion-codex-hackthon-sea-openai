@@ -231,3 +231,12 @@ time { font-variant-numeric:tabular-nums; }
 /* BE05: retain header contrast for the compact customer selector. */
 .customer-picker { width:auto; min-width:142px; background:var(--surface); color:var(--ink); }
 .case-info dd { min-width:0; overflow-wrap:anywhere; }
+
+/* Bug 2: customer sees the photos they sent. Bug 3: agent reads the suggested reply before using it. */
+.customer-evidence { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; margin-top:4px; }
+.customer-evidence-thumb { display:flex; flex-direction:column; gap:6px; padding:6px; border:1px solid var(--border); border-radius:12px; background:var(--color-card, #fff); cursor:pointer; max-width:180px; text-align:left; }
+.customer-evidence-thumb img { width:168px; height:120px; object-fit:cover; border-radius:8px; display:block; }
+.customer-evidence-thumb span { display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--muted, #64748b); }
+.suggested-reply { border-top:1px solid var(--border); margin-top:18px; padding-top:16px; }
+.suggested-reply strong { font-size:13px; }
+.suggested-reply p { font-size:13px; line-height:1.7; margin-top:6px; white-space:pre-wrap; background:var(--canvas, #f1f5f9); border-radius:10px; padding:10px 12px; }

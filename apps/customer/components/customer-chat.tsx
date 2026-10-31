@@ -67,20 +67,29 @@ function CustomerConversation({ customer }: { customer: typeof CUSTOMERS[number]
     pending.current = false; setBusy(false);
   }
   async function send() {
-    if (pending.current || !selected || (!draft.trim() && !attachment && !file)) return;
+    if (pending.current || (!draft.trim() && !attachment && !file)) return;
     pending.current = true; setBusy(true); setError(''); setNotice('');
+    let target = selected;
     try {
+      // First message with no open conversation: create one so the customer can just type.
+      if (!target) {
+        const created = await api.createConversation(customer.id);
+        if (!created.ok) { setError(created.error); return; }
+        target = created.data.id; generation.current += 1;
+        setConversations(previous => [...previous, created.data]); setSelected(target);
+        setDrafts(previous => ({ ...previous, [target]: previous[''] ?? '', '': '' }));
+      }
       // Save evidence first so the hard attachment rule cannot race a fast triage call.
       // Clear only saved parts; a failed text send can be retried without another upload.
       if (file || attachment) {
-        const result = file ? await api.upload(selected, file) : await api.seedImage(selected, attachment as 'parcel_a' | 'parcel_b_open');
+        const result = file ? await api.upload(target, file) : await api.seedImage(target, attachment as 'parcel_a' | 'parcel_b_open');
         if (!result.ok) { setError(`${result.error} Your message has not been sent. Retry the attachment or choose a sample.`); return; }
         setAttachment(''); setFile(null); setPickerOpen(false);
       }
       if (draft.trim()) {
-        const result = await api.sendMessage(selected, draft);
+        const result = await api.sendMessage(target, draft);
         if (!result.ok) { setError(result.error); return; }
-        setDrafts(previous => ({ ...previous, [selected]: '' }));
+        setDrafts(previous => ({ ...previous, [target]: '', '': '' }));
       }
       setNotice('Sent');
     } finally { await refresh(); pending.current = false; setBusy(false); }
@@ -94,13 +103,13 @@ function CustomerConversation({ customer }: { customer: typeof CUSTOMERS[number]
           <div className="chat-header"><div className="row"><span className="brand-symbol"><MessageSquare size={18} /></span><div><h2>Conversation with support</h2><p className="muted small">Your earlier messages and attachments stay on file.</p></div></div><Badge>{order?.order.id ?? 'Order'}</Badge></div>
           {readError && <Alert variant="destructive"><AlertDescription>Could not refresh conversations. {readError}<Button variant="outline" size="sm" disabled={busy} onClick={() => void refresh()}>Retry conversations</Button></AlertDescription></Alert>}<div className="customer-messages" role="log" aria-label="Messages" aria-live="polite">
             <div className="day-divider">{thread ? `${formatTime(thread.conversation.opened_at)} · ${thread.conversation.id}` : loading ? 'Loading conversations…' : 'New conversation'}</div>
-            {!loading && !readError && !thread?.messages.length && <EmptyState title="What can we help with?">{selected ? 'Tell us what happened with your order.' : 'Start a new conversation to contact support.'} Your earlier conversations stay on file.</EmptyState>}
+            {!loading && !readError && !thread?.messages.length && <EmptyState title="What can we help with?">Tell us what happened with your order. Your earlier conversations stay on file.</EmptyState>}
             {thread?.messages.map(message => <article key={message.id} className={`message ${message.role === 'customer' ? 'own' : ''}`}><Avatar small name={message.role === 'customer' ? customer.name : actorName(message.actor)} /><div className="message-body"><div className="message-meta"><strong>{message.role === 'customer' ? 'You' : `${actorName(message.actor)} · Support`}</strong><time>{formatTime(message.created_at)}</time><CheckCheck size={12} aria-label="Saved" /></div><div className="bubble">{message.text}</div></div></article>)}
-            <div className="evidence-grid">{thread?.evidence.map(item => <Button variant="outline" key={item.id} onClick={() => setEvidence(item)}><Paperclip />{item.id} · {item.path.includes('/demo/') ? 'Sample image' : 'Image'}</Button>)}</div>
+            {!!thread?.evidence.length && <div className="customer-evidence" aria-label="Your attachments">{thread.evidence.map(item => <button type="button" className="customer-evidence-thumb" key={item.id} onClick={() => setEvidence(item)} aria-label={`Open attachment ${item.id}`}><Image unoptimized width={160} height={120} src={api.fileUrl(item.path)} alt={item.path.includes('/demo/') ? 'Sample photo you sent' : 'Photo you sent'} /><span><Paperclip size={12} />{item.path.includes('/demo/') ? 'Sample photo' : 'Your photo'} · {formatTime(item.created_at)}</span></button>)}</div>}
           </div>
           <form className="composer" onSubmit={event => { event.preventDefault(); void send(); }}>
-            <div className="composer-box"><Label className="sr-only" htmlFor="customer-message">Your message</Label><Textarea id="customer-message" placeholder={selected ? 'Write your message…' : 'Start a new conversation first'} maxLength={4000} value={draft} onChange={e => setDrafts(previous => ({ ...previous, [selected]: e.target.value }))} disabled={busy || !selected} />
-              <div className="composer-tools"><Button variant="ghost" size="sm" aria-expanded={pickerOpen} onClick={() => setPickerOpen(!pickerOpen)} disabled={busy || !selected}><Paperclip />{file ? file.name : attachment ? '1 sample attached' : 'Attach image'}</Button><Button type="submit" disabled={busy || !selected || (!draft.trim() && !attachment && !file)}>{busy ? 'Sending…' : 'Send'}<ArrowUp /></Button></div>
+            <div className="composer-box"><Label className="sr-only" htmlFor="customer-message">Your message</Label><Textarea id="customer-message" placeholder={selected ? 'Write your message…' : 'Tell us what happened with your order…'} maxLength={4000} value={draft} onChange={e => setDrafts(previous => ({ ...previous, [selected]: e.target.value }))} disabled={busy} />
+              <div className="composer-tools"><Button variant="ghost" size="sm" aria-expanded={pickerOpen} onClick={() => setPickerOpen(!pickerOpen)} disabled={busy}><Paperclip />{file ? file.name : attachment ? '1 sample attached' : 'Attach image'}</Button><Button type="submit" disabled={busy || (!draft.trim() && !attachment && !file)}>{busy ? 'Sending…' : 'Send'}<ArrowUp /></Button></div>
               {pickerOpen && <div className="attachment-picker"><Label htmlFor="customer-file">Upload an image</Label><Input key={file?.name ?? 'empty'} id="customer-file" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { setFile(event.target.files?.[0] ?? null); setAttachment(''); }} /><Label htmlFor="customer-attachment" className="small">Or use a demo image</Label><Select value={attachment || 'none'} onValueChange={value => { setAttachment(value === 'none' ? '' : value as 'parcel_a' | 'parcel_b_open'); setFile(null); }} disabled={busy}><SelectTrigger id="customer-attachment"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="none">Choose a sample</SelectItem><SelectItem value="parcel_a">Parcel A · shipping label</SelectItem><SelectItem value="parcel_b_open">Parcel B · opened parcel</SelectItem></SelectContent></Select>{(attachment || file) && <Button variant="ghost" size="icon" aria-label="Remove attachment" onClick={() => { setAttachment(''); setFile(null); }}><X /></Button>}<p className="muted small">JPEG, PNG or WebP, up to 10 MiB. Sample images are labeled illustrations.</p></div>}
             </div>
             <div className="composer-footnote"><ShieldCheck size={13} />Your messages stay with this conversation.</div>
