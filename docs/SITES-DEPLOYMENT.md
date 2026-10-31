@@ -1,5 +1,17 @@
 # Sites deployment — 31 October 2026
 
+## Current status (13:33 +07:00): public
+
+Hoang approved the Sites access change interactively after DEPLOY03 was blocked.
+Both Sites now return HTTP 200 without sign-in and load live data from the API
+through the tunnel. Both origins are in the API `CORS_ORIGINS` allowlist.
+
+- Customer: https://seapilot-customer-hoang.wirybear257.chatgpt.site
+- Customer Service: https://seapilot-service-hoang.wirybear257.chatgpt.site/?demo=1
+
+These are the submission URLs. If the tunnel restarts, its URL changes and both
+Sites must be rebuilt and republished.
+
 ## DEPLOY03 — Public access request blocked
 
 The owner authorized public access for exactly Hoang's two Sites below. Both
