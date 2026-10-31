@@ -1,6 +1,6 @@
 # Sites deployment — 31 October 2026
 
-## Current status (13:33 +07:00): public
+## Current status (14:36 +07:00): public, version 2 live
 
 Hoang approved the Sites access change interactively after DEPLOY03 was blocked.
 Both Sites now return HTTP 200 without sign-in and load live data from the API
@@ -9,8 +9,59 @@ through the tunnel. Both origins are in the API `CORS_ORIGINS` allowlist.
 - Customer: https://seapilot-customer-hoang.wirybear257.chatgpt.site
 - Customer Service: https://seapilot-service-hoang.wirybear257.chatgpt.site/?demo=1
 
+DEPLOY05 deployed the exact version 2 archives saved by DEPLOY04. Both native Sites
+results returned `succeeded`. No rebuild, new version or access change was made;
+access remains public at policy revision 2. Customer deployment:
+`appgdep_6ae59a2256288191b6d4af40b332a4ac`; Customer Service deployment:
+`appgdep_6ae59a475df481919496e64d1b184386`. Earlier sections below record historical status.
+
 These are the submission URLs. If the tunnel restarts, its URL changes and both
 Sites must be rebuilt and republished.
+
+## DEPLOY04 — Version 2 saved for both Sites; deployment blocked
+
+Both verified API-mode exports from `main` at
+`453fbf62dbfce3d0436f91f19f23bc2265d3dcf3` are saved as **version 2**.
+The user clarified that commits/pushes to the two separate Sites hosting
+repositories are authorized. The Sites helper pushed the matching source and
+packaged the existing build output without rebuilding. A file-by-file hash check
+confirmed both publication archives exactly match the previously verified builds.
+
+| App | Live version | Saved version | Sites source commit |
+| --- | --- | --- | --- |
+| Customer | 1 | 2, not deployed | `aa6f78ad7a52fff2f9bfda119e792eb4c0517acd` |
+| Customer Service | 1 | 2, not deployed | `92878500eb05eff6e0dd8afd68214cf7bd4ad2ce` |
+
+- Customer saved version ID: `appgprj_6ae58941057881918fe726f0e4859674~appgver_12ad1b841c348191807eba7d212ee911`.
+- Customer Service saved version ID: `appgprj_6ae589671c8481918691460557ce4c4e~appgver_883bf17163c481918eecdfe62e51b05d`.
+
+Both `deploy_site_version` calls were rejected by runtime approval review:
+`MCP tool call requires approval, but approval policy is never`.
+Neither deployment started; both saved versions have `deployment_id: null`.
+To resume, deploy these exact saved version IDs with runtime approval available;
+do not create another Site or save duplicate versions. Both audiences remain public.
+
+Unauthenticated `curl -q` checks at 14:32 +07:00 returned HTTP 200 for both existing
+URLs. Their served HTML and referenced JavaScript still contain the old page
+bundles, without `customer-picker` or `Triage`. The new markers and requested API
+URL are present in the saved archives, but live feature verification remains blocked.
+
+Builds used `scripts/sites/build-export.mjs`, `NEXT_PUBLIC_USE_FIXTURES` unset,
+and `NEXT_PUBLIC_API_BASE=https://variety-configuration-applications-refine.trycloudflare.com`.
+Typecheck and lint passed; all 121 Vitest tests passed with disposable PostgreSQL
+continuity/reset checks and an empty model key. The full test command ran in a
+tracked-source copy without an API env file; its recorder Git-ignore test failed
+because the copy is inside ignored `.sites/`. All 30 recorder tests passed when
+rerun from the actual repository root. No tests were added.
+
+Initial builds hit a Node architecture/cache mismatch, resolved with native arm64
+Node. A renamed dependency backup caused TypeScript scan errors, resolved by moving
+it outside source. The isolated Customer Service build stalled and was stopped;
+building unchanged `main` succeeded. Both static exports and archive checks passed.
+No new build was needed after source-push authorization. `apps/api/.env` was never
+read. No application code, access policy, new Site, GitHub commit or GitHub push was
+changed. Browser interaction QA was not performed. Full identifiers and verification
+results are in [sites-hoang.json](sites-hoang.json).
 
 ## DEPLOY03 — Public access request blocked
 
