@@ -69,7 +69,7 @@ What a business can now do: let any agent on any shift pick up any case without 
 
   Each task is logged with its start and end time in `docs/codex-log.md` (33 entries).
 - **Usage evidence:** shared Codex hooks recorded 1,050 events across 16 sessions by 15:25, including 500 tool invocations. The report is in `docs/codex-usage-report.md`.
-- **Tests:** 122 automated tests plus 30 tests for the usage-reporting tool. They include an end-to-end continuity test, written by Codex, that replays the demo story and checks for one case only, no repeated question, and the correct final status.
+- **Tests:** 124 automated tests plus 30 tests for the usage-reporting tool. They include an end-to-end continuity test, written by Codex, that replays the demo story and checks for one case only, no repeated question, and the correct final status.
 - **A concrete example:** in task FIX01, Codex reproduced a test that failed about 1 run in 5. It traced the failure to database state shared between test files and fixed it by isolating test data, without adding retries.
 
 ## 7. Results and limits
